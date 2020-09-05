@@ -1,0 +1,23 @@
+{
+	"name": "@alireza-ab/persian-date",
+	"version": "1.0.0",
+	"description": "A lightweight but professional library for working with Persian dates",
+	"main": "./dist/PersianDate.min.js",
+	"scripts": {
+		"test": "jest",
+		"build": "webpack"
+	},
+	"keywords": [
+		"javascript",
+		"date",
+		"persian",
+		"jalali"
+	],
+	"author": "Alireza Alibeiki <alibeikialireza@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"jest": "^26.4.2",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
+	}
+}
