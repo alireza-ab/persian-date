@@ -2,7 +2,7 @@
 
 A lightweight but professional javascript library for working with Persian dates.
 
-[![npm version](https://badge.fury.io/js/persian-date.svg)](https://github.com/alireza-ab/persian-date)
+[![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://img.shields.io/npm/v/@alireza-ab/persian-date)
 
 ## Install
 
