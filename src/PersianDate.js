@@ -1,5 +1,5 @@
 //                              ||                ||
-//              ----------------||----------------||----------------                       
+//              ----------------||----------------||----------------
 //             ||               ||                ||               ||
 //             ||                                                  ||
 //             ||                                                  ||
@@ -26,7 +26,7 @@
 //             ||                                                  ||
 //             ||                                                  ||
 //             ||                                                  ||
-//              ----------------------------------------------------                             
+//              ----------------------------------------------------
 
 ////////////////////---------- Are You Ready? ----------////////////////////
 ////////////////////------------- Let's Go -------------////////////////////
@@ -451,7 +451,7 @@ const PersianDate = function () {
                     year.y || year.year || year.years,
                     year.M || year.month || year.months || 1,
                     year.d || year.day || year.days || year.date || 1,
-                    year.h || year.hour || year.hours || 1,
+                    year.h || year.hour || year.hours || 0,
                     year.m || year.minute || year.minutes || 0,
                     year.s || year.second || year.seconds || 0,
                     year.ms || year.millisecond || year.milliseconds || 0,
@@ -1457,6 +1457,87 @@ const PersianDate = function () {
             return jtg().getTime();
         }
     }
+
+    ////////////////////--- Version 1.1.0 ---////////////////////
+
+    /**
+     * get clone of date
+     * @returns {PersianDate} returns the clone of this date
+     */
+    PersianDate.prototype.clone = function () {
+        return (new PersianDate()).parse(this.d);
+    }
+
+    /**
+     * checks this date is equal to another date
+     * @param {PersianDate|String|Array|Object|Number} year - this param must be PersianDate or string or array or Object from date or year
+     * @param {String|Number} year.y - year of date
+     * @param {Null|String|Number} year.year - year of date
+     * @param {Null|String|Number} year.years - year of date
+     * @param {Null|String|Number} year.M - month of date
+     * @param {Null|String|Number} year.month - month of date
+     * @param {Null|String|Number} year.months - month of date
+     * @param {Null|String|Number} year.d - day of date
+     * @param {Null|String|Number} year.day - day of date
+     * @param {Null|String|Number} year.days - day of date
+     * @param {Null|String|Number} year.date - day of date
+     * @param {Null|String|Number} year.h - hour of date
+     * @param {Null|String|Number} year.hour - hour of date
+     * @param {Null|String|Number} year.hours - hour of date
+     * @param {Null|String|Number} year.m - minute of date
+     * @param {Null|String|Number} year.minute - minute of date
+     * @param {Null|String|Number} year.minutes - minute of date
+     * @param {Null|String|Number} year.s - second of date
+     * @param {Null|String|Number} year.second - second of date
+     * @param {Null|String|Number} year.seconds - second of date
+     * @param {Null|String|Number} year.ms - millisecond of date
+     * @param {Null|String|Number} year.millisecond - millisecond of date
+     * @param {Null|String|Number} year.milliseconds - millisecond of date
+     * @param {Null|Number|String} month month of date
+     * @param {Null|Number|String} day day of date
+     * @param {Null|Number|String} hour hour of date
+     * @param {Null|Number|String} minute minute of date
+     * @param {Null|Number|String} second second of date
+     * @param {Null|Number|String} millisecond millisecond of date
+     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     */
+    PersianDate.prototype.isSame = function (year, month, day, hour, minute, second, millisecond) {
+        if (this.error)
+            return this;
+        if (typeof year == 'string' && year.search('\\/| |-|\\.|,|:') != -1)
+            [year, month, day, hour, minute, second, millisecond] = year.split(/[/ -.,:\\]/);
+        if (Object.prototype.toString.call(year) === '[object Array]') // if type of year is Array
+            [year, month, day, hour, minute, second, millisecond] = year;
+        if (year instanceof PersianDate)
+            year = year.d;
+        if (Object.prototype.toString.call(year) === '[object Object]')  // if type of year is Object
+            [
+                year,
+                month,
+                day,
+                hour,
+                minute,
+                second,
+                millisecond
+            ] = [
+                    year.y || year.year || year.years,
+                    year.M || year.month || year.months || 1,
+                    year.d || year.day || year.days || year.date || 1,
+                    year.h || year.hour || year.hours || 0,
+                    year.m || year.minute || year.minutes || 0,
+                    year.s || year.second || year.seconds || 0,
+                    year.ms || year.millisecond || year.milliseconds || 0,
+                ];
+
+        return (year == this.d.year &&
+            (month ? month == this.d.month : true) &&
+            (day ? day == this.d.date : true) &&
+            (hour ? hour == this.d.hour : true) &&
+            (minute ? minute == this.d.minute : true) &&
+            (second ? second == this.d.second : true) &&
+            (millisecond ? millisecond == this.d.millisecond : true))
+    }
+
 
     if (arguments.length)
         this.setDate(...arguments);

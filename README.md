@@ -172,6 +172,8 @@ persianDate.toString("YYYY-MM-DD"); // 2021/03/21
 
 inspired by [moment](https://momentjs.com/)
 
+#### Persian formats
+
 |     Type     |      Token      |                          Output                          |
 | :----------: | :-------------: | :------------------------------------------------------: |
 |     Year     |  [ jYYYY, jy ]  |                 1350 1351 ... 1399 1400                  |
@@ -218,6 +220,59 @@ inspired by [moment](https://momentjs.com/)
 |    Am/PM     |       jA        |                  قبل‌از‌ظهر بعد‌از‌ظهر                   |
 |              |       jaa       |                         ق.ظ ب.‌ظ                         |
 |              |       ja        |                         ق ظ ب ‌ظ                         |
+
+#### Aliases
+
+|  Alias   |       Format        |      Output      |
+| :------: | :-----------------: | :--------------: |
+| datetime | jYYYY/jMM/jDD HH:mm | 1400/01/01 12:25 |
+|   date   |    jYYYY/jMM/jDD    |    1400/01/01    |
+|   time   |        HH:mm        |      12:25       |
+
+#### Gregorian formats
+
+|     Type     |       Token        |                 Output                 |
+| :----------: | :----------------: | :------------------------------------: |
+|     Year     |    [ YYYY, y ]     |        1970 1971 ... 2029 2030         |
+|              |         YY         |            70 71 ... 29 30             |
+|    Month     |        MMMM        | January February ... November December |
+|              |        MMM         |          Jan Feb ... Nov Dec           |
+|              |         MM         |            01 02 ... 11 12             |
+|              |     [ MO, Mo ]     |         1st 2nd ... 11th 12th          |
+|              |         M          |             1 2 ... 11 12              |
+| Day of Month |         DD         |            01 02 ... 30 31             |
+|              |     [ DO, Do ]     |         1st 2nd ... 30th 31st          |
+|              |         D          |             1 2 ... 30 31              |
+| Day of Week  |        dddd        |   Sunday Monday ... Friday Saturday    |
+| Day of Week  |        ddd         |          Sun Mon ... Fri Sat           |
+|              |         dd         |            Su Mo ... Fr Sa             |
+|              |     [ dO, do ]     |          1st 2nd ... 6th 7th           |
+|              |         de         |              1 2 ... 6 7               |
+|              |         d          |              0 1 ... 5 6               |
+| Day of Year  |        DDDD        |          001 002 ... 364 365           |
+|              |   [ DDDO, DDDo ]   |        1st 2nd ... 364th 365th         |
+|              |        DDD         |            1 2 ... 364 365             |
+|   Quarter    |     [ QO, Qo ]     |            1st 2nd 3rd 4th             |
+|              |         Q          |                1 2 3 4                 |
+|     Week     |     [ WW, ww ]     |            01 02 ... 52 53             |
+|              | [ WO, wO, Wo, wo ] |         1st 2nd ... 52nd 53rd          |
+|              |      [ W, w ]      |             1 2 ... 52 53              |
+|     Hour     |         HH         |            00 01 ... 22 23             |
+|              |         H          |             0 1 ... 22 23              |
+|              |         hh         |            01 02 ... 11 12             |
+|              |         h          |             1 2 ... 11 12              |
+|              |         kk         |            01 02 ... 23 24             |
+|              |         k          |             1 2 ... 23 24              |
+|    Minute    |         mm         |            00 01 ... 58 59             |
+|              |         m          |             0 1 ... 58 59              |
+|    Second    |         ss         |            00 01 ... 58 59             |
+|              |         s          |             0 1 ... 58 59              |
+| Millisecond  |        CCCC        |          000 001 ... 998 999           |
+|              |     [ CCC, c ]     |            0 1 ... 998 999             |
+|  Timestamp   |         t          |             1609446600000              |
+|    Am/PM     |         A          |                 AM PM                  |
+|              |         aa         |               A.M. P.M.                |
+|              |         a          |                 am pm                  |
 
 ---
 

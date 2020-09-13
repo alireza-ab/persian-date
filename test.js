@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 6,
-    date: 15
+    date: 23
 }
 
 test('create date and return now', () => {
@@ -755,4 +755,25 @@ test('timestamp function without parameter', () => {
 test('timestamp function with parameter', () => {
     persianDate = persianDate.timestamp((new Date(2020, 7, 22, 0, 0, 0, 0).getTime()));
     expect(persianDate.toString('datetime')).toBe('1399/06/01 00:00')
+});
+
+////////////////////--- Version 1.1.0 ---////////////////////
+
+test('clone function', () => {
+    clone = persianDate.parse('1399/6/1 12:20:30.235').clone();
+    expect(clone.year()).toBe(persianDate.year())
+    expect(clone.month()).toBe(persianDate.month())
+    expect(clone.date()).toBe(persianDate.date())
+    expect(clone.hour()).toBe(persianDate.hour())
+    expect(clone.minute()).toBe(persianDate.minute())
+    expect(clone.second()).toBe(persianDate.second())
+    expect(clone.millisecond()).toBe(persianDate.millisecond())
+});
+
+test('isSame function', () => {
+    persianDate.parse('1399/6/1 12:20:30.235');
+    expect(persianDate.isSame(1399, 6, 1, 12, 20, 30, 235)).toBe(true)
+    expect(persianDate.isSame([1399, 7])).toBe(false)
+    expect(persianDate.isSame(new PersianDate())).toBe(false)
+    expect(persianDate.isSame('1399/6/1')).toBe(true)
 });
