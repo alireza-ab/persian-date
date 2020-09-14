@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0727a48-f0e1-4967-8cde-b4758fdd0dbf" name="Default Changelist" comment="" />
+    <list default="true" id="f0727a48-f0e1-4967-8cde-b4758fdd0dbf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PersianDate.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/PersianDate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PersianDate.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/PersianDate.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PersianDate.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/PersianDate.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PersianDate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/PersianDate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,7 +31,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../send-sms" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -39,6 +48,7 @@
       <workItem from="1599058882399" duration="7675000" />
       <workItem from="1599106661530" duration="17980000" />
       <workItem from="1599311843227" duration="33000" />
+      <workItem from="1600094349069" duration="384000" />
     </task>
     <servers />
   </component>

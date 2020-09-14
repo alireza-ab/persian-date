@@ -8,6 +8,7 @@ module.exports = [
             filename: 'PersianDate.js',
             library: "PersianDate",
             libraryTarget: "umd",
+            libraryExport: "default",
         },
     },
     {
@@ -19,6 +20,7 @@ module.exports = [
             filename: 'PersianDate.min.js',
             library: "PersianDate",
             libraryTarget: "umd",
+            libraryExport: "default",
         },
     }
 ];

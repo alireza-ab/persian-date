@@ -4,6 +4,10 @@ A lightweight but professional javascript library for working with Persian dates
 
 [![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://img.shields.io/npm/v/@alireza-ab/persian-date)
 
+| [Install](#Install) | [Get Started](#get-started) | [Usage](#Usage) | [Set - Get](#set---get) | [Manipulate](#manipulate) | [Display](#display) | [Query](#query) | [License](#license) |
+| :-----------------: | :-------------------------: | :-------------: | :---------------------: | :-----------------------: | :-----------------: | --------------- | ------------------- |
+
+
 ## Install
 
 ```shell
@@ -18,13 +22,13 @@ npm install @alireza-ab/persian-date
 import PersianDate from "@alireza-ab/persian-date";
 ```
 
-<!--
 ### require
 
 ```javascript
 const PersianDate = require("@alireza-ab/persian-date");
 ```
---- -->
+
+---
 
 ## Usage
 
@@ -39,7 +43,7 @@ let persianDate = new PersianDate("2021-1-1");
 
 ### setDate()
 
-set date from gregorian date
+set date from the gregorian date
 
 > parameters are the same as the previous example
 
@@ -49,7 +53,7 @@ persianDate.setDate(new Date());
 
 ### parse()
 
-parse a persian date
+parse a Persian date
 
 ```javascript
 persianDate.parse(1400, 1, 1, 0, 0, 0, 0);
@@ -78,14 +82,14 @@ persianDate.now();
 
 ## Set - Get
 
-you can call these methods with number parameter as setter, and call without the parameter or with a format string as getter
+you can call these methods with number parameter as the setter, and call without the parameter or with a format string as the getter
 
 ```javascript
 persianDate.year(1400);
-persianDate.month("1");
-persianDate.date("1");
+persianDate.month(1);
+persianDate.date(1);
 persianDate.hour(5);
-persianDate.minute("1");
+persianDate.minute(1);
 persianDate.second(54);
 persianDate.millisecond(456);
 
@@ -102,10 +106,10 @@ persianDate.timestamp(1609446600000); // 1400/1/1 00:00:00.0
 persianDate.timestamp(); // 1609446600000
 ```
 
-> you can use it as chaining method
+> you can use it as a chaining method
 
 ```javascript
-persianDate.year(1400).month("1").date("1");
+persianDate.year(1400).month(1).date(1);
 ```
 
 ### getDaysInMonth()
@@ -117,6 +121,16 @@ persianDate.parse("1400/1").getDaysInMonth(); // 31
 persianDate.getDaysInMonth("1400", 10); // 30
 persianDate.getDaysInMonth("1399", 12); // 30
 persianDate.getDaysInMonth("1400", 12); // 29
+```
+
+### clone()
+
+get a clone of this date
+
+```javascript
+let clone = persianDate.parse("1400/1/1 13:07:27.000").clone(); // 31
+persianDate.toString("datetime"); // 1400/1/1 13:07
+clone.toString("datetime"); // 1400/1/1 13:07
 ```
 
 ---
@@ -133,23 +147,23 @@ by default adds 1 value and checks it's valid
 persianDate.addYear(); // 1401/1/1 00:00:00.0
 persianDate.addMonth(2); // 1401/3/1 00:00:00.0
 persianDate.addDay(56); // 1401/4/26 00:00:00.0
-persianDate.addHour("5"); // 1401/4/26 05:00:00.0
+persianDate.addHour(5); // 1401/4/26 05:00:00.0
 persianDate.addMinute(); // 1401/4/26 05:01:00.0
 persianDate.addSecond(54); // 1401/4/26 05:01:54.0
-persianDate.addMillisecond("456"); // 1401/4/26 05:01:54.456
+persianDate.addMillisecond(456); // 1401/4/26 05:01:54.456
 /*
 by default subtracts 1 value and checks it's valid
 */
 persianDate.subtractYear(); // 1400/4/26 05:01:54.456
 persianDate.subtractMonth(2); // 1400/2/26 05:01:54.456
 persianDate.subtractDay(56); // 1400/1/1 05:01:54.456
-persianDate.subtractHour("5"); // 1400/1/1 00:01:54.456
+persianDate.subtractHour(5); // 1400/1/1 00:01:54.456
 persianDate.subtractMinute(); // 1400/1/1 00:00:54.456
 persianDate.subtractSecond(54); // 1400/1/1 00:00:00.456
-persianDate.subtractMillisecond("456"); // 1400/1/1 00:00:00.0
+persianDate.subtractMillisecond(456); // 1400/1/1 00:00:00.0
 ```
 
-> you can use it as chaining method
+> you can use it as a chaining method
 
 ```javascript
 persianDate.addYear().addMonth(2).addDay(56);
@@ -283,13 +297,13 @@ inspired by [moment](https://momentjs.com/)
 determines whether the year is a leap year or not
 
 ```javascript
-persianDate.parse("1400").isLeapYear(); // false
+persianDate.parse(1400).isLeapYear(); // false
 persianDate.isLeapYear(1399); // true
 ```
 
 ### isValid()
 
-check the date or time or both
+checks the date or time or both
 
 ```javascript
 // check both date and time
@@ -303,6 +317,78 @@ persianDate.parse("1400/1/1 25:00:00").isValidTime(); // false
 persianDate.isValidTime(12, 5, 0, 0); // true
 ```
 
-## license
+### isSame()
 
-PersianDate is available under the [MIT](https://opensource.org/licenses/MIT) license.
+checks this date is the same to another date
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isSame(1399, 6, 1, 12, 20, 30, 235); // true
+persianDate.isSame(new PersianDate()); // false
+persianDate.isSame({
+	year: 1399,
+	month: 6,
+	date: 24,
+	hour: 11,
+	minute: 2,
+	second: 55,
+	millisecond: 112,
+}); // false
+persianDate.isSame([1399, 6]); // true
+persianDate.isSame("1399/6/1"); // true
+persianDate.isSame("1399/6/1 11:20"); // false
+// without parameter compares with now
+persianDate.isSame(); // false
+```
+
+### isBefore()
+
+checks this date is before the another date
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isBefore(1399, 6, 1, 12, 20, 30, 235); // false
+persianDate.isBefore(new PersianDate()); // true
+persianDate.isBefore({
+	year: 1399,
+	month: 6,
+	date: 24,
+	hour: 11,
+	minute: 2,
+	second: 55,
+	millisecond: 112,
+}); // true
+persianDate.isBefore([1399, 6]); // false
+persianDate.isBefore("1399/6/1"); // false
+persianDate.isBefore("1399/6/1 11:20"); // true
+// without parameter compares with now
+persianDate.isBefore(); // true
+```
+
+### isAfter()
+
+checks this date is after the another date
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isAfter(1399, 6, 1, 12, 20, 30, 235); // false
+persianDate.isAfter(new PersianDate()); // false
+persianDate.isAfter({
+	year: 1399,
+	month: 5,
+	date: 18,
+	hour: 5,
+	minute: 2,
+	second: 55,
+	millisecond: 112,
+}); // true
+persianDate.isAfter([1399, 6]); // false
+persianDate.isAfter("1399/6/1"); // false
+persianDate.isAfter("1399/6/1 13:20"); // true
+// without parameter compares with now
+persianDate.isAfter(); // false
+```
+
+## License
+
+Persianate is available under the [MIT](https://opensource.org/licenses/MIT) license.
