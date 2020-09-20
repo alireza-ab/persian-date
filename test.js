@@ -1,5 +1,5 @@
 const PersianDate = require('./dist/PersianDate.js');
-// import PersianDate from './dist/PersianDate.js'
+// import PersianDate from './src/PersianDate.js'
 
 let persianDate = new PersianDate();
 
@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 6,
-    date: 24
+    date: 30
 }
 
 test('create date and return now', () => {
@@ -828,4 +828,144 @@ test('isAfter function', () => {
     expect(persianDate.isAfter('1399/5/1')).toBe(true)
     expect(persianDate.isAfter('1399/13/1')).toBe(false)
     expect(persianDate.isAfter()).toBe(false)
+});
+
+////////////////////--- Version 1.3.0 ---////////////////////
+
+test('toObject function without parameter', () => {
+    let object = persianDate.parse('1400/1/1').toObject();
+    expect(object.year).toBe(persianDate.year())
+    expect(object.month).toBe(persianDate.month())
+    expect(object.date).toBe(persianDate.date())
+    expect(object.hour).toBe(persianDate.hour())
+    expect(object.minute).toBe(persianDate.minute())
+    expect(object.second).toBe(persianDate.second())
+    expect(object.millisecond).toBe(persianDate.millisecond())
+});
+
+test('toObject function with string parameter', () => {
+    let object = persianDate.parse('1400/1/1').toObject('jYY-jMM');
+    expect(object.year).toBe(persianDate.year('jYY'))
+    expect(object.month).toBe(persianDate.month('jMM'))
+    expect(object.date).toBe(persianDate.date())
+    expect(object.hour).toBe(persianDate.hour())
+    expect(object.minute).toBe(persianDate.minute())
+    expect(object.second).toBe(persianDate.second())
+    expect(object.millisecond).toBe(persianDate.millisecond())
+});
+
+test('toObject function with array parameter', () => {
+    let object = persianDate.parse('1400/1/1').toObject(['jYY', 'jMM', 'jDD', 'kk', 'm', 'ss', 'C']);
+    expect(object.year).toBe(persianDate.year('jYY'))
+    expect(object.month).toBe(persianDate.month('jMM'))
+    expect(object.date).toBe(persianDate.date('jDD'))
+    expect(object.hour).toBe(persianDate.hour('kk'))
+    expect(object.minute).toBe(persianDate.minute('m'))
+    expect(object.second).toBe(persianDate.second('ss'))
+    expect(object.millisecond).toBe(persianDate.millisecond('C'))
+});
+
+test('toObject function with object parameter', () => {
+    let object = persianDate.parse('1400/1/1').toObject({
+        year: 'jYY',
+        M: 'jMM',
+        date: 'jDD',
+        hour: 'kk',
+        minutes: 'm',
+        s: 'ss',
+        ms: 'C'
+    });
+    expect(object.year).toBe(persianDate.year('jYY'))
+    expect(object.month).toBe(persianDate.month('jMM'))
+    expect(object.date).toBe(persianDate.date('jDD'))
+    expect(object.hour).toBe(persianDate.hour('kk'))
+    expect(object.minute).toBe(persianDate.minute('m'))
+    expect(object.second).toBe(persianDate.second('ss'))
+    expect(object.millisecond).toBe(persianDate.millisecond('C'))
+});
+
+test('toObject function with numeric parameter', () => {
+    let object = persianDate.parse('1400/1/1').toObject('jYY', 'jMM', 'jDD', 'kk', 'm', 'ss', 'C');
+    expect(object.year).toBe(persianDate.year('jYY'))
+    expect(object.month).toBe(persianDate.month('jMM'))
+    expect(object.date).toBe(persianDate.date('jDD'))
+    expect(object.hour).toBe(persianDate.hour('kk'))
+    expect(object.minute).toBe(persianDate.minute('m'))
+    expect(object.second).toBe(persianDate.second('ss'))
+    expect(object.millisecond).toBe(persianDate.millisecond('C'))
+});
+
+test('is Date function', () => {
+    expect(persianDate.isDate(new Date)).toBe(true)
+    expect(persianDate.isDate(new PersianDate)).toBe(false)
+    expect(persianDate.isDate('2020-1-1')).toBe(false)
+})
+
+test('is PersianDate function', () => {
+    expect(persianDate.isPersianDate(new Date)).toBe(false)
+    expect(persianDate.isPersianDate(new PersianDate)).toBe(true)
+    expect(persianDate.isPersianDate('2020-1-1')).toBe(false)
+})
+
+test('isSameOrBefore function', () => {
+    persianDate.parse('1399/6/1 12:20:30.235');
+    expect(persianDate.isSameOrBefore(1399, '6', 1, '12', 20, 30, 235)).toBe(true)
+    expect(persianDate.isSameOrBefore([1399, 7])).toBe(true)
+    expect(persianDate.isSameOrBefore(new PersianDate())).toBe(true)
+    expect(persianDate.isSameOrBefore({
+        year: 1399,
+        month: 6,
+        date: 24,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    })).toBe(true)
+    expect(persianDate.isSameOrBefore('1399/6/2')).toBe(true)
+    expect(persianDate.isSameOrBefore('1399/13/1')).toBe(false)
+    expect(persianDate.isSameOrBefore()).toBe(true)
+});
+
+test('isSameOrAfter function', () => {
+    persianDate.parse('1399/6/1 12:20:30.235');
+    expect(persianDate.isSameOrAfter(1399, '6', 1, '12', 20, 30, 235)).toBe(true)
+    expect(persianDate.isSameOrAfter([1399, 5])).toBe(true)
+    expect(persianDate.isSameOrAfter(new PersianDate())).toBe(false)
+    expect(persianDate.isSameOrAfter({
+        year: 1399,
+        month: 6,
+        date: 24,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    })).toBe(false)
+    expect(persianDate.isSameOrAfter('1399/5/1')).toBe(true)
+    expect(persianDate.isSameOrAfter('1399/13/1')).toBe(false)
+    expect(persianDate.isSameOrAfter()).toBe(false)
+});
+
+test('isBetween function', () => {
+    persianDate.parse('1399/6/1 12:20:30.235');
+    expect(persianDate.isBetween([1399, '5', 1, '12', 20, 30, 235], '1399/7/1 12:20:30.235')).toBe(true)
+    expect(persianDate.isBetween({
+        year: 1399,
+        month: 5,
+        date: 31,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    }, new PersianDate())).toBe(true)
+    expect(persianDate.isBetween()).toBe(false)
+    expect(persianDate.isBetween('1399/7/1', '1399/13/1')).toBe(false)
+    expect(persianDate.isBetween('1399/7/32', '1399/12/1')).toBe(false)
+    expect(persianDate.isBetween('1399/7', '1399/5')).toBe(false)
+    expect(persianDate.isBetween('1399', '1400')).toBe(false)
+    expect(persianDate.isBetween('1399', '1400', '[)')).toBe(true)
+    expect(persianDate.isBetween('1399/5', '1399/6', '[)')).toBe(false)
+    expect(persianDate.isBetween('1399/5', '1399/6', '(]')).toBe(true)
+    expect(persianDate.isBetween('1399/5/31', '1399/6/2')).toBe(true)
+    expect(persianDate.isBetween('1399/6/1', '1399/6/1')).toBe(false)
+    expect(persianDate.isBetween('1399/6/1', '1399/6/1', '[]')).toBe(true)
 });

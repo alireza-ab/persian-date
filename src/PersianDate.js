@@ -1008,6 +1008,7 @@ const PersianDate = function () {
     PersianDate.prototype.toString = function (format = 'date') {
         if (this.error)
             return this;
+        //TODO: add jdate and jdatetime and jtime for v2
         format = format.replace(/datetime/ig, 'jYYYY/jMM/jDD HH:mm')
             .replace(/date/ig, 'jYYYY/jMM/jDD')
             .replace(/time/ig, 'HH:mm');
@@ -1485,7 +1486,7 @@ const PersianDate = function () {
         second = +second || this.d.second;
         millisecond = +millisecond || this.d.millisecond;
         if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return dateToNumber(year, month, day, hour, minute, second, millisecond) == dateToNumber(this.d);
+            return this.dateToNumber(year, month, day, hour, minute, second, millisecond) == this.dateToNumber(this.d);
         return false;
     }
 
@@ -1525,9 +1526,9 @@ const PersianDate = function () {
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {Array} array includes year, month, date, hour, minute, second, millinsecond
      */
-    const typesToArray = (year, month, day, hour, minute, second, millisecond) => {
+    const typesToArray = function (year, month, day, hour, minute, second, millisecond) {
         if (year instanceof PersianDate) // if type of year is PersianDate
-            year = year.d;
+            year = year.toObject();
         if (typeof year == 'string' && year.search('\\/| |-|\\.|,|:') != -1) // if type of year is String
             return year.split(/[/ -.,:\\]/);
         else if (!year) // if year not defined
@@ -1581,9 +1582,18 @@ const PersianDate = function () {
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {Number} uniqe number
      */
-    const dateToNumber = (year, month, day, hour, minute, second, millisecond) => {
+    PersianDate.prototype.dateToNumber = function (year, month, day, hour, minute, second, millisecond) {
         [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
-        return (((((year * 12 + month) * 30 + day) * 24 + hour) * 60 + minute) * 60 + second) * 1000 + millisecond;
+
+        year = +year || 0;
+        month = +month || this.d.month;
+        day = +day || this.d.date;
+        hour = +hour || this.d.hour;
+        minute = +minute || this.d.minute;
+        second = +second || this.d.second;
+        millisecond = +millisecond || this.d.millisecond;
+
+        return (((((year * 12 + month) * 31 + day) * 24 + hour) * 60 + minute) * 60 + second) * 1000 + millisecond;
     }
 
     /**
@@ -1623,15 +1633,8 @@ const PersianDate = function () {
     PersianDate.prototype.isBefore = function (year, month, day, hour, minute, second, millisecond) {
         [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
 
-        year = +year || 0;
-        month = +month || this.d.month;
-        day = +day || this.d.date;
-        hour = +hour || this.d.hour;
-        minute = +minute || this.d.minute;
-        second = +second || this.d.second;
-        millisecond = +millisecond || this.d.millisecond;
         if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return dateToNumber(year, month, day, hour, minute, second, millisecond) > dateToNumber(this.d);
+            return this.dateToNumber(year, month, day, hour, minute, second, millisecond) > this.dateToNumber(this.d);
         return false;
     }
 
@@ -1674,20 +1677,242 @@ const PersianDate = function () {
             return false;
         [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
 
-        year = +year || 0;
-        month = +month || this.d.month;
-        day = +day || this.d.date;
-        hour = +hour || this.d.hour;
-        minute = +minute || this.d.minute;
-        second = +second || this.d.second;
-        millisecond = +millisecond || this.d.millisecond;
         if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return dateToNumber(year, month, day, hour, minute, second, millisecond) < dateToNumber(this.d);
+            return this.dateToNumber(year, month, day, hour, minute, second, millisecond) < this.dateToNumber(this.d);
         return false;
     }
 
-    //TODO: toObject and isDate function
-    //TODO: add feature that to use text in toString 
+    ////////////////////--- Version 1.3.0 ---////////////////////
+
+    /**
+     * checks this date is before the another date
+     * @version 1.3.0
+     * @param {String|Array|Object|Number} year - this param must be string or array or Object from date or year
+     * @param {String|Number} year.y - year of date
+     * @param {Null|String|Number} year.year - year of date
+     * @param {Null|String|Number} year.years - year of date
+     * @param {Null|String|Number} year.M - month of date
+     * @param {Null|String|Number} year.month - month of date
+     * @param {Null|String|Number} year.months - month of date
+     * @param {Null|String|Number} year.d - day of date
+     * @param {Null|String|Number} year.day - day of date
+     * @param {Null|String|Number} year.days - day of date
+     * @param {Null|String|Number} year.date - day of date
+     * @param {Null|String|Number} year.h - hour of date
+     * @param {Null|String|Number} year.hour - hour of date
+     * @param {Null|String|Number} year.hours - hour of date
+     * @param {Null|String|Number} year.m - minute of date
+     * @param {Null|String|Number} year.minute - minute of date
+     * @param {Null|String|Number} year.minutes - minute of date
+     * @param {Null|String|Number} year.s - second of date
+     * @param {Null|String|Number} year.second - second of date
+     * @param {Null|String|Number} year.seconds - second of date
+     * @param {Null|String|Number} year.ms - millisecond of date
+     * @param {Null|String|Number} year.millisecond - millisecond of date
+     * @param {Null|String|Number} year.milliseconds - millisecond of date
+     * @param {Null|Number|String} month month of date
+     * @param {Null|Number|String} day day of date
+     * @param {Null|Number|String} hour hour of date
+     * @param {Null|Number|String} minute minute of date
+     * @param {Null|Number|String} second second of date
+     * @param {Null|Number|String} millisecond millisecond of date
+     * @returns {Object} if date valid, return Object of date
+     */
+    PersianDate.prototype.toObject = function () {
+        if (this.error)
+            return this;
+        if (!arguments.length) {
+            return this.d;
+        }
+        let formats = typesToArray(...arguments);
+        return {
+            year: this.year(formats[0]),
+            month: this.month(formats[1]),
+            date: this.date(formats[2]),
+            hour: this.hour(formats[3]),
+            minute: this.minute(formats[4]),
+            second: this.second(formats[5]),
+            millisecond: this.millisecond(formats[6]),
+        }
+    }
+
+    /**
+     * checks date is a native js Date object
+     * @version 1.3.0
+     * @param {*} date date that must be checked
+     * @returns {Boolean} if date is a native js Date, return true
+     */
+    PersianDate.prototype.isDate = function (date) {
+        return date instanceof Date;
+    }
+
+    /**
+     * checks date is a PersianDate object
+     * @version 1.3.0
+     * @param {*} date date that must be checked
+     * @returns {Boolean} if date is a PersianDate, return true
+     */
+    PersianDate.prototype.isPersianDate = function (date) {
+        return date instanceof PersianDate;
+    }
+
+    /**
+         * checks this date is same or before the another date
+         * @version 1.2.0
+         * @param {PersianDate|String|Array|Object|Number} year - this param must be PersianDate or string or array or Object from date or year
+         * @param {String|Number} year.y - year of date
+         * @param {Null|String|Number} year.year - year of date
+         * @param {Null|String|Number} year.years - year of date
+         * @param {Null|String|Number} year.M - month of date
+         * @param {Null|String|Number} year.month - month of date
+         * @param {Null|String|Number} year.months - month of date
+         * @param {Null|String|Number} year.d - day of date
+         * @param {Null|String|Number} year.day - day of date
+         * @param {Null|String|Number} year.days - day of date
+         * @param {Null|String|Number} year.date - day of date
+         * @param {Null|String|Number} year.h - hour of date
+         * @param {Null|String|Number} year.hour - hour of date
+         * @param {Null|String|Number} year.hours - hour of date
+         * @param {Null|String|Number} year.m - minute of date
+         * @param {Null|String|Number} year.minute - minute of date
+         * @param {Null|String|Number} year.minutes - minute of date
+         * @param {Null|String|Number} year.s - second of date
+         * @param {Null|String|Number} year.second - second of date
+         * @param {Null|String|Number} year.seconds - second of date
+         * @param {Null|String|Number} year.ms - millisecond of date
+         * @param {Null|String|Number} year.millisecond - millisecond of date
+         * @param {Null|String|Number} year.milliseconds - millisecond of date
+         * @param {Null|Number|String} month month of date
+         * @param {Null|Number|String} day day of date
+         * @param {Null|Number|String} hour hour of date
+         * @param {Null|Number|String} minute minute of date
+         * @param {Null|Number|String} second second of date
+         * @param {Null|Number|String} millisecond millisecond of date
+         * @returns {PersianDate|‌Boolean} if date valid, return true of false
+         */
+    PersianDate.prototype.isSameOrBefore = function (year, month, day, hour, minute, second, millisecond) {
+        [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
+
+        if (this.isValid(year, month, day, hour, minute, second, millisecond))
+            return this.dateToNumber(year, month, day, hour, minute, second, millisecond) >= this.dateToNumber(this.d);
+        return false;
+    }
+
+    /**
+     * checks this date is same or after the another date
+     * @version 1.2.0
+     * @param {PersianDate|String|Array|Object|Number} year - this param must be PersianDate or string or array or Object from date or year
+     * @param {String|Number} year.y - year of date
+     * @param {Null|String|Number} year.year - year of date
+     * @param {Null|String|Number} year.years - year of date
+     * @param {Null|String|Number} year.M - month of date
+     * @param {Null|String|Number} year.month - month of date
+     * @param {Null|String|Number} year.months - month of date
+     * @param {Null|String|Number} year.d - day of date
+     * @param {Null|String|Number} year.day - day of date
+     * @param {Null|String|Number} year.days - day of date
+     * @param {Null|String|Number} year.date - day of date
+     * @param {Null|String|Number} year.h - hour of date
+     * @param {Null|String|Number} year.hour - hour of date
+     * @param {Null|String|Number} year.hours - hour of date
+     * @param {Null|String|Number} year.m - minute of date
+     * @param {Null|String|Number} year.minute - minute of date
+     * @param {Null|String|Number} year.minutes - minute of date
+     * @param {Null|String|Number} year.s - second of date
+     * @param {Null|String|Number} year.second - second of date
+     * @param {Null|String|Number} year.seconds - second of date
+     * @param {Null|String|Number} year.ms - millisecond of date
+     * @param {Null|String|Number} year.millisecond - millisecond of date
+     * @param {Null|String|Number} year.milliseconds - millisecond of date
+     * @param {Null|Number|String} month month of date
+     * @param {Null|Number|String} day day of date
+     * @param {Null|Number|String} hour hour of date
+     * @param {Null|Number|String} minute minute of date
+     * @param {Null|Number|String} second second of date
+     * @param {Null|Number|String} millisecond millisecond of date
+     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     */
+    PersianDate.prototype.isSameOrAfter = function (year, month, day, hour, minute, second, millisecond) {
+        if (this.error)
+            return false;
+        [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
+
+
+        if (this.isValid(year, month, day, hour, minute, second, millisecond))
+            return this.dateToNumber(year, month, day, hour, minute, second, millisecond) <= this.dateToNumber(this.d);
+        return false;
+    }
+
+    /**
+     * checks this date is between the another dates
+     * @version 1.3.0
+     * @param {PersianDate|String|Array|Object} from - this param must be PersianDate or string or array or Object from date
+     * @param {String|Number} from.y - year of date
+     * @param {Null|String|Number} from.year - year of date
+     * @param {Null|String|Number} from.years - year of date
+     * @param {Null|String|Number} from.M - month of date
+     * @param {Null|String|Number} from.month - month of date
+     * @param {Null|String|Number} from.months - month of date
+     * @param {Null|String|Number} from.d - day of date
+     * @param {Null|String|Number} from.day - day of date
+     * @param {Null|String|Number} from.days - day of date
+     * @param {Null|String|Number} from.date - day of date
+     * @param {Null|String|Number} from.h - hour of date
+     * @param {Null|String|Number} from.hour - hour of date
+     * @param {Null|String|Number} from.hours - hour of date
+     * @param {Null|String|Number} from.m - minute of date
+     * @param {Null|String|Number} from.minute - minute of date
+     * @param {Null|String|Number} from.minutes - minute of date
+     * @param {Null|String|Number} from.s - second of date
+     * @param {Null|String|Number} from.second - second of date
+     * @param {Null|String|Number} from.seconds - second of date
+     * @param {Null|String|Number} from.ms - millisecond of date
+     * @param {Null|String|Number} from.millisecond - millisecond of date
+     * @param {Null|String|Number} from.milliseconds - millisecond of date
+     * @param {PersianDate|String|Array|Object} to - this param must be PersianDate or string or array or Object from date
+     * @param {String|Number} to.y - year of date
+     * @param {Null|String|Number} to.year - year of date
+     * @param {Null|String|Number} to.years - year of date
+     * @param {Null|String|Number} to.M - month of date
+     * @param {Null|String|Number} to.month - month of date
+     * @param {Null|String|Number} to.months - month of date
+     * @param {Null|String|Number} to.d - day of date
+     * @param {Null|String|Number} to.day - day of date
+     * @param {Null|String|Number} to.days - day of date
+     * @param {Null|String|Number} to.date - day of date
+     * @param {Null|String|Number} to.h - hour of date
+     * @param {Null|String|Number} to.hour - hour of date
+     * @param {Null|String|Number} to.hours - hour of date
+     * @param {Null|String|Number} to.m - minute of date
+     * @param {Null|String|Number} to.minute - minute of date
+     * @param {Null|String|Number} to.minutes - minute of date
+     * @param {Null|String|Number} to.s - second of date
+     * @param {Null|String|Number} to.second - second of date
+     * @param {Null|String|Number} to.seconds - second of date
+     * @param {Null|String|Number} to.ms - millisecond of date
+     * @param {Null|String|Number} to.millisecond - millisecond of date
+     * @param {Null|String|Number} to.milliseconds - millisecond of date
+     * @param {String} method - determines that consider the dates themselves
+     * @returns {PersianDate|‌Boolean} if date valid, return true or false
+     */
+    PersianDate.prototype.isBetween = function (from, to, method = '()') {
+        if (this.error)
+            return false;
+        from = typesToArray(from);
+        to = typesToArray(to);
+
+        if (!(this.isValid(...from) && this.isValid(...to)))
+            return false;
+
+        return (method[0] === '[' ? this.isSameOrAfter(from) : this.isAfter(from)) &&
+            (method[1] === ']' ? this.isSameOrBefore(to) : this.isBefore(to));
+    }
+
+
+    //TODO: add feature that to use text in toString for v2
+    //TODO: add locale for v2
+    //TODO: add ago function (4 years ago) for v2
+
 
     if (arguments.length)
         this.setDate(...arguments);

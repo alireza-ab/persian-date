@@ -8,6 +8,9 @@ A lightweight but professional javascript library for working with Persian dates
 | :-----------------: | :-------------------------: | :-------------: | :---------------------: | :-----------------------: | :-----------------: | --------------- | ------------------- |
 
 
+//TODO: send center of page this table
+//TODO: add versioning to new functions
+
 ## Install
 
 ```shell
@@ -290,6 +293,15 @@ inspired by [moment](https://momentjs.com/)
 
 ---
 
+### toObject()
+
+```javascript
+persianDate.parse("1400/1/1");
+persianDate.toObject(); // { year: 1400, month:1, date:1, hour:0, minute:0, second:0, millisecond:0 }
+persianDate.toObject("YYYY-MM-DD"); // { year: 2021, month:'03', date:21, hour:0, minute:0, second:0, millisecond:0 }
+persianDate.toObject(["YYYY", "MM", "DD"]); // { year: 2021, month:'03', date:21, hour:0, minute:0, second:0, millisecond:0 }
+```
+
 ## Query
 
 ### isLeapYear()
@@ -315,6 +327,24 @@ persianDate.isValidDate(1399, 7, 31); // false
 // check time
 persianDate.parse("1400/1/1 25:00:00").isValidTime(); // false
 persianDate.isValidTime(12, 5, 0, 0); // true
+```
+
+### isDate()
+
+checks date is a native js Date object
+
+```javascript
+persianDate.isDate("1400/1/1 00:00:00.0"); // false
+persianDate.isDate(new Date()); // true
+```
+
+### isPersianDate()
+
+checks date is a PersianDate object
+
+```javascript
+persianDate.isPersianDate("1400/1/1 00:00:00.0"); // false
+persianDate.isDate(new PersianDate()); // true
 ```
 
 ### isSame()
@@ -387,6 +417,94 @@ persianDate.isAfter("1399/6/1"); // false
 persianDate.isAfter("1399/6/1 13:20"); // true
 // without parameter compares with now
 persianDate.isAfter(); // false
+```
+
+### isSameOrBefore()
+
+checks this date is same or before the another date
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isSameOrBefore(1399, 6, 1, 12, 20, 30, 235); // true
+persianDate.isSameOrBefore(new PersianDate()); // true
+persianDate.isSameOrBefore({
+	year: 1399,
+	month: 6,
+	date: 24,
+	hour: 11,
+	minute: 2,
+	second: 55,
+	millisecond: 112,
+}); // true
+persianDate.isSameOrBefore([1399, 6]); // true
+persianDate.isSameOrBefore("1399/6/1"); // true
+persianDate.isSameOrBefore("1399/6/1 11:20"); // true
+// without parameter compares with now
+persianDate.isSameOrBefore(); // true
+```
+
+### isSameOrAfter()
+
+checks this date is same or after the another date
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isSameOrAfter(1399, 6, 1, 12, 20, 30, 235); // true
+persianDate.isSameOrAfter(new PersianDate()); // false
+persianDate.isSameOrAfter({
+	year: 1399,
+	month: 5,
+	date: 18,
+	hour: 5,
+	minute: 2,
+	second: 55,
+	millisecond: 112,
+}); // true
+persianDate.isSameOrAfter([1399, 6]); // true
+persianDate.isSameOrAfter("1399/6/1"); // true
+persianDate.isSameOrAfter("1399/6/1 13:20"); // true
+// without parameter compares with now
+persianDate.isSameOrAfter(); // false
+```
+
+### isBetween()
+
+checks this date is between the another dates
+
+```javascript
+persianDate.parse("1399/6/1 12:20:30.235");
+persianDate.isBetween(
+	[1399, "5", 1, "12", 20, 30, 235],
+	"1399/7/1 12:20:30.235"
+); // true
+persianDate.isBetween(
+	{
+		year: 1399,
+		month: 5,
+		date: 31,
+		hour: 11,
+		minute: 2,
+		second: 55,
+		millisecond: 112,
+	},
+	new PersianDate()
+); // true
+persianDate.isBetween(); // false
+// if date given is not valid return false
+persianDate.isBetween("1399/7/1", "1399/13/1"); // false
+persianDate.isBetween("1399/7/32", "1399/12/1"); // false
+// the larger date not must be a first argument
+persianDate.isBetween("1399/7", "1399/5"); // false
+// if you just send year to the method, this compare just on year
+persianDate.isBetween("1399", "1400"); // false
+// the three argument determines the method of compare
+// [ or ] compares this date with the date itself
+persianDate.isBetween("1399", "1400", "[)"); // true
+persianDate.isBetween("1399/5", "1399/6", "[)"); // false
+persianDate.isBetween("1399/5", "1399/6", "(]"); // true
+persianDate.isBetween("1399/5/31", "1399/6/2"); // true
+persianDate.isBetween("1399/6/1", "1399/6/1"); // false
+persianDate.isBetween("1399/6/1", "1399/6/1", "[]"); // true
 ```
 
 ## License
