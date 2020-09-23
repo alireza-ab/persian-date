@@ -9,8 +9,8 @@ let persianDate = new PersianDate();
 
 const now = {
     year: 1399,
-    month: 6,
-    date: 30
+    month: 7,
+    date: 2
 }
 
 test('create date and return now', () => {
@@ -968,4 +968,80 @@ test('isBetween function', () => {
     expect(persianDate.isBetween('1399/5/31', '1399/6/2')).toBe(true)
     expect(persianDate.isBetween('1399/6/1', '1399/6/1')).toBe(false)
     expect(persianDate.isBetween('1399/6/1', '1399/6/1', '[]')).toBe(true)
+});
+
+////////////////////--- Version 1.4.0 ---////////////////////
+
+test('min function', () => {
+    expect(persianDate.min([1399, '5', 1, '12', 20, 30, 235], '1399/7/1 12:20:30.235')).toEqual([1399, '5', 1, '12', 20, 30, 235])
+    expect(persianDate.min({
+        year: 1399,
+        month: 5,
+        date: 31,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    }, new PersianDate())).toEqual({
+        year: 1399,
+        month: 5,
+        date: 31,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    })
+    expect(persianDate.min()).toBe(false)
+    expect(persianDate.min('1399/7/1', '1399/13/1')).toBe(false)
+    expect(persianDate.min('1399/7/1', '1399/12/1')).toBe('1399/7/1')
+    expect(persianDate.min('1399/10/21', '1399/10/21')).toBe('1399/10/21')
+    expect(persianDate.min('1399/7/32', '1399/12/1')).toBe(false)
+    expect(persianDate.min('1399/7', '1399/5')).toBe('1399/5')
+    expect(persianDate.min('1399', '1400')).toBe('1399')
+});
+
+test('max function', () => {
+    expect(persianDate.max([1399, '5', 1, '12', 20, 30, 235], '1399/7/1 12:20:30.235')).toBe('1399/7/1 12:20:30.235')
+    expect(persianDate.max({
+        year: 1399,
+        month: 5,
+        date: 31,
+        hour: 11,
+        minute: 2,
+        second: 55,
+        millisecond: 112
+    }, new PersianDate())).toEqual(new PersianDate())
+    expect(persianDate.max()).toBe(false)
+    expect(persianDate.max('1399/7/1', '1399/13/1')).toBe(false)
+    expect(persianDate.max('1399/7/1', '1399/12/1')).toBe('1399/12/1')
+    expect(persianDate.min('1399/10/21', '1399/10/21')).toBe('1399/10/21')
+    expect(persianDate.max('1399/7/32', '1399/12/1')).toBe(false)
+    expect(persianDate.max('1399/7', '1399/5')).toBe('1399/7')
+    expect(persianDate.max('1399', '1400')).toBe('1400')
+});
+
+test('diff function', () => {
+    persianDate.parse('1399/6/1 12:20:30.235');
+    expect(persianDate.diff([1399, '5', 1, '12', 20, 30, 235], 'year')).toBe(0)
+    expect(persianDate.diff([1399, '5', 1, '12', 20, 30, 235], 'month')).toBe(1)
+    expect(persianDate.diff({
+        year: 1399,
+        month: 5,
+        date: 1,
+        hour: 12,
+        minute: 20,
+        second: 30,
+        millisecond: 235
+    }, 'date')).toBe(31)
+    expect(persianDate.diff('1399/5/1 12:20:30.235', 'hour')).toBe(31 * 24)
+    expect(persianDate.diff(persianDate.clone().month(5), 'minute')).toBe(31 * 24 * 60)
+    expect(persianDate.diff('1399/5/1 12:20:30.235', 'second')).toBe(31 * 24 * 3600)
+    expect(persianDate.diff('1399/5/1 12:20:30.235', 'millisecond')).toBe(31 * 24 * 3600000)
+    expect(persianDate.diff('1399/5/1 12:20:30.235')).toBe(31 * 24 * 3600000)
+    expect(persianDate.diff(null, 'date')).toBe(persianDate.diff(persianDate.clone().now().toObject(), 'date'))
+    persianDate.parse('1398/1/10');
+    expect(persianDate.diff('1398/6/10', 'month')).toBe(-5)
+    expect(persianDate.diff('1398/2/1', 'month', true)).toBeGreaterThan(-1)
+    persianDate.parse('1400');
+    expect(persianDate.diff('1399/12', 'date')).toBe(30)
 });

@@ -8,9 +8,6 @@ A lightweight but professional javascript library for working with Persian dates
 | :-----------------: | :-------------------------: | :-------------: | :---------------------: | :-----------------------: | :-----------------: | --------------- | ------------------- |
 
 
-//TODO: send center of page this table
-//TODO: add versioning to new functions
-
 ## Install
 
 ```shell
@@ -505,6 +502,40 @@ persianDate.isBetween("1399/5", "1399/6", "(]"); // true
 persianDate.isBetween("1399/5/31", "1399/6/2"); // true
 persianDate.isBetween("1399/6/1", "1399/6/1"); // false
 persianDate.isBetween("1399/6/1", "1399/6/1", "[]"); // true
+```
+
+## Operation
+
+### min()
+
+Get the minimum date between multiple dates
+
+```javascript
+let nowruz = persianDate.clone().parse("1400/1/1");
+persianDate.min(nowruz, [1399, 7, 2], { y: 1399, M: 10, d: 1 }, "1399-7-1"); // 1399-7-1
+// if parameters not send, returns false
+persianDate.min(); // false
+```
+
+### max()
+
+Get the maximum date between multiple dates
+
+```javascript
+let nowruz = persianDate.clone().parse("1400/1/1");
+persianDate.max(nowruz, [1399, 7, 2], { y: 1399, M: 10, d: 1 }, "1399-7-1"); // nowruz
+// if parameters not send, returns false
+persianDate.max(); // false
+```
+
+### diff()
+
+get the diffrence between two date
+
+```javascript
+persianDate.parse("1400/2/1");
+persianDate.diff("1400/1/1", "month"); // 1
+persianDate.diff("1400/1/1", "date"); // 31
 ```
 
 ## License
