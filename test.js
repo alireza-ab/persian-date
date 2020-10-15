@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 7,
-    date: 2
+    date: 24
 }
 
 test('create date and return now', () => {
@@ -1044,4 +1044,69 @@ test('diff function', () => {
     expect(persianDate.diff('1398/2/1', 'month', true)).toBeGreaterThan(-1)
     persianDate.parse('1400');
     expect(persianDate.diff('1399/12', 'date')).toBe(30)
+});
+
+////////////////////--- Version 1.5.0 ---////////////////////
+
+test('toArray function without parameter', () => {
+    let array = persianDate.parse('1400/1/1').toArray();
+    expect(array[0]).toBe(persianDate.year())
+    expect(array[1]).toBe(persianDate.month())
+    expect(array[2]).toBe(persianDate.date())
+    expect(array[3]).toBe(persianDate.hour())
+    expect(array[4]).toBe(persianDate.minute())
+    expect(array[5]).toBe(persianDate.second())
+    expect(array[6]).toBe(persianDate.millisecond())
+});
+
+test('toArray function with string parameter', () => {
+    let array = persianDate.parse('1400/1/1').toArray('jYY-jMM');
+    expect(array[0]).toBe(persianDate.year('jYY'))
+    expect(array[1]).toBe(persianDate.month('jMM'))
+    expect(array[2]).toBe(persianDate.date())
+    expect(array[3]).toBe(persianDate.hour())
+    expect(array[4]).toBe(persianDate.minute())
+    expect(array[5]).toBe(persianDate.second())
+    expect(array[6]).toBe(persianDate.millisecond())
+});
+
+test('toArray function with array parameter', () => {
+    let array = persianDate.parse('1400/1/1').toArray(['jYY', 'jMM', 'jDD', 'kk', 'm', 'ss', 'C']);
+    expect(array[0]).toBe(persianDate.year('jYY'))
+    expect(array[1]).toBe(persianDate.month('jMM'))
+    expect(array[2]).toBe(persianDate.date('jDD'))
+    expect(array[3]).toBe(persianDate.hour('kk'))
+    expect(array[4]).toBe(persianDate.minute('m'))
+    expect(array[5]).toBe(persianDate.second('ss'))
+    expect(array[6]).toBe(persianDate.millisecond('C'))
+});
+
+test('toArray function with object parameter', () => {
+    let array = persianDate.parse('1400/1/1').toArray({
+        year: 'jYY',
+        M: 'jMM',
+        date: 'jDD',
+        hour: 'kk',
+        minutes: 'm',
+        s: 'ss',
+        ms: 'C'
+    });
+    expect(array[0]).toBe(persianDate.year('jYY'))
+    expect(array[1]).toBe(persianDate.month('jMM'))
+    expect(array[2]).toBe(persianDate.date('jDD'))
+    expect(array[3]).toBe(persianDate.hour('kk'))
+    expect(array[4]).toBe(persianDate.minute('m'))
+    expect(array[5]).toBe(persianDate.second('ss'))
+    expect(array[6]).toBe(persianDate.millisecond('C'))
+});
+
+test('toArray function with numeric parameter', () => {
+    let array = persianDate.parse('1400/1/1').toArray('jYY', 'jMM', 'jDD', 'kk', 'm', 'ss', 'C');
+    expect(array[0]).toBe(persianDate.year('jYY'))
+    expect(array[1]).toBe(persianDate.month('jMM'))
+    expect(array[2]).toBe(persianDate.date('jDD'))
+    expect(array[3]).toBe(persianDate.hour('kk'))
+    expect(array[4]).toBe(persianDate.minute('m'))
+    expect(array[5]).toBe(persianDate.second('ss'))
+    expect(array[6]).toBe(persianDate.millisecond('C'))
 });

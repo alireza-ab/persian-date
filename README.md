@@ -299,6 +299,15 @@ persianDate.toObject("YYYY-MM-DD"); // { year: 2021, month:'03', date:21, hour:0
 persianDate.toObject(["YYYY", "MM", "DD"]); // { year: 2021, month:'03', date:21, hour:0, minute:0, second:0, millisecond:0 }
 ```
 
+### toArray()
+
+```javascript
+persianDate.parse("1400/1/1");
+persianDate.toArray(); // [1400, 1, 1, 0, 0, 0, 0]
+persianDate.toArray("YYYY-MM-DD"); // [2021, '03', 21, 0, 0, 0, 0]
+persianDate.toArray(["YYYY", "MM", "DD"]); // [2021, '03', 21, 0, 0, 0, 0]
+```
+
 ## Query
 
 ### isLeapYear()
