@@ -1585,6 +1585,24 @@ const PersianDate = function () {
     }
 
     /**
+     * convert the date to the unique number
+     * @since 1.2.0
+     * @param {Array} date - date that's want to number
+     * @returns {Number} uniqe number
+     */
+    const dateToNumber = (date) => {
+        let year = +date[0] || 0;
+        let month = +date[1] || 1;
+        let day = +date[2] || 1;
+        let hour = +date[3] || 0;
+        let minute = +date[4] || 0;
+        let second = +date[5] || 0;
+        let millisecond = +date[6] || 0;
+
+        return (((((year * 12 + month) * 31 + day) * 24 + hour) * 60 + minute) * 60 + second) * 1000 + millisecond;
+    }
+
+    /**
      * checks this date is before the another date
      * @since 1.2.0
      * @param {PersianDate|String|Array|Object|Number} year - this param must be PersianDate or string or array or Object from date or year
@@ -2041,6 +2059,7 @@ const PersianDate = function () {
      * @throws {Boolean} if dates invalid, returns false
      */
     PersianDate.prototype.diff = function (date, unit, asFloat = false) {
+        //FIXME:
         if (this.error)
             return false;
         date = typesToArray(date)
@@ -2049,18 +2068,18 @@ const PersianDate = function () {
             case 'y':
             case 'year':
             case 'years':
-                result = result / 1000 / 60 / 60 / 24 / (this.isLeapYear(date[0]) ? 366 : 365)
+                result = Math.ceil(result / 1000 / 60 / 60 / 24) / (this.isLeapYear(date[0]) ? 366 : 365)
                 break;
             case 'M':
             case 'month':
             case 'months':
-                result = result / 1000 / 60 / 60 / 24 / 31
+                result = Math.ceil(result / 1000 / 60 / 60 / 24) / (this.getDaysInMonth(date[0], date[1]))
                 break;
             case 'd':
             case 'date':
             case 'day':
             case 'days':
-                result = result / 1000 / 60 / 60 / 24
+                result = Math.ceil(result / 1000 / 60 / 60 / 24)
                 break;
             case 'h':
             case 'hour':
@@ -2085,7 +2104,6 @@ const PersianDate = function () {
         }
         return asFloat ? result : Math.floor(result)
     }
-
 
     ////////////////////--- Version 1.5.0 ---////////////////////
 
@@ -2147,6 +2165,7 @@ const PersianDate = function () {
     //TODO: add ago function (4 years ago) for v2
     //TODO: thats function not needed to date without create PersianDate must working for v2
     //TODO: add versioning in doc for new functions
+    //TODO: git rm -rf --cached .
 
 
     if (arguments.length)

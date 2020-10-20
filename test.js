@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 7,
-    date: 24
+    date: 29
 }
 
 test('create date and return now', () => {
@@ -1044,6 +1044,7 @@ test('diff function', () => {
     expect(persianDate.diff('1398/2/1', 'month', true)).toBeGreaterThan(-1)
     persianDate.parse('1400');
     expect(persianDate.diff('1399/12', 'date')).toBe(30)
+    expect(new PersianDate().parse('1400/2').diff('1400/1', 'month')).toBe(1)
 });
 
 ////////////////////--- Version 1.5.0 ---////////////////////

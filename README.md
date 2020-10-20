@@ -2,7 +2,7 @@
 
 A lightweight but professional javascript library for working with Persian dates.
 
-[![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://img.shields.io/npm/v/@alireza-ab/persian-date)
+[![npm version](https://www.npmjs.com/package/@alireza-ab/persian-date)](https://img.shields.io/npm/v/@alireza-ab/persian-date)
 
 | [Install](#Install) | [Get Started](#get-started) | [Usage](#Usage) | [Set - Get](#set---get) | [Manipulate](#manipulate) | [Display](#display) | [Query](#query) | [License](#license) |
 | :-----------------: | :-------------------------: | :-------------: | :---------------------: | :-----------------------: | :-----------------: | --------------- | ------------------- |
