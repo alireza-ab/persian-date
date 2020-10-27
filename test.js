@@ -650,6 +650,9 @@ test('toString function', () => {
     expect(persianDate.toString('CCCC|CCC|c')).toBe('856|856|856')
     expect(persianDate.toString('t')).toBe('1616329496856')
     expect(persianDate.toString('aa|a|A|jaa|ja|jA')).toBe('P.M.|pm|PM|ب.ظ|ب ظ|بعد از ظهر')
+    expect(persianDate.toString('`the value is:` date')).toBe('the value is: 1400/01/01')
+    expect(persianDate.toString('jYYYY `is a good year.`')).toBe('1400 is a good year.')
+    expect(persianDate.toString("`it's` h `O'Clock`")).toBe("it's 3 O'Clock")
 });
 
 test('year function', () => {

@@ -1034,7 +1034,11 @@ const PersianDate = function () {
     PersianDate.prototype.toString = function (format = 'date') {
         if (this.error)
             return this;
-        //TODO: add jdate and jdatetime and jtime for v2
+        let texts = [];
+        format = format.replace(REGEX['betweenBacktick'], (matched, text) => {
+            texts.push(text)
+            return '###';
+        })
         format = format.replace(/datetime/ig, 'jYYYY/jMM/jDD HH:mm')
             .replace(/date/ig, 'jYYYY/jMM/jDD')
             .replace(/time/ig, 'HH:mm');
@@ -1068,6 +1072,9 @@ const PersianDate = function () {
                 dateString += TIMETYPE(this.d.hour, i);
             format = format.substr(format.indexOf(i) + i.length);
         }
+        dateString += format;
+        for (let i = 0; i < texts.length; i++)
+            dateString = dateString.replace('###', texts[i])
         return String(dateString);
     }
 
@@ -1565,7 +1572,7 @@ const PersianDate = function () {
     const typesToArray = function (year, month, day, hour, minute, second, millisecond) {
         if (year instanceof PersianDate) // if type of year is PersianDate
             year = year.toObject();
-        if (typeof year == 'string' && year.search('\\/| |-|\\.|,|:') != -1) // if type of year is String
+        if (typeof year == 'string' && year.search(REGEX['separators']) != -1) // if type of year is String
             return year.split(/[/ -.,:\\]/);
         else if (!year) // if year not defined
             return gtj(); // return now
@@ -2059,7 +2066,6 @@ const PersianDate = function () {
      * @throws {Boolean} if dates invalid, returns false
      */
     PersianDate.prototype.diff = function (date, unit, addOne = false) {
-        //FIXME:
         if (this.error)
             return false;
         date = typesToArray(date)
@@ -2166,6 +2172,7 @@ const PersianDate = function () {
     //TODO: thats function not needed to date without create PersianDate must working for v2
     //TODO: add versioning in doc for new functions
     //TODO: git rm -rf --cached .
+    //TODO: in doc, add jt, jh, jm and ...
 
 
     if (arguments.length)
