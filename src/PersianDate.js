@@ -2058,7 +2058,7 @@ const PersianDate = function () {
      * @returns {Number} diffrence
      * @throws {Boolean} if dates invalid, returns false
      */
-    PersianDate.prototype.diff = function (date, unit, asFloat = false) {
+    PersianDate.prototype.diff = function (date, unit, addOne = false) {
         //FIXME:
         if (this.error)
             return false;
@@ -2068,12 +2068,12 @@ const PersianDate = function () {
             case 'y':
             case 'year':
             case 'years':
-                result = Math.ceil(result / 1000 / 60 / 60 / 24) / (this.isLeapYear(date[0]) ? 366 : 365)
+                result = this.year() - date[0];
                 break;
             case 'M':
             case 'month':
             case 'months':
-                result = Math.ceil(result / 1000 / 60 / 60 / 24) / (this.getDaysInMonth(date[0], date[1]))
+                result = (this.year() * 12 + this.month()) - (+date[0] * 12 + +date[1])
                 break;
             case 'd':
             case 'date':
@@ -2102,7 +2102,7 @@ const PersianDate = function () {
             default:
                 result = result
         }
-        return asFloat ? result : Math.floor(result)
+        return addOne ? result + (result >= 0 ? 1 : -1) : result
     }
 
     ////////////////////--- Version 1.5.0 ---////////////////////

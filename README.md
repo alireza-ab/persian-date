@@ -549,4 +549,4 @@ persianDate.diff("1400/1/1", "date"); // 31
 
 ## License
 
-Persianate is available under the [MIT](https://opensource.org/licenses/MIT) license.
+PersianDate is available under the [MIT](https://opensource.org/licenses/MIT) license.
