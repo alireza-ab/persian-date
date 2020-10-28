@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 8,
-    date: 6
+    date: 7
 }
 
 test('create date and return now', () => {
@@ -1113,4 +1113,27 @@ test('toArray function with numeric parameter', () => {
     expect(array[4]).toBe(persianDate.minute('m'))
     expect(array[5]).toBe(persianDate.second('ss'))
     expect(array[6]).toBe(persianDate.millisecond('C'))
+});
+
+////////////////////--- Version 2.0.0 ---////////////////////
+
+test('diffForHumans function', () => {
+    persianDate.parse('1400/1/1');
+    expect(persianDate.diffForHumans('1350/1/1')).toBe('50 سال آینده')
+    expect(persianDate.diffForHumans('1450/1/1')).toBe('50 سال پیش')
+    expect(persianDate.diffForHumans('1399/1/1')).toBe('1 سال آینده')
+    expect(persianDate.diffForHumans('1401/1/1')).toBe('1 سال پیش')
+    expect(persianDate.diffForHumans('1399/5/1')).toBe('8 ماه آینده')
+    expect(persianDate.diffForHumans('1400/5/1')).toBe('4 ماه پیش')
+    expect(persianDate.diffForHumans('1399/12/15')).toBe('16 روز آینده')
+    expect(persianDate.diffForHumans('1400/1/15')).toBe('14 روز پیش')
+    expect(persianDate.diffForHumans('1399/12/30 20:00')).toBe('4 ساعت آینده')
+    expect(persianDate.diffForHumans('1400/1/1 4:00')).toBe('4 ساعت پیش')
+    expect(persianDate.diffForHumans('1399/12/30 23:20')).toBe('40 دقیقه آینده')
+    expect(persianDate.diffForHumans('1400/1/1 00:40')).toBe('40 دقیقه پیش')
+    expect(persianDate.diffForHumans('1399/12/30 23:59:10')).toBe('1 دقیقه آینده')
+    expect(persianDate.diffForHumans('1400/1/1 00:00:50')).toBe('1 دقیقه پیش')
+    expect(persianDate.diffForHumans('1399/12/30 23:59:30')).toBe('لحظاتی آینده')
+    expect(persianDate.diffForHumans('1400/1/1 00:00:30')).toBe('لحظاتی پیش')
+    expect(persianDate.diffForHumans('1400/1/1')).toBe('هم اکنون')
 });

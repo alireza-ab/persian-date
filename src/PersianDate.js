@@ -2090,17 +2090,17 @@ const PersianDate = function () {
             case 'h':
             case 'hour':
             case 'hours':
-                result = result / 1000 / 60 / 60
+                result = Math.ceil(result / 1000 / 60 / 60)
                 break;
             case 'm':
             case 'minute':
             case 'minutes':
-                result = result / 1000 / 60
+                result = Math.ceil(result / 1000 / 60)
                 break;
             case 's':
             case 'second':
             case 'seconds':
-                result = result / 1000
+                result = Math.ceil(result / 1000)
                 break;
             case 'ms':
             case 'millisecond':
@@ -2166,9 +2166,41 @@ const PersianDate = function () {
         ]
     }
 
-    //TODO: add feature that to use text in toString for v2
+    ////////////////////--- Version 2.0.0 ---////////////////////
+
+    /**
+     * return the object of PersianDate
+     * @since 2.0.0
+     * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
+     * @returns {Object} if date valid, return Object of date
+     * @throws {PersianDate} if date invalid return class with error property with error property
+     */
+    PersianDate.prototype.diffForHumans = function (date, suffix = true) {
+        if (this.error)
+            return this;
+
+        let result = this.diff(date, 's');
+        let prefix = result > 0 ? 'آینده' : 'پیش';
+        result = Math.abs(result);
+        if (result == 0)
+            return 'هم اکنون';
+        else if (result < 45)
+            result = 'لحظاتی';
+        else if ((result /= 60) < 45) // divide by 60, for getting minute
+            result = Math.round(result) + ' ' + 'دقیقه';
+        else if ((result /= 60) < 23.5) // divide by 60, for getting hour
+            result = Math.round(result) + ' ' + 'ساعت';
+        else if ((result /= 24) < 26) // divide by 24, for getting day
+            result = Math.round(result) + ' ' + 'روز';
+        else if (result < 320)
+            result = Math.round(result / 30) + ' ' + 'ماه';
+        else
+            result = Math.round(result / 365) + ' ' + 'سال';
+        return result + ' ' + (suffix ? prefix : '');
+    }
+
+    //TODO: change subtract to sub
     //TODO: add locale for v2
-    //TODO: add ago function (4 years ago) for v2
     //TODO: thats function not needed to date without create PersianDate must working for v2
     //TODO: add versioning in doc for new functions
     //TODO: git rm -rf --cached .
