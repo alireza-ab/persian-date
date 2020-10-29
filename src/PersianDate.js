@@ -549,7 +549,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addYear = function (year = 1, checkDate = true) {
-        if (!year || this.error)
+        if (this.error)
+            return this.error;
+        if (!year)
             return this;
         if (year < 0) // if the number was negative, send to subYear method
             return this.subYear(Math.abs(year));
@@ -568,7 +570,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMonth = function (month = 1, checkDate = true) {
-        if (!month || this.error)
+        if (this.error)
+            return this.error;
+        if (!month)
             return this;
         if (month < 0) // if the number was negative, send to subMonth method
             return this.subMonth(Math.abs(month));
@@ -604,7 +608,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addDay = function (day = 1, checkDate = true) {
-        if (!day || this.error)
+        if (this.error)
+            return this.error;
+        if (!day)
             return this;
         if (day < 0) // if the number was negative, send to subDay method
             return this.subDay(Math.abs(day));
@@ -640,7 +646,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addQuarter = function (quarter = 1, checkDate = true) {
-        if (!quarter || this.error)
+        if (this.error)
+            return this.error;
+        if (!quarter)
             return this;
         if (quarter < 0) // if the number was negative, send to subQuarter method
             return this.subQuarter(Math.abs(quarter));
@@ -657,7 +665,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addWeek = function (week = 1, checkDate = true) {
-        if (!week || this.error)
+        if (this.error)
+            return this.error;
+        if (!week)
             return this;
         if (week < 0) // if the number was negative, send to subWeek method
             return this.subWeek(Math.abs(week));
@@ -674,7 +684,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addHour = function (hour = 1, checkDate = true) {
-        if (!hour || this.error)
+        if (this.error)
+            return this.error;
+        if (!hour)
             return this;
         if (hour < 0) // if the number was negative, send to subHour method
             return this.subHour(Math.abs(hour));
@@ -705,7 +717,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMinute = function (minute = 1, checkDate = true) {
-        if (!minute || this.error)
+        if (this.error)
+            return this.error;
+        if (!minute)
             return this;
         if (minute < 0) // if the number was negative, send to subMinute method
             return this.subMinute(Math.abs(minute));
@@ -736,7 +750,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addSecond = function (second = 1, checkDate = true) {
-        if (!second || this.error)
+        if (this.error)
+            return this.error;
+        if (!second)
             return this;
         if (second < 0) // if the number was negative, send to subSecond method
             return this.subSecond(Math.abs(second));
@@ -767,7 +783,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMillisecond = function (millisecond = 1, checkDate = true) {
-        if (!millisecond || this.error)
+        if (this.error)
+            return this.error;
+        if (!millisecond)
             return this;
         if (millisecond < 0) // if the number was negative, send to subMillisecond method
             return this.subMillisecond(Math.abs(millisecond));
@@ -798,7 +816,7 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
-        if (!year || this.error)
+        if (!year)
             return this;
         this.d.year -= Math.abs(year); //plus sign before a variable, convert variable to int
         while (checkDate && !this.isValidDate())
@@ -815,7 +833,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMonth = function (month = 1, checkDate = true) {
-        if (!month || this.error)
+        if (this.error)
+            return this.error;
+        if (!month)
             return this;
         month = Math.abs(month); //plus sign before a variable, convert variable to int
         let pastMonth = this.d.month; //pastMonth -> Number of month that is past
@@ -848,7 +868,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subDay = function (day = 1, checkDate = true) {
-        if (!day || this.error)
+        if (this.error)
+            return this.error;
+        if (!day)
             return this;
         day = Math.abs(day);
         let pastDays = this.d.date; // pastDays -> Number of days that is past
@@ -880,7 +902,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subQuarter = function (quarter = 1, checkDate = true) {
-        if (!quarter || this.error)
+        if (this.error)
+            return this.error;
+        if (!quarter)
             return this;
         quarter = Math.abs(quarter);
         return this.subMonth(quarter * 3, checkDate);
@@ -895,7 +919,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subWeek = function (week = 1, checkDate = true) {
-        if (!week || this.error)
+        if (this.error)
+            return this.error;
+        if (!week)
             return this;
         week = Math.abs(week);
         return this.subDay(week * 7, checkDate);
@@ -910,7 +936,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subHour = function (hour = 1, checkDate = true) {
-        if (!hour || this.error)
+        if (this.error)
+            return this.error;
+        if (!hour)
             return this;
         hour = Math.abs(hour);
         while (hour >= 24) {
@@ -939,7 +967,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMinute = function (minute = 1, checkDate = true) {
-        if (!minute || this.error)
+        if (this.error)
+            return this.error;
+        if (!minute)
             return this;
         minute = Math.abs(minute);
         while (minute >= 60) {
@@ -968,7 +998,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subSecond = function (second = 1, checkDate = true) {
-        if (!second || this.error)
+        if (this.error)
+            return this.error;
+        if (!second)
             return this;
         second = Math.abs(second);
         while (second >= 60) {
@@ -997,7 +1029,9 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMillisecond = function (millisecond = 1, checkDate = true) {
-        if (!millisecond || this.error)
+        if (this.error)
+            return this.error;
+        if (!millisecond)
             return this;
         millisecond = Math.abs(millisecond);
         while (millisecond >= 1000) {
@@ -2071,8 +2105,10 @@ const PersianDate = function () {
      */
     PersianDate.prototype.diff = function (date, unit, addOne = false) {
         if (this.error)
-            return false;
+            return this.error;
         date = typesToArray(date)
+        if (!this.isValid(...date))
+            return 'تاریخ نامعتبر';
         let result = this.timestamp() - jtg(...date).getTime();
         switch (unit) {
             case 'y':
@@ -2184,8 +2220,9 @@ const PersianDate = function () {
     PersianDate.prototype.diffForHumans = function (date, suffix = true) {
         if (this.error)
             return this.error;
-
         let result = this.diff(date, 's');
+        if (typeof result == 'string')
+            return 'تاریخ نامعتبر'
         let prefix = result > 0 ? 'آینده' : 'پیش';
         result = Math.abs(result);
 
