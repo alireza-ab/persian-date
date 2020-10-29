@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 8,
-    date: 7
+    date: 8
 }
 
 test('create date and return now', () => {
@@ -37,7 +37,7 @@ test('now function', () => {
 test('setDate function with all parameters', () => {
     persianDate = persianDate.setDate('2020', '7', '27', '11', '5', '8', '452');
     expect(persianDate.year()).toBe(1399);
-    expect(persianDate.month()).toBe(6);
+    expect(persianDate.month()).toBe(5);
     expect(persianDate.date()).toBe(6);
     expect(persianDate.hour()).toBe(11);
     expect(persianDate.minute()).toBe(5);
@@ -395,167 +395,167 @@ test('addMillisecond function without check time', () => {
     expect(persianDate.second()).toBe(0)
 });
 
-test('subtractYear function without parameter', () => {
-    persianDate.subtractYear();
+test('subYear function without parameter', () => {
+    persianDate.subYear();
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(1)
     expect(persianDate.date()).toBe(1)
 });
 
-test('subtractYear function with parameter and check date', () => {
+test('subYear function with parameter and check date', () => {
     persianDate = persianDate.parse('1399-12-30');
-    persianDate.subtractYear('1');
+    persianDate.subYear('1');
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(29)
 });
 
-test('subtractYear function without check date', () => {
+test('subYear function without check date', () => {
     persianDate = persianDate.parse('1399-12-30');
-    persianDate.subtractYear('1', false);
+    persianDate.subYear('1', false);
     expect(persianDate.isValid()).toBe(false);
 });
 
-test('subtractMonth function without parameter', () => {
+test('subMonth function without parameter', () => {
     persianDate = persianDate.parse('1399-1-8');
-    persianDate.subtractMonth();
+    persianDate.subMonth();
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(8)
 });
 
-test('subtractMonth function with parameter and check date', () => {
+test('subMonth function with parameter and check date', () => {
     persianDate = persianDate.parse('1399-2-31');
-    persianDate.subtractMonth('4');
+    persianDate.subMonth('4');
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(10)
     expect(persianDate.date()).toBe(30)
 });
 
-test('subtractMonth function without check date', () => {
+test('subMonth function without check date', () => {
     persianDate = persianDate.parse('1399-1-31');
-    persianDate.subtractMonth('1', false);
+    persianDate.subMonth('1', false);
     expect(persianDate.isValid()).toBe(false);
 });
 
-test('subtractDay function without parameter', () => {
+test('subDay function without parameter', () => {
     persianDate = persianDate.parse('1400-1-1');
-    persianDate.subtractDay();
+    persianDate.subDay();
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(30)
 });
 
-test('subtractDay function with parameter and check date', () => {
+test('subDay function with parameter and check date', () => {
     persianDate = persianDate.parse('1399-1-30');
-    persianDate.subtractDay('32');
+    persianDate.subDay('32');
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(27)
 });
 
-test('subtractDay function without check date', () => {
+test('subDay function without check date', () => {
     persianDate = persianDate.parse('1400-1-1');
-    persianDate.subtractDay('30', false);
+    persianDate.subDay('30', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(1)
 });
 
-test('subtractQuarter function without parameter', () => {
+test('subQuarter function without parameter', () => {
     persianDate = persianDate.parse('1399-2-1');
-    persianDate.subtractQuarter();
+    persianDate.subQuarter();
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(11)
     expect(persianDate.date()).toBe(1)
 });
 
-test('subtractQuarter function with parameter and check date', () => {
+test('subQuarter function with parameter and check date', () => {
     persianDate = persianDate.parse('1399-6-31');
-    persianDate.subtractQuarter('2');
+    persianDate.subQuarter('2');
     expect(persianDate.year()).toBe(1398)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(29)
 });
 
-test('subtractQuarter function without check date', () => {
+test('subQuarter function without check date', () => {
     persianDate = persianDate.parse('1399-3-31');
-    persianDate.subtractQuarter('6', false);
+    persianDate.subQuarter('6', false);
     expect(persianDate.isValid()).toBe(false)
 });
 
-test('subtractWeek function without parameter', () => {
+test('subWeek function without parameter', () => {
     persianDate = persianDate.parse('1399-7-7');
-    persianDate.subtractWeek();
+    persianDate.subWeek();
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(31)
 });
 
-test('subtractWeek function with parameter and check date', () => {
+test('subWeek function with parameter and check date', () => {
     persianDate = persianDate.parse('1399-6-22');
-    persianDate.subtractWeek('3');
+    persianDate.subWeek('3');
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(1)
 });
 
-test('subtractWeek function without check date', () => {
+test('subWeek function without check date', () => {
     persianDate = persianDate.parse('1400-1-13');
-    persianDate.subtractWeek('6', false);
+    persianDate.subWeek('6', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(1)
 });
 
-test('subtractHour function without parameter', () => {
+test('subHour function without parameter', () => {
     persianDate = persianDate.parse('1399-6-31 00:10');
-    persianDate.subtractHour();
+    persianDate.subHour();
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(23)
     expect(persianDate.minute()).toBe(10)
 });
 
-test('subtractHour function with parameter and check time', () => {
+test('subHour function with parameter and check time', () => {
     persianDate = persianDate.parse('1399-9-4 5:10');
-    persianDate.subtractHour('78');
+    persianDate.subHour('78');
     expect(persianDate.month()).toBe(8)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(23)
     expect(persianDate.minute()).toBe(10)
 });
 
-test('subtractHour function without check time', () => {
+test('subHour function without check time', () => {
     persianDate = persianDate.parse('1399-12-1');
-    persianDate.subtractHour('24', false);
+    persianDate.subHour('24', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(11)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(0)
 });
 
-test('subtractMinute function without parameter', () => {
+test('subMinute function without parameter', () => {
     persianDate = persianDate.parse('1399-6-31 00:00');
-    persianDate.subtractMinute();
+    persianDate.subMinute();
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(23)
     expect(persianDate.minute()).toBe(59)
 });
 
-test('subtractMinute function with parameter and check time', () => {
+test('subMinute function with parameter and check time', () => {
     persianDate = persianDate.parse('1399-8-30 23:10');
-    persianDate.subtractMinute('1440');
+    persianDate.subMinute('1440');
     expect(persianDate.month()).toBe(8)
     expect(persianDate.date()).toBe(29)
     expect(persianDate.hour()).toBe(23)
     expect(persianDate.minute()).toBe(10)
 });
 
-test('subtractMinute function without check time', () => {
+test('subMinute function without check time', () => {
     persianDate = persianDate.parse('1399-12-30 00:00');
-    persianDate.subtractMinute('1', false);
+    persianDate.subMinute('1', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(29)
@@ -563,9 +563,9 @@ test('subtractMinute function without check time', () => {
     expect(persianDate.minute()).toBe(59)
 });
 
-test('subtractSecond function without parameter', () => {
+test('subSecond function without parameter', () => {
     persianDate = persianDate.parse('1399-6-31 00:00:00');
-    persianDate.subtractSecond();
+    persianDate.subSecond();
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(23)
@@ -573,9 +573,9 @@ test('subtractSecond function without parameter', () => {
     expect(persianDate.second()).toBe(59)
 });
 
-test('subtractSecond function with parameter and check time', () => {
+test('subSecond function with parameter and check time', () => {
     persianDate = persianDate.parse('1399-8-30 1:00');
-    persianDate.subtractSecond('3600');
+    persianDate.subSecond('3600');
     expect(persianDate.month()).toBe(8)
     expect(persianDate.date()).toBe(30)
     expect(persianDate.hour()).toBe(0)
@@ -583,9 +583,9 @@ test('subtractSecond function with parameter and check time', () => {
     expect(persianDate.second()).toBe(0)
 });
 
-test('subtractSecond function without check time', () => {
+test('subSecond function without check time', () => {
     persianDate = persianDate.parse('1400-1-1 00:00:00');
-    persianDate.subtractSecond('1', false);
+    persianDate.subSecond('1', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(30)
@@ -594,9 +594,9 @@ test('subtractSecond function without check time', () => {
     expect(persianDate.second()).toBe(59)
 });
 
-test('subtractMillisecond function without parameter', () => {
+test('subMillisecond function without parameter', () => {
     persianDate = persianDate.parse('1399-7-1');
-    persianDate.subtractMillisecond();
+    persianDate.subMillisecond();
     expect(persianDate.month()).toBe(6)
     expect(persianDate.date()).toBe(31)
     expect(persianDate.hour()).toBe(23)
@@ -605,9 +605,9 @@ test('subtractMillisecond function without parameter', () => {
     expect(persianDate.millisecond()).toBe(999)
 });
 
-test('subtractMillisecond function with parameter and check time', () => {
+test('subMillisecond function with parameter and check time', () => {
     persianDate = persianDate.parse('1399-8-30 00:00');
-    persianDate.subtractMillisecond('3600000');
+    persianDate.subMillisecond('3600000');
     expect(persianDate.month()).toBe(8)
     expect(persianDate.date()).toBe(29)
     expect(persianDate.hour()).toBe(23)
@@ -616,9 +616,9 @@ test('subtractMillisecond function with parameter and check time', () => {
     expect(persianDate.millisecond()).toBe(0)
 });
 
-test('subtractMillisecond function without check time', () => {
+test('subMillisecond function without check time', () => {
     persianDate = persianDate.parse('1400-1-1');
-    persianDate.subtractMillisecond('1', false);
+    persianDate.subMillisecond('1', false);
     expect(persianDate.year()).toBe(1399)
     expect(persianDate.month()).toBe(12)
     expect(persianDate.date()).toBe(30)
@@ -1005,6 +1005,7 @@ test('min function', () => {
 
 test('max function', () => {
     expect(persianDate.max([1399, '5', 1, '12', 20, 30, 235], '1399/7/1 12:20:30.235')).toBe('1399/7/1 12:20:30.235')
+    let p = new PersianDate();
     expect(persianDate.max({
         year: 1399,
         month: 5,
@@ -1013,7 +1014,7 @@ test('max function', () => {
         minute: 2,
         second: 55,
         millisecond: 112
-    }, new PersianDate())).toEqual(new PersianDate())
+    }, p)).toEqual(p)
     expect(persianDate.max()).toBe(false)
     expect(persianDate.max('1399/7/1', '1399/13/1')).toBe(false)
     expect(persianDate.max('1399/7/1', '1399/12/1')).toBe('1399/12/1')
@@ -1136,4 +1137,114 @@ test('diffForHumans function', () => {
     expect(persianDate.diffForHumans('1399/12/30 23:59:30')).toBe('لحظاتی آینده')
     expect(persianDate.diffForHumans('1400/1/1 00:00:30')).toBe('لحظاتی پیش')
     expect(persianDate.diffForHumans('1400/1/1')).toBe('هم اکنون')
+    expect(persianDate.diffForHumans('1350/1/1', false)).toBe('50 سال')
+    expect(persianDate.diffForHumans('1450/1/1', false)).toBe('50 سال')
+});
+
+test('fromJalali function', () => {
+    persianDate = persianDate.fromJalali('1399', '6', '6', '14', '45');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(14);
+    expect(persianDate.minute()).toBe(45);
+    expect(persianDate.second()).toBe(0);
+    expect(persianDate.millisecond()).toBe(0);
+});
+
+test('fromJalali function with string parameter', () => {
+    persianDate = persianDate.fromJalali('1399-6-6 14:45');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(14);
+    expect(persianDate.minute()).toBe(45);
+    expect(persianDate.second()).toBe(0);
+    expect(persianDate.millisecond()).toBe(0);
+});
+
+test('fromJalali function with array parameter', () => {
+    persianDate = persianDate.fromJalali(['1399', '6', '6', '14', '45', '4', '54']);
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(14);
+    expect(persianDate.minute()).toBe(45);
+    expect(persianDate.second()).toBe(4);
+    expect(persianDate.millisecond()).toBe(54);
+});
+
+test('fromJalali function with object parameter', () => {
+    persianDate = persianDate.fromJalali({ year: '1399', M: '6', date: '6', hour: '14', minutes: '45', s: '4', ms: '54' });
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(14);
+    expect(persianDate.minute()).toBe(45);
+    expect(persianDate.second()).toBe(4);
+    expect(persianDate.millisecond()).toBe(54);
+});
+
+test('fromJalali function without parameter', () => {
+    expect(persianDate.fromJalali()).toEqual(persianDate.now());
+});
+
+test('fromGregorian function', () => {
+    persianDate = persianDate.fromGregorian('2020', '7', '27', '11', '5', '8', '452');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(5);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(11);
+    expect(persianDate.minute()).toBe(5);
+    expect(persianDate.second()).toBe(8);
+    expect(persianDate.millisecond()).toBe(452);
+});
+
+test('fromGregorian function with string parameter', () => {
+    persianDate = persianDate.fromGregorian('2020-8-27');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(0);
+    expect(persianDate.minute()).toBe(0);
+    expect(persianDate.second()).toBe(0);
+    expect(persianDate.millisecond()).toBe(0);
+});
+
+test('fromGregorian function with Date parameter', () => {
+    let date = new Date();
+    persianDate = persianDate.fromGregorian(date);
+    expect(persianDate.year()).toBe(now.year);
+    expect(persianDate.month()).toBe(now.month);
+    expect(persianDate.date()).toBe(now.date);
+    expect(persianDate.hour()).toBe((date).getHours());
+    expect(persianDate.minute()).toBe((date).getMinutes());
+    expect(persianDate.second()).toBe((date).getSeconds());
+    expect(persianDate.millisecond()).toBe((date).getMilliseconds());
+});
+
+test('fromGregorian function with array parameter', () => {
+    persianDate = persianDate.fromGregorian(['2020', '7', '27', '11', '5', '8', '452']);
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(5);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(11);
+    expect(persianDate.minute()).toBe(5);
+    expect(persianDate.second()).toBe(8);
+    expect(persianDate.millisecond()).toBe(452);
+});
+
+test('fromGregorian function with object parameter', () => {
+    persianDate = persianDate.fromGregorian({ year: '2020', M: '7', date: '27', hour: '11', minutes: '5', s: '8', ms: '452' });
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(5);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(11);
+    expect(persianDate.minute()).toBe(5);
+    expect(persianDate.second()).toBe(8);
+    expect(persianDate.millisecond()).toBe(452);
+});
+
+test('fromGregorian function without parameter', () => {
+    expect(persianDate.fromGregorian()).toEqual(persianDate.now());
 });

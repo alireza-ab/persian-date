@@ -48,15 +48,25 @@ const PersianDate = function () {
 
     /**
      * keeps the date and time
-     * @param {Number} year - the year of date
-     * @param {Number} month - the month of date
-     * @param {Number} date - the day of month of date
-     * @param {Number} hour - the hour of time
-     * @param {Number} minute - the minute of time
-     * @param {Number} second - the second of time
-     * @param {Number} millisecond - the millisecond of time
+     * @type {Object} 
+     * @property {Number} year - the year of date
+     * @property {Number} month - the month of date
+     * @property {Number} date - the day of month of date
+     * @property {Number} hour - the hour of time
+     * @property {Number} minute - the minute of time
+     * @property {Number} second - the second of time
+     * @property {Number} millisecond - the millisecond of time
+     * @property {Number} gregorian - the gregorian date
      */
     this.d = {};
+
+    /**
+     * the calendar type
+     * @type {String}
+     * @default "jalali"
+     * @example jalali | gregorian
+     */
+    this.c = 'jalali';
 
     /**
      * Gregorian to Jalali
@@ -371,7 +381,9 @@ const PersianDate = function () {
             delete this.error;
             this.d = {};
         }
-        [this.d.year, this.d.month, this.d.date, this.d.hour, this.d.minute, this.d.second, this.d.millisecond] = gtj();
+        this.d.gregorian = new Date();
+        [this.d.year, this.d.month, this.d.date, this.d.hour, this.d.minute, this.d.second, this.d.millisecond]
+            = gtj(this.d.gregorian);
         return this;
     }
 
@@ -382,19 +394,12 @@ const PersianDate = function () {
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
     PersianDate.prototype.setDate = function (...date) {
-        if (this.error) {
-            delete this.error;
-            this.d = {};
-        }
-        date = new Date(...date);
-        if (date == 'Invalid Date')
-            return showError('تاریخ نامعتبر');
-        [this.d.year, this.d.month, this.d.date, this.d.hour, this.d.minute, this.d.second, this.d.millisecond] = gtj(date);
-        return this;
+        deprecate('"setDate" function is deprecated!\nuse "fromGregorian" function instead.')
+        return this.fromGregorian(...date);
     }
 
     /**
-     * convert a string of date or array of date or object of date to PersianDate
+     * convert a jalali or gregorian date to PersianDate instance
      * @param {String|Array|Object|Number} year - this param must be string of date or array of date or Object from date or year
      * @param {String|Number} year.y - year of date
      * @param {Null|String|Number} year.year - year of date
@@ -427,24 +432,11 @@ const PersianDate = function () {
      * @returns {PersianDate} return class with persian date
      * @throws {PersianDate} if date invalid return class with error property with error property
      */
-    PersianDate.prototype.parse = function (year, month, day, hour, minute, second, millisecond) {
-        if (this.error) {
-            delete this.error;
-            this.d = {};
-        }
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(year, month, day, hour, minute, second, millisecond)
-        //plus sign before a variable, convert variable to int
-        this.d.year = +year;
-        this.d.month = +month || 1;
-        this.d.date = +day || 1;
-        this.d.hour = +hour || 0;
-        this.d.minute = +minute || 0;
-        this.d.second = +second || 0;
-        this.d.millisecond = +millisecond || 0;
-
-        if (!this.isValid())
-            return showError('تاریخ نامعتبر');
-        return this;
+    PersianDate.prototype.parse = function (...date) {
+        if (this.c == 'jalali')
+            return this.fromJalali(...date);
+        else
+            return this.fromGregorian(...date);
     }
 
     /**
@@ -1466,7 +1458,7 @@ const PersianDate = function () {
         if (this.error)
             return this;
         if (value) {
-            return this.setDate(+String(value).trim());
+            return this.fromGregorian(+String(value).trim());
         } else {
             return jtg(...this.toArray()).getTime();
         }
@@ -1570,12 +1562,23 @@ const PersianDate = function () {
      * @returns {Array} array includes year, month, date, hour, minute, second, millinsecond
      */
     const typesToArray = function (year, month, day, hour, minute, second, millisecond) {
+        //FIXME: check PersianDate and Date in diffrent calendar 
+        if (!year) // if year not defined
+            year = gtj(); // return now
         if (year instanceof PersianDate) // if type of year is PersianDate
-            year = year.toObject();
-        if (typeof year == 'string' && year.search(REGEX['separators']) != -1) // if type of year is String
+            return year.toArray();
+        else if (year instanceof Date) // if type of year is PersianDate
+            return [
+                year.getFullYear(),
+                year.getMonth() + 1,
+                year.getDate(),
+                year.getHours(),
+                year.getMinutes(),
+                year.getSeconds(),
+                year.getMilliseconds(),
+            ];
+        else if (typeof year == 'string' && year.search(REGEX['separators']) != -1) // if type of year is String
             return year.split(/[/ -.,:\\]/);
-        else if (!year) // if year not defined
-            return gtj(); // return now
         else if (Object.prototype.toString.call(year) === '[object Array]') // if type of year is Array
             return year;
         else if (Object.prototype.toString.call(year) === '[object Object]') // if type of year is Object
@@ -1737,6 +1740,7 @@ const PersianDate = function () {
         if (this.error)
             return this;
         if (!arguments.length) {
+            //FIXME:
             return this.d;
         }
         let formats = typesToArray(...arguments);
@@ -2152,6 +2156,8 @@ const PersianDate = function () {
         if (this.error)
             return this;
         if (!arguments.length) {
+            let date = this.d;
+            delete date.gregorian;
             return Object.values(this.d);
         }
         let formats = typesToArray(...arguments);
@@ -2182,6 +2188,7 @@ const PersianDate = function () {
         let result = this.diff(date, 's');
         let prefix = result > 0 ? 'آینده' : 'پیش';
         result = Math.abs(result);
+
         if (result == 0)
             return 'هم اکنون';
         else if (result < 45)
@@ -2196,10 +2203,168 @@ const PersianDate = function () {
             result = Math.round(result / 30) + ' ' + 'ماه';
         else
             result = Math.round(result / 365) + ' ' + 'سال';
-        return result + ' ' + (suffix ? prefix : '');
+        return result + (suffix ? ' ' + prefix : '');
     }
 
+    /**
+     * convert a jalali date to PersianDate instance
+     * @since 2.0.0
+     * @param {String|Array|Object|Number} year - this param must be string of date or array of date or Object from date or year
+     * @param {String|Number} year.y - year of date
+     * @param {Null|String|Number} year.year - year of date
+     * @param {Null|String|Number} year.years - year of date
+     * @param {Null|String|Number} year.M - month of date
+     * @param {Null|String|Number} year.month - month of date
+     * @param {Null|String|Number} year.months - month of date
+     * @param {Null|String|Number} year.d - day of date
+     * @param {Null|String|Number} year.day - day of date
+     * @param {Null|String|Number} year.days - day of date
+     * @param {Null|String|Number} year.date - day of date
+     * @param {Null|String|Number} year.h - hour of date
+     * @param {Null|String|Number} year.hour - hour of date
+     * @param {Null|String|Number} year.hours - hour of date
+     * @param {Null|String|Number} year.m - minute of date
+     * @param {Null|String|Number} year.minute - minute of date
+     * @param {Null|String|Number} year.minutes - minute of date
+     * @param {Null|String|Number} year.s - second of date
+     * @param {Null|String|Number} year.second - second of date
+     * @param {Null|String|Number} year.seconds - second of date
+     * @param {Null|String|Number} year.ms - millisecond of date
+     * @param {Null|String|Number} year.millisecond - millisecond of date
+     * @param {Null|String|Number} year.milliseconds - millisecond of date
+     * @param {Null|Number|String} month month of date
+     * @param {Null|Number|String} day day of date
+     * @param {Null|Number|String} hour hour of date
+     * @param {Null|Number|String} minute minute of date
+     * @param {Null|Number|String} second second of date
+     * @param {Null|Number|String} millisecond millisecond of date
+     * @returns {PersianDate} return class with persian date
+     * @throws {PersianDate} if date invalid return class with error property with error property
+     */
+    PersianDate.prototype.fromJalali = function (...date) {
+        if (this.error) {
+            delete this.error;
+            this.d = {};
+        }
+
+        date = typesToArray(...date)
+        //plus sign before a variable, convert variable to int
+        this.d.year = +date[0];
+        this.d.month = +date[1] || 1;
+        this.d.date = +date[2] || 1;
+        this.d.hour = +date[3] || 0;
+        this.d.minute = +date[4] || 0;
+        this.d.second = +date[5] || 0;
+        this.d.millisecond = +date[6] || 0;
+        this.d.gregorian = jtg(...date);
+
+        if (!this.isValid())
+            return showError('تاریخ نامعتبر');
+        return this;
+    }
+
+    /**
+     * convert a gregorian date to PersianDate instance
+     * @since 2.0.0
+     * @param {String|Array|Object|Number|Date} year - this param must be string of date or array of date or Object from date or year
+     * @param {String|Number} year.y - year of date
+     * @param {Null|String|Number} year.year - year of date
+     * @param {Null|String|Number} year.years - year of date
+     * @param {Null|String|Number} year.M - month of date
+     * @param {Null|String|Number} year.month - month of date
+     * @param {Null|String|Number} year.months - month of date
+     * @param {Null|String|Number} year.d - day of date
+     * @param {Null|String|Number} year.day - day of date
+     * @param {Null|String|Number} year.days - day of date
+     * @param {Null|String|Number} year.date - day of date
+     * @param {Null|String|Number} year.h - hour of date
+     * @param {Null|String|Number} year.hour - hour of date
+     * @param {Null|String|Number} year.hours - hour of date
+     * @param {Null|String|Number} year.m - minute of date
+     * @param {Null|String|Number} year.minute - minute of date
+     * @param {Null|String|Number} year.minutes - minute of date
+     * @param {Null|String|Number} year.s - second of date
+     * @param {Null|String|Number} year.second - second of date
+     * @param {Null|String|Number} year.seconds - second of date
+     * @param {Null|String|Number} year.ms - millisecond of date
+     * @param {Null|String|Number} year.millisecond - millisecond of date
+     * @param {Null|String|Number} year.milliseconds - millisecond of date
+     * @param {Null|Number|String} month month of date
+     * @param {Null|Number|String} day day of date
+     * @param {Null|Number|String} hour hour of date
+     * @param {Null|Number|String} minute minute of date
+     * @param {Null|Number|String} second second of date
+     * @param {Null|Number|String} millisecond millisecond of date
+     * @returns {PersianDate} return class with persian date
+     * @throws {PersianDate} if date invalid return class with error property with error property
+     */
+    PersianDate.prototype.fromGregorian = function (...date) {
+        if (this.error) {
+            delete this.error;
+            this.d = {};
+        }
+
+        if (!isTimestamp(date[0])) {
+            date = typesToArray(...date);
+            date[6] = +date[6] || 0;
+            date[5] = +date[5] || 0;
+            date[4] = +date[4] || 0;
+            date[3] = +date[3] || 0;
+            date[2] = +date[2] || 1;
+            date[1] = (+date[1] - 1) || 1; // this is month; becuse the Date get month from 0, subtract one 
+        }
+        date[0] = +date[0];
+
+        date = new Date(...date);
+        if (date == 'Invalid Date')
+            return showError('تاریخ نامعتبر');
+        this.d.gregorian = date;
+        [this.d.year, this.d.month, this.d.date, this.d.hour, this.d.minute, this.d.second, this.d.millisecond]
+            = gtj(date);
+        return this;
+    }
+
+    /**
+     * convert a gregorian date to PersianDate instance
+     * @since 2.0.0
+     * @param {"j"|"jalali"|"g"|"gregorian"} calendar - the calendar
+     * @returns {PersianDate} return class with persian date
+     */
+    PersianDate.prototype.calendar = function (calendar) {
+        if (calendar[0] == 'j')
+            this.c = 'jalali';
+        else
+            this.c = 'gregorian';
+        return this;
+    }
+
+    /**
+     * show warning for deprecated functions
+     * @since 2.0.0
+     * @param {String} msg - the message for warning
+     */
+    const deprecate = (msg) => {
+        console.warn(msg);
+    }
+
+    /**
+     * check the input is timestamp
+     * @since 2.0.0
+     * @param {Number|String} timestamp - input that must be checked
+     * @returns {Boolean} if input was timestamp, return true
+     */
+    const isTimestamp = (timestamp) => {
+        return Number(timestamp) != NaN && Math.floor(timestamp / 10000) > 0
+    }
+
+    //TODO: after writing the documentation complete the deprecated function warning
+    //TODO: change ordinal numbers in utils.js 
+    //TODO: deprecate setDate function
+    //TODO: remove the excess comments
+    //TODO: remove dateToNumber function
+    //TODO: fix the showError function
     //TODO: add locale for v2
+    //TODO: add nodejs support
     //TODO: thats function not needed to date without create PersianDate must working for v2
     //TODO: add versioning in doc for new functions
     //TODO: git rm -rf --cached .
