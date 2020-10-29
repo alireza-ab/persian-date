@@ -250,7 +250,7 @@ const PersianDate = function () {
     const getDayLabel = (date = new Date(), locale = 'fa') => {
         if (Object.prototype.toString.call(date) === '[object Date]') // if the year was an instance of Date
             return DAYS['label'][locale][date.getDay()];
-        return showError('تاریخ نامعتبر');
+        return showError('تاریخ نامعتبر', this);
     }
 
     /**
@@ -265,7 +265,7 @@ const PersianDate = function () {
         if (Object.prototype.toString.call(date) === '[object Date]') { // if the year was an instance of Date
             return DAYS[locale][date.getDay()] + (mode != 'standard' ? 0 : 1);
         }
-        return showError('تاریخ نامعتبر');
+        return showError('تاریخ نامعتبر', this);
     }
 
     /**
@@ -366,10 +366,10 @@ const PersianDate = function () {
      * @param {String} errorText - Error Text
      * @returns {PersianDate} make error and return class
      */
-    const showError = (errorText) => {
-        delete this.d;
-        this.error = errorText;
-        return this;
+    const showError = (errorText, instance) => {
+        delete instance.d;
+        instance.error = errorText;
+        return errorText;
     }
 
     /**
@@ -531,7 +531,7 @@ const PersianDate = function () {
     PersianDate.prototype.getDaysInMonth =
         function (year = this.d.year, month = this.d.month) {
             if (this.error)
-                return this;
+                return this.error;
             if (month >= 1 && month <= 6)
                 return 31;
             if (month > 6 && month <= 11 || this.isLeapYear(year)) {
@@ -1025,7 +1025,7 @@ const PersianDate = function () {
      */
     PersianDate.prototype.toString = function (format = 'date') {
         if (this.error)
-            return this;
+            return this.error;
         let texts = [];
         format = format.replace(REGEX['betweenBacktick'], (matched, text) => {
             texts.push(text)
@@ -1079,12 +1079,12 @@ const PersianDate = function () {
      */
     PersianDate.prototype.year = function (format = 'jYYYY') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             this.d.year = +format;
             if (!this.isValidDate()) {
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             }
             return this;
         } else {
@@ -1111,11 +1111,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.month = function (format = 'jM') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 1 || format > 12)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.month = +format;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1157,11 +1157,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.date = function (format = 'jD') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 1 || format > 31)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.date = +format;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1245,11 +1245,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.quarter = function (format = 'jQ') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 1 || format > 4)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.month = +format * 3 - 2;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1281,11 +1281,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.week = function (format = 'jw') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 1 || format > 53)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             let gDateFirstOfYear = jtg(this.d.year);
             let firstOfYear = getDayOfWeek(gDateFirstOfYear, 'fa', 'array');// day of first date of year --> 2020-1-1 -> Saturday -> 6
             let dayOfYear = +format * 7 - firstOfYear; // number of day that past from this week
@@ -1338,11 +1338,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.hour = function (format = 'H') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 23)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.hour = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1375,11 +1375,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.minute = function (format = 'm') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 59)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.minute = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1402,11 +1402,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.second = function (format = 's') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 59)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.second = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1429,11 +1429,11 @@ const PersianDate = function () {
      */
     PersianDate.prototype.millisecond = function (format = 'c') {
         if (this.error)
-            return this;
+            return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 999)
-                return showError('تاریخ نامعتبر');
+                return showError('تاریخ نامعتبر', this);
             this.d.millisecond = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1456,7 +1456,7 @@ const PersianDate = function () {
      */
     PersianDate.prototype.timestamp = function (value) {
         if (this.error)
-            return this;
+            return this.error;
         if (value) {
             return this.fromGregorian(+String(value).trim());
         } else {
@@ -1738,7 +1738,7 @@ const PersianDate = function () {
      */
     PersianDate.prototype.toObject = function () {
         if (this.error)
-            return this;
+            return this.error;
         if (!arguments.length) {
             //FIXME:
             return this.d;
@@ -2154,7 +2154,7 @@ const PersianDate = function () {
      */
     PersianDate.prototype.toArray = function () {
         if (this.error)
-            return this;
+            return this.error;
         if (!arguments.length) {
             let date = this.d;
             delete date.gregorian;
@@ -2183,7 +2183,7 @@ const PersianDate = function () {
      */
     PersianDate.prototype.diffForHumans = function (date, suffix = true) {
         if (this.error)
-            return this;
+            return this.error;
 
         let result = this.diff(date, 's');
         let prefix = result > 0 ? 'آینده' : 'پیش';
@@ -2259,7 +2259,7 @@ const PersianDate = function () {
         this.d.gregorian = jtg(...date);
 
         if (!this.isValid())
-            return showError('تاریخ نامعتبر');
+            return showError('تاریخ نامعتبر', this);
         return this;
     }
 
@@ -2317,7 +2317,7 @@ const PersianDate = function () {
 
         date = new Date(...date);
         if (date == 'Invalid Date')
-            return showError('تاریخ نامعتبر');
+            return showError('تاریخ نامعتبر', this);
         this.d.gregorian = date;
         [this.d.year, this.d.month, this.d.date, this.d.hour, this.d.minute, this.d.second, this.d.millisecond]
             = gtj(date);
