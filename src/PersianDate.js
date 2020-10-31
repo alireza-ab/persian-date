@@ -244,7 +244,7 @@ const PersianDate = function () {
      * @param {Date} date - the date that received day
      * @param {'fa'|'en'} locale - locale of day label
      * @returns {String} returns day label
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      * @example Saturday | شنبه
      */
     const getDayLabel = (date = new Date(), locale = 'fa') => {
@@ -319,7 +319,8 @@ const PersianDate = function () {
         let dayOfYear = getDayOfJYear(month, day);
         let gDate = jtg(year);
         dayOfYear += getDayOfWeek(gDate, 'fa', 'array');
-        return Math.ceil(dayOfYear / 7);
+        let weekNumber = Math.ceil(dayOfYear / 7)
+        return weekNumber > 53 ? weekNumber - 53 : weekNumber;
     }
 
     /**
@@ -334,7 +335,8 @@ const PersianDate = function () {
         // year = year || jtg(this.d.year).getFullYear();
         let gDate = new Date(year, 0, 1);
         dayOfYear += getDayOfWeek(gDate, 'en', 'array');
-        return Math.ceil(dayOfYear / 7);
+        let weekNumber = Math.ceil(dayOfYear / 7)
+        return weekNumber > 53 ? weekNumber - 53 : weekNumber;
     }
 
     /**
@@ -391,7 +393,7 @@ const PersianDate = function () {
      * set persian date from Gregorian date
      * @param {...Number|Date|Array|Null} date - the date that convert to persian date
      * @returns {PersianDate} return class with persian date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.setDate = function (...date) {
         deprecate('"setDate" function is deprecated!\nuse "fromGregorian" function instead.')
@@ -430,7 +432,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {PersianDate} return class with persian date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.parse = function (...date) {
         if (this.c == 'jalali')
@@ -444,12 +446,18 @@ const PersianDate = function () {
      * @param {?Number} year - the year to be determined is a leap or not
      * @returns {Boolean} if is leap year, returns true
      */
-    PersianDate.prototype.isLeapYear = function (year = this.d.year) {
+    PersianDate.prototype.isLeapYear = function (year) {
         if (this.error)
             return false;
-        let array = year > 1342 ? [1, 5, 9, 13, 17, 22, 26, 30] : [1, 5, 9, 13, 17, 21, 26, 30];
-        let remainder = year % 33;
-        return array.includes(remainder);
+        if (!year)
+            year = this.year();
+        if (this.c == 'jalali') {
+            let array = year > 1342 ? [1, 5, 9, 13, 17, 22, 26, 30] : [1, 5, 9, 13, 17, 21, 26, 30];
+            let remainder = year % 33;
+            return array.includes(remainder);
+        } else {
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
     }
 
     /**
@@ -481,20 +489,29 @@ const PersianDate = function () {
      * @returns {Boolean} if is valid date, returns true
      */
     PersianDate.prototype.isValidDate =
-        function (year = this.d.year, month = this.d.month, day = this.d.date) {
+        function (year, month, day) {
             if (this.error)
                 return false;
+            if (!year) {
+                year = this.year();
+                month = this.month();
+                day = this.date();
+            }
             if ([year, month, day].some(e => String(e).search(/null|undifind|NaN/) != -1))
                 return false;
-            if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
-                return false;
-            if (month >= 7 && month <= 11 && day == 31)
-                return false;
-            if (month == 12 && day == 31)
-                return false;
-            if (month == 12 && day == 30 && !this.isLeapYear(year))
-                return false;
-            return true;
+            if (this.c == 'jalali') {
+                if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
+                    return false;
+                if (month >= 7 && month <= 11 && day == 31)
+                    return false;
+                if (month == 12 && day == 31)
+                    return false;
+                if (month == 12 && day == 30 && !this.isLeapYear(year))
+                    return false;
+                return true;
+            } else {
+
+            }
         }
 
     /**
@@ -546,7 +563,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addYear = function (year = 1, checkDate = true) {
         if (this.error)
@@ -567,7 +584,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMonth = function (month = 1, checkDate = true) {
         if (this.error)
@@ -605,7 +622,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addDay = function (day = 1, checkDate = true) {
         if (this.error)
@@ -643,7 +660,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addQuarter = function (quarter = 1, checkDate = true) {
         if (this.error)
@@ -662,7 +679,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addWeek = function (week = 1, checkDate = true) {
         if (this.error)
@@ -681,7 +698,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addHour = function (hour = 1, checkDate = true) {
         if (this.error)
@@ -714,7 +731,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMinute = function (minute = 1, checkDate = true) {
         if (this.error)
@@ -747,7 +764,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addSecond = function (second = 1, checkDate = true) {
         if (this.error)
@@ -780,7 +797,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.addMillisecond = function (millisecond = 1, checkDate = true) {
         if (this.error)
@@ -813,7 +830,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
         if (!year)
@@ -830,7 +847,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMonth = function (month = 1, checkDate = true) {
         if (this.error)
@@ -865,7 +882,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subDay = function (day = 1, checkDate = true) {
         if (this.error)
@@ -899,7 +916,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subQuarter = function (quarter = 1, checkDate = true) {
         if (this.error)
@@ -916,7 +933,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subWeek = function (week = 1, checkDate = true) {
         if (this.error)
@@ -933,7 +950,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subHour = function (hour = 1, checkDate = true) {
         if (this.error)
@@ -964,7 +981,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMinute = function (minute = 1, checkDate = true) {
         if (this.error)
@@ -995,7 +1012,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subSecond = function (second = 1, checkDate = true) {
         if (this.error)
@@ -1026,7 +1043,7 @@ const PersianDate = function () {
      * @param {?Boolean} checkDate checks the result that the date is valid,
      * If not valid, it will be deducted from the day to be valid
      * @returns {PersianDate} return class with new date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.subMillisecond = function (millisecond = 1, checkDate = true) {
         if (this.error)
@@ -1055,7 +1072,7 @@ const PersianDate = function () {
      * returns date as string with specify format
      * @param {?String} [format=date] - formatting date to string
      * @returns {String} date string
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.toString = function (format = 'date') {
         if (this.error)
@@ -1109,7 +1126,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=jYYYY] - a number for set the year or a format for formatting
      * @returns {PersianDate|String|Number} if set the year, returns class,
      * else returns a number or string from year
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.year = function (format = 'jYYYY') {
         if (this.error)
@@ -1118,7 +1135,7 @@ const PersianDate = function () {
         if (REGEX['isNumeric'].test(format)) {
             this.d.year = +format;
             if (!this.isValidDate()) {
-                return showError('تاریخ نامعتبر', this);
+                return this.addYear(format);
             }
             return this;
         } else {
@@ -1141,15 +1158,20 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=jM] - a number for set the month or a format for formatting
      * @returns {PersianDate|String|Number} if set the month, returns class,
      * else returns a number or string from month
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.month = function (format = 'jM') {
         if (this.error)
             return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
-            if (format < 1 || format > 12)
-                return showError('تاریخ نامعتبر', this);
+            if (format < 1) {
+                this.d.month = 1;
+                return this.subMonth(--format);
+            } else if (format > 12) {
+                this.d.month = 12;
+                return this.addMonth(format - 12);
+            }
             this.d.month = +format;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1187,15 +1209,21 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=jD] - a number for set the day in month or a format for formatting
      * @returns {PersianDate|String|Number} if set the day, returns class,
      * else returns a number or string from day
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.date = function (format = 'jD') {
         if (this.error)
             return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
-            if (format < 1 || format > 31)
-                return showError('تاریخ نامعتبر', this);
+            let daysInMonth = this.getDaysInMonth();
+            if (format < 1) {
+                this.d.date = 1;
+                return this.subDay(--format);
+            } else if (format > daysInMonth) {
+                this.d.date = daysInMonth;
+                return this.addDay(format - daysInMonth);
+            }
             this.d.date = +format;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1275,15 +1303,21 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=jQ] - a number for set the quarter or a format for formatting
      * @returns {PersianDate|String|Number} if set the quarter, returns class,
      * else returns a number or string from quarter
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.quarter = function (format = 'jQ') {
         if (this.error)
             return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
-            if (format < 1 || format > 4)
-                return showError('تاریخ نامعتبر', this);
+            if (format < 1) {
+                this.d.month = 1;
+                return this.subQuarter(--format);
+            }
+            else if (format > 4) {
+                this.d.month = 12;
+                return this.addQuarter(format - 4);
+            }
             this.d.month = +format * 3 - 2;
             while (!this.isValidDate()) {
                 this.subDay(1, false);
@@ -1311,15 +1345,22 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=jw] - a number for set the week or a format for formatting
      * @returns {PersianDate|String|Number} if set the week, returns class,
      * else returns a number or string from week
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.week = function (format = 'jw') {
         if (this.error)
             return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
-            if (format < 1 || format > 53)
-                return showError('تاریخ نامعتبر', this);
+            let weeksInYear = this.getWeeksInYear();
+            if (format < 1) {
+                this.week(1);
+                return this.subWeek(--format).addDay(6);
+            }
+            else if (format > weeksInYear) {
+                this.week(weeksInYear);
+                return this.addWeek(format - weeksInYear);
+            }
             let gDateFirstOfYear = jtg(this.d.year);
             let firstOfYear = getDayOfWeek(gDateFirstOfYear, 'fa', 'array');// day of first date of year --> 2020-1-1 -> Saturday -> 6
             let dayOfYear = +format * 7 - firstOfYear; // number of day that past from this week
@@ -1368,15 +1409,21 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=H] - a number for set the hour or a format for formatting
      * @returns {PersianDate|String|Number} if set the hour, returns class,
      * else returns a number or string from hour
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.hour = function (format = 'H') {
         if (this.error)
             return this.error;
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
-            if (format < 0 || format > 23)
-                return showError('تاریخ نامعتبر', this);
+            if (format < 0) {
+                this.d.hour = 0;
+                return this.subHour(--format);
+            }
+            else if (format > 23) {
+                this.d.hour = 23;
+                return this.addHour(format - 23);
+            }
             this.d.hour = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1405,7 +1452,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=m] - a number for set the minute or a format for formatting
      * @returns {PersianDate|String|Number} if set the minute, returns class,
      * else returns a number or string from minute
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.minute = function (format = 'm') {
         if (this.error)
@@ -1413,7 +1460,7 @@ const PersianDate = function () {
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 59)
-                return showError('تاریخ نامعتبر', this);
+                return this.addMinute(format);
             this.d.minute = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1432,7 +1479,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=s] - a number for set the second or a format for formatting
      * @returns {PersianDate|String|Number} if set the second, returns class,
      * else returns a number or string from second
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.second = function (format = 's') {
         if (this.error)
@@ -1440,7 +1487,7 @@ const PersianDate = function () {
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 59)
-                return showError('تاریخ نامعتبر', this);
+                return this.addSecond(format);
             this.d.second = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1459,7 +1506,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} [format=c] - a number for set the millisecond or a format for formatting
      * @returns {PersianDate|String|Number} if set the millisecond, returns class,
      * else returns a number or string from millisecond
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.millisecond = function (format = 'c') {
         if (this.error)
@@ -1467,7 +1514,7 @@ const PersianDate = function () {
         format = String(format).trim();
         if (REGEX['isNumeric'].test(format)) {
             if (format < 0 || format > 999)
-                return showError('تاریخ نامعتبر', this);
+                return this.addMillisecond(format);
             this.d.millisecond = +format;
             while (!this.isValidTime())
                 this.subMillisecond(1, false);
@@ -1486,7 +1533,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} value - a number for set the millisecond
      * @returns {PersianDate|Number} if set the timestamp, returns class,
      * else returns timestamp (number)
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.timestamp = function (value) {
         if (this.error)
@@ -1768,7 +1815,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} secondFormat second format
      * @param {Null|Number|String} millisecondFormat millisecond format
      * @returns {Object} if date valid, return Object of date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.toObject = function () {
         if (this.error)
@@ -2186,7 +2233,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} secondFormat second format
      * @param {Null|Number|String} millisecondFormat millisecond format
      * @returns {Object} if date valid, return Object of date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.toArray = function () {
         if (this.error)
@@ -2215,7 +2262,7 @@ const PersianDate = function () {
      * @since 2.0.0
      * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
      * @returns {Object} if date valid, return Object of date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.diffForHumans = function (date, suffix = true) {
         if (this.error)
@@ -2276,7 +2323,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {PersianDate} return class with persian date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.fromJalali = function (...date) {
         if (this.error) {
@@ -2333,7 +2380,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {PersianDate} return class with persian date
-     * @throws {PersianDate} if date invalid return class with error property with error property
+     * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.fromGregorian = function (...date) {
         if (this.error) {
@@ -2376,6 +2423,27 @@ const PersianDate = function () {
     }
 
     /**
+     * return number of weeks in year
+     * @since 2.0.0
+     * @param {Number|String} year - the year 
+     * @returns {PersianDate} number of weeks in year
+     */
+    PersianDate.prototype.getWeeksInYear = function (year) {
+        if (this.error)
+            return this.error;
+        if (!year)
+            year = this.year();
+        // get year and month and date of the last day of the previous year
+        let date = this.clone().parse(year).subDay().toArray().slice(0, 3);
+        let weeks;
+        if (this.c == "jalali")
+            weeks = getWeekOfJYear(...date);
+        else
+            weeks = getWeekOfGYear(...date);
+        return weeks == 1 ? 53 : weeks;
+    }
+
+    /**
      * show warning for deprecated functions
      * @since 2.0.0
      * @param {String} msg - the message for warning
@@ -2394,18 +2462,18 @@ const PersianDate = function () {
         return Number(timestamp) != NaN && Math.floor(timestamp / 10000) > 0
     }
 
-    //TODO: after writing the documentation complete the deprecated function warning
-    //TODO: change ordinal numbers in utils.js 
-    //TODO: deprecate setDate function
-    //TODO: remove the excess comments
-    //TODO: remove dateToNumber function
-    //TODO: fix the showError function
     //TODO: add locale for v2
+    //TODO: change ordinal numbers in utils.js 
+    //TODO: add start and end function
     //TODO: add nodejs support
     //TODO: thats function not needed to date without create PersianDate must working for v2
-    //TODO: add versioning in doc for new functions
+    //TODO: remove the excess comments
+    //TODO: remove dateToNumber function
+    //TODO: combine getWeekOfJYear and getWeekOfGYear function
     //TODO: git rm -rf --cached .
     //TODO: in doc, add jt, jh, jm and ...
+    //TODO: add versioning in doc for new functions
+    //TODO: after writing the documentation complete the deprecated function warning
 
 
     if (arguments.length)
