@@ -783,7 +783,7 @@ const ORDINALNUMBERS = {
 };
 
 const DAYS = {
-    fa: { // days in persian calendar start from saturday or 0
+    jalali: { // days in persian calendar start from saturday or 0
         6: 0,
         0: 1,
         1: 2,
@@ -792,7 +792,7 @@ const DAYS = {
         4: 5,
         5: 6,
     },
-    en: {
+    gregorian: {
         0: 0,
         1: 1,
         2: 2,
@@ -846,7 +846,7 @@ const TIMETYPE = function (hour, format) {
             return 'قبل از ظهر';
         return 'ق.ظ';
     }
-    if (hour > 12 && hour <= 23) {
+    if (hour >= 12 && hour < 24) {
         if (format == 'a')
             return 'pm';
         if (format == 'aa')
