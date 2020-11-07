@@ -10,7 +10,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 8,
-    date: 14
+    date: 17
 }
 
 test('create date and return now', () => {
@@ -38,42 +38,42 @@ test('now function', () => {
     expect(persianDate.calendar('g').now().toString('M/D/y, h:mm:ss A')).toBe(new Date().toLocaleString());
 });
 
-// ////////////////////------------- ATTENTION -------------////////////////////
-// //         "setDate" is deprecated. "fromGregorian" replaces this.         //
-// /////////////////////////////////////////////////////////////////////////////
+////////////////////------------- ATTENTION -------------////////////////////
+//         "setDate" is deprecated. "fromGregorian" replaces this.         //
+/////////////////////////////////////////////////////////////////////////////
 
-// /*test('setDate function with all parameters', () => {
-//     persianDate.setDate('2020', '7', '27', '11', '5', '8', '452');
-//     expect(persianDate.year()).toBe(1399);
-//     expect(persianDate.month()).toBe(5);
-//     expect(persianDate.date()).toBe(6);
-//     expect(persianDate.hour()).toBe(11);
-//     expect(persianDate.minute()).toBe(5);
-//     expect(persianDate.second()).toBe(8);
-//     expect(persianDate.millisecond()).toBe(452);
-// });
+/*test('setDate function with all parameters', () => {
+    persianDate.setDate('2020', '7', '27', '11', '5', '8', '452');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(5);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(11);
+    expect(persianDate.minute()).toBe(5);
+    expect(persianDate.second()).toBe(8);
+    expect(persianDate.millisecond()).toBe(452);
+});
 
-// test('setDate function with Date parameter', () => {
-//     persianDate.setDate(new Date());
-//     expect(persianDate.year()).toBe(now.year);
-//     expect(persianDate.month()).toBe(now.month);
-//     expect(persianDate.date()).toBe(now.date);
-//     expect(persianDate.hour()).toBe((new Date()).getHours());
-//     expect(persianDate.minute()).toBe((new Date()).getMinutes());
-//     expect(persianDate.second()).toBe((new Date()).getSeconds());
-//     // expect(persianDate.millisecond()).toBe((new Date()).getMilliseconds());
-// });
+test('setDate function with Date parameter', () => {
+    persianDate.setDate(new Date());
+    expect(persianDate.year()).toBe(now.year);
+    expect(persianDate.month()).toBe(now.month);
+    expect(persianDate.date()).toBe(now.date);
+    expect(persianDate.hour()).toBe((new Date()).getHours());
+    expect(persianDate.minute()).toBe((new Date()).getMinutes());
+    expect(persianDate.second()).toBe((new Date()).getSeconds());
+    // expect(persianDate.millisecond()).toBe((new Date()).getMilliseconds());
+});
 
-// test('setDate function with string parameter', () => {
-//     persianDate.setDate('2020-8-27');
-//     expect(persianDate.year()).toBe(1399);
-//     expect(persianDate.month()).toBe(6);
-//     expect(persianDate.date()).toBe(6);
-//     expect(persianDate.hour()).toBe(0);
-//     expect(persianDate.minute()).toBe(0);
-//     expect(persianDate.second()).toBe(0);
-//     expect(persianDate.millisecond()).toBe(0);
-// });*/
+test('setDate function with string parameter', () => {
+    persianDate.setDate('2020-8-27');
+    expect(persianDate.year()).toBe(1399);
+    expect(persianDate.month()).toBe(6);
+    expect(persianDate.date()).toBe(6);
+    expect(persianDate.hour()).toBe(0);
+    expect(persianDate.minute()).toBe(0);
+    expect(persianDate.second()).toBe(0);
+    expect(persianDate.millisecond()).toBe(0);
+});*/
 
 test('parse function', () => {
     persianDate.calendar('j').parse('1399', '6', '6', '14', '45');
@@ -1745,4 +1745,61 @@ test('toDate function', () => {
     expect(persianDate.toDate().toString()).toBe(new Date(2021, 2, 21).toString());
     persianDate.calendar('g').parse('2020');
     expect(persianDate.toDate().toString()).toBe(new Date(2020, 0, 1, 0, 0, 0, 0).toString());
+});
+
+test('startOf function', () => {
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('second').toString('datetime:ss.c')).toBe('1399/06/01 12:20:30.0');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('minute').toString('datetime:ss.c')).toBe('1399/06/01 12:20:00.0');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('hour').toString('datetime:ss.c')).toBe('1399/06/01 12:00:00.0');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('date').toString('datetime:ss.c')).toBe('1399/06/01 00:00:00.0');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('month').toString('datetime:ss.c')).toBe('1399/06/01 00:00:00.0');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.startOf('year').toString('datetime:ss.c')).toBe('1399/01/01 00:00:00.0');
+
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('second').toString('datetime:ss.c')).toBe('2020-06-01 12:20:30.0');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('minute').toString('datetime:ss.c')).toBe('2020-06-01 12:20:00.0');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('hour').toString('datetime:ss.c')).toBe('2020-06-01 12:00:00.0');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('date').toString('datetime:ss.c')).toBe('2020-06-01 00:00:00.0');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('month').toString('datetime:ss.c')).toBe('2020-06-01 00:00:00.0');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.startOf('year').toString('datetime:ss.c')).toBe('2020-01-01 00:00:00.0');
+});
+
+
+test('endOf function', () => {
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('second').toString('datetime:ss.c')).toBe('1399/06/01 12:20:30.999');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('minute').toString('datetime:ss.c')).toBe('1399/06/01 12:20:59.999');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('hour').toString('datetime:ss.c')).toBe('1399/06/01 12:59:59.999');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('date').toString('datetime:ss.c')).toBe('1399/06/01 23:59:59.999');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('month').toString('datetime:ss.c')).toBe('1399/06/31 23:59:59.999');
+    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
+    expect(persianDate.endOf('year').toString('datetime:ss.c')).toBe('1399/12/30 23:59:59.999');
+
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('second').toString('datetime:ss.c')).toBe('2020-06-01 12:20:30.999');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('minute').toString('datetime:ss.c')).toBe('2020-06-01 12:20:59.999');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('hour').toString('datetime:ss.c')).toBe('2020-06-01 12:59:59.999');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('date').toString('datetime:ss.c')).toBe('2020-06-01 23:59:59.999');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('month').toString('datetime:ss.c')).toBe('2020-06-30 23:59:59.999');
+    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
+    expect(persianDate.endOf('year').toString('datetime:ss.c')).toBe('2020-12-31 23:59:59.999');
 });

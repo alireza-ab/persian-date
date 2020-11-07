@@ -36,7 +36,7 @@
 //          In the first, I'm must say, in the all of the project,         //
 //          g means Gregorian and j means Jalali                           //
 /////////////////////////////////////////////////////////////////////////////
-import { MONTHS, ORDINALNUMBERS, DAYS, TIMETYPE, REGEX } from './utils.js'
+import { CALENDAR, TIMETYPE, REGEX } from './utils.js'
 
 /**
  * A Date library for working with persian date
@@ -242,28 +242,28 @@ const PersianDate = function () {
     /**
      * get label of day
      * @param {Date} date - the date that received day
-     * @param {'fa'|'en'} locale - locale of day label
+     * @param {'jalali'|'gregorian'} calendar - the calendar
      * @returns {String} returns day label
      * @throws {PersianDate|String} if date invalid return class with error property with error property
      * @example Saturday | شنبه
      */
-    const getDayLabel = (date = new Date(), locale = 'fa') => {
+    const getDayLabel = (date = new Date(), calendar = 'jalali') => {
         if (Object.prototype.toString.call(date) === '[object Date]') // if the year was an instance of Date
-            return DAYS['label'][locale][date.getDay()];
+            return CALENDAR[calendar]['days']['label'][date.getDay()];
         return showError('تاریخ نامعتبر', this);
     }
 
     /**
      * get the day of the week
      * @param {Date} date - the date that received day of week
-     * @param {'fa', 'en'} locale - locale of day
+     * @param {'jalali', 'gregorian'} calendar - the calendar
      * @param {'standard','array'} mode - standard mode start from 1 and array mode start from 0
      * @returns {Number} the number of the day of week
      * @throws {PersianDate} if date invalid return class with error property
      */
     const getDayOfWeek = (date = new Date(), calendar = 'jalali', mode = 'standard') => {
         if (Object.prototype.toString.call(date) === '[object Date]') { // if the year was an instance of Date
-            return DAYS[calendar][date.getDay()] + (mode != 'standard' ? 0 : 1);
+            return CALENDAR[calendar]['days']['weekNumber'][date.getDay()] + (mode != 'standard' ? 0 : 1);
         }
         return showError('تاریخ نامعتبر', this);
     }
@@ -334,14 +334,13 @@ const PersianDate = function () {
     /**
      * returns the ordinal number of that number sent to it
      * @param {Number} number - the number that gives ordinal number --> from 1 to 366
-     * @param {'fa','en'} locale - locale of ordinal number
-     * @param {?Number} mode  - 'fa' locale have two mode of ordinal number
+     * @param {'jalali','gregorian'} calendar - the calendar
+     * @param {?Number} mode  - 'jalali' calendar have two mode of ordinal number
      * @returns {String} ordinal number
      * @example 1st | اول | اولین
      */
-    const ordinalNumber = (number, locale = "fa", mode = 1) => {
-        if (locale != 'fa') mode = ''
-        return ORDINALNUMBERS[locale + mode][number];
+    const ordinalNumber = (number, calendar = "jalali", mode = 1) => {
+        return CALENDAR[calendar].ordinalNumbers(number, mode);
     }
 
     /**
@@ -1207,22 +1206,22 @@ const PersianDate = function () {
             if (format == 'jM')
                 return month;
             if (format == 'jMMMM' || format == 'jMMM')
-                return MONTHS['fa'][month];
+                return CALENDAR['jalali']['months'][month];
             if (format == 'jMo')
                 return ordinalNumber(month);
             if (format == 'jMO')
-                return ordinalNumber(month, 'fa', 2);
+                return ordinalNumber(month, 'jalali', 2);
             let gMonth = this.c == 'jalali' ? this.toDate().getMonth() + 1 : this.d.month;
             if (format == 'M')
                 return gMonth;
             if (format == 'MM')
                 return addPrefix(gMonth, 2);
             if (format == 'MMMM')
-                return MONTHS['en'][gMonth];
+                return CALENDAR['gregorian']['months'][gMonth];
             if (format == 'Mo' || format == 'MO')
-                return ordinalNumber(gMonth, 'en');
+                return ordinalNumber(gMonth, 'gregorian');
             if (format == 'MMM')
-                return MONTHS['en'][gMonth].slice(0, 3);
+                return CALENDAR['gregorian']['months'][gMonth].slice(0, 3);
             return month;
         }
 
@@ -1265,7 +1264,7 @@ const PersianDate = function () {
             if (format == 'jDo')
                 return ordinalNumber(date);
             if (format == 'jDO')
-                return ordinalNumber(date, 'fa', 2);
+                return ordinalNumber(date, 'jalali', 2);
             //---------- Day of Week ----------//
             let gDate = this.toDate();
             if (format == 'jdddd' || format == 'jddd')
@@ -1276,7 +1275,7 @@ const PersianDate = function () {
             if (format == 'jdo')
                 return ordinalNumber(dayOfWeek);
             if (format == 'jdO')
-                return ordinalNumber(dayOfWeek, 'fa', 2);
+                return ordinalNumber(dayOfWeek, 'jalali', 2);
             if (format == 'jd')
                 return getDayOfWeek(gDate, 'jalali', 'array');
             if (format == 'jde')
@@ -1290,24 +1289,24 @@ const PersianDate = function () {
             if (format == 'jDDDo')
                 return ordinalNumber(dayOfYear);
             if (format == 'jDDDO')
-                return ordinalNumber(dayOfYear, 'fa', 2);
+                return ordinalNumber(dayOfYear, 'jalali', 2);
             //---------- Day of Month ----------//
             if (format == 'DD')
                 return addPrefix(gDate.getDate(), 2);
             if (format == 'D')
                 return gDate.getDate();
             if (format == 'Do' || format == 'DO')
-                return ordinalNumber(gDate.getDate(), 'en');
+                return ordinalNumber(gDate.getDate(), 'gregorian');
             //---------- Day of Week ----------//
             if (format == 'dddd')
-                return getDayLabel(gDate, 'en');
+                return getDayLabel(gDate, 'gregorian');
             if (format == 'ddd')
-                return getDayLabel(gDate, 'en').slice(0, 3);
+                return getDayLabel(gDate, 'gregorian').slice(0, 3);
             if (format == 'dd')
-                return getDayLabel(gDate, 'en').slice(0, 2);
+                return getDayLabel(gDate, 'gregorian').slice(0, 2);
             dayOfWeek = getDayOfWeek(gDate, 'gregorian');
             if (format == 'do' || format == 'dO')
-                return ordinalNumber(dayOfWeek, 'en');
+                return ordinalNumber(dayOfWeek, 'gregorian');
             if (format == 'd')
                 return getDayOfWeek(gDate, 'gregorian', 'array');
             if (format == 'de')
@@ -1319,7 +1318,7 @@ const PersianDate = function () {
             if (format == 'DDD')
                 return dayOfYear;
             if (format == 'DDDo' || format == 'DDDO')
-                return ordinalNumber(dayOfYear, 'en');
+                return ordinalNumber(dayOfYear, 'gregorian');
             return date;
         }
 
@@ -1359,12 +1358,12 @@ const PersianDate = function () {
             if (format == 'jQo')
                 return ordinalNumber(quarter);
             if (format == 'jQO')
-                return ordinalNumber(quarter, 'fa', 2);
+                return ordinalNumber(quarter, 'jalali', 2);
             quarter = Math.ceil((this.c == 'jalali' ? this.toDate().getMonth() + 1 : this.d.month) / 3);
             if (format == 'Q')
                 return quarter;
             if (format == 'Qo' || format == 'QO')
-                return ordinalNumber(quarter, 'en');
+                return ordinalNumber(quarter, 'gregorian');
             return quarter;
         }
     }
@@ -1425,14 +1424,14 @@ const PersianDate = function () {
             if (format == 'jwo' || format == 'jWo')
                 return ordinalNumber(weekOfYear);
             if (format == 'jwO' || format == 'jWO')
-                return ordinalNumber(weekOfYear, 'fa', 2);
+                return ordinalNumber(weekOfYear, 'jalali', 2);
             weekOfYear = getWeekOfYear(this.year('y'), this.month('M'), this.date('D'), 'gregorian')
             if (format == 'w' || format == 'W')
                 return weekOfYear;
             if (format == 'ww' || format == 'WW')
                 return addPrefix(weekOfYear, 2);
             if (format == 'wo' || format == 'Wo' || format == 'wO' || format == 'WO')
-                return ordinalNumber(weekOfYear, 'en');
+                return ordinalNumber(weekOfYear, 'gregorian');
             return weekOfYear;
         }
     }
@@ -2284,7 +2283,7 @@ const PersianDate = function () {
      * return the object of PersianDate
      * @since 2.0.0
      * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
-     * @returns {Object} if date valid, return Object of date
+     * @returns {String} if date valid, return diff human-readable format
      * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.diffForHumans = function (date, suffix = true) {
@@ -2476,7 +2475,7 @@ const PersianDate = function () {
      * return number of weeks in year
      * @since 2.0.0
      * @param {Number|String} year - the year 
-     * @returns {PersianDate} number of weeks in year
+     * @returns {Number} number of weeks in year
      */
     PersianDate.prototype.getWeeksInYear = function (year) {
         if (this.error)
@@ -2503,7 +2502,7 @@ const PersianDate = function () {
 
     /**
      * return the Date instance of PersianDate
-     * @since 1.3.0
+     * @since 2.0.0
      * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
      * @param {String|Number} yearForamt.y - year format
      * @param {Null|String|Number} yearForamt.year - year format
@@ -2533,7 +2532,7 @@ const PersianDate = function () {
      * @param {Null|Number|String} minuteFormat minute format
      * @param {Null|Number|String} secondFormat second format
      * @param {Null|Number|String} millisecondFormat millisecond format
-     * @returns {Object} if date valid, return Date instance of date
+     * @returns {Date} if date valid, return Date instance of date
      * @throws {String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.toDate = function () {
@@ -2544,6 +2543,61 @@ const PersianDate = function () {
         let date = this.toArray();
         --date[1];
         return new Date(...date);
+    }
+
+    /**
+     * change the date to start of the year or month or ...
+     * @since 2.0.0
+     * @param {String} unit - the unit of time
+     * @returns {PersianDate} return the class with new date or time
+     */
+    PersianDate.prototype.startOf = function (unit = 'year') {
+        this.d.millisecond = 0;
+        if (unit[0] == 's')
+            return this;
+        this.d.second = 0;
+        if (unit == 'm' || unit == 'minute')
+            return this;
+        this.d.minute = 0;
+        if (unit[0] == 'h')
+            return this;
+        this.d.hour = 0;
+        if (unit[0] == 'd')
+            return this;
+        this.d.date = 1;
+        if (unit == 'M' || unit == 'month')
+            return this;
+        this.d.month = 1;
+        if (unit[0] == 'y')
+            return this;
+    }
+
+    /**
+     * change the date to end of the year or month or ...
+     * @since 2.0.0
+     * @param {String} unit - the unit of time
+     * @returns {PersianDate} return the class with new date or time
+     */
+    PersianDate.prototype.endOf = function (unit = 'year') {
+        this.d.millisecond = 999;
+        if (unit[0] == 's')
+            return this;
+        this.d.second = 59;
+        if (unit == 'm' || unit == 'minute')
+            return this;
+        this.d.minute = 59;
+        if (unit[0] == 'h')
+            return this;
+        this.d.hour = 23;
+        if (unit[0] == 'd')
+            return this;
+        this.d.date = this.getDaysInMonth();
+        if (unit == 'M' || unit == 'month')
+            return this;
+        this.d.month = 12;
+        this.d.date = this.getDaysInMonth();
+        if (unit[0] == 'y')
+            return this;
     }
 
     /**
@@ -2602,9 +2656,6 @@ const PersianDate = function () {
     }
 
 
-    //TODO: add locale for v2
-    //TODO: change ordinal numbers in utils.js 
-    //TODO: add start and end function
     //TODO: add nodejs support
     //TODO: thats function not needed to date without create PersianDate must working for v2
     //TODO: remove the excess comments
@@ -2618,6 +2669,9 @@ const PersianDate = function () {
     //TODO: in doc, add jt, jh, jm and ...
     //TODO: add versioning in doc for new functions
     //TODO: after writing the documentation complete the deprecated function warning
+
+    //for next version
+    //TODO: add quarter and week and day to startOf and endOf
 
 
     if (arguments.length)
