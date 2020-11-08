@@ -1,11 +1,12 @@
 {
 	"name": "@alireza-ab/persian-date",
-	"version": "1.5.1",
+	"version": "2.0.0-beta",
 	"description": "A lightweight but professional library for working with Persian dates",
 	"main": "./dist/PersianDate.min.js",
 	"scripts": {
 		"test": "jest",
-		"build": "webpack"
+		"build": "webpack",
+		"babel": "babel src -d lib"
 	},
 	"keywords": [
 		"javascript",
@@ -16,8 +17,16 @@
 	"author": "Alireza Alibeiki <alibeikialireza@gmail.com>",
 	"license": "MIT",
 	"devDependencies": {
+		"@alireza-ab/performance-check": "^1.0.0",
+		"@babel/cli": "^7.12.1",
+		"@babel/core": "^7.12.3",
+		"@babel/preset-env": "^7.12.1",
+		"babel-plugin-add-module-exports": "^1.0.4",
 		"jest": "^26.4.2",
 		"webpack": "^4.44.1",
 		"webpack-cli": "^3.3.12"
+	},
+	"dependencies": {
+		"@babel/plugin-transform-modules-umd": "^7.12.1"
 	}
 }

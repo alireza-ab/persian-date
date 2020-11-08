@@ -2,6 +2,7 @@ const path = require('path');
 module.exports = [
     {
         mode: "development",
+        target: "node",
         entry: './src/PersianDate.js',
         output: {
             path: path.resolve(__dirname, "dist"),

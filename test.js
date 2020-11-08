@@ -1,4 +1,5 @@
 const PersianDate = require('./dist/PersianDate.js');
+const perf = require('@alireza-ab/performance-check');
 // import PersianDate from './src/PersianDate.js'
 
 let persianDate = new PersianDate();
@@ -10,10 +11,11 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 8,
-    date: 17
+    date: 18
 }
 
 test('create date and return now', () => {
+    perf.start()
     expect(persianDate.year()).toBe(now.year);
     expect(persianDate.month()).toBe(now.month);
     expect(persianDate.date()).toBe(now.date);
@@ -24,6 +26,14 @@ test('create date and return now', () => {
 
     // expect(persianDate.calendar('g').toDate().toString()).toBe(new Date().toString());
     expect(new PersianDate().calendar('g').toDate().toString()).toBe(new Date().toString());
+});
+
+test('create date with date and calendar', () => {
+    expect(new PersianDate(['2020', '7', '27', '11', '5', '8', '452']).toString('datetime:ss.c')).toBe('1399/05/06 11:05:08.452');
+    expect(new PersianDate('2020-8-27').toString('datetime:ss.c')).toBe('1399/06/06 00:00:00.0');
+
+    expect(new PersianDate(['2021', '5', 8], 'g').toString('datetime:ss.c')).toBe('2021-05-08 00:00:00.0');
+    expect(new PersianDate('2020-8-27', 'g').toString('datetime:ss.c')).toBe('2020-08-27 00:00:00.0');
 });
 
 test('now function', () => {
@@ -1775,7 +1785,6 @@ test('startOf function', () => {
     expect(persianDate.startOf('year').toString('datetime:ss.c')).toBe('2020-01-01 00:00:00.0');
 });
 
-
 test('endOf function', () => {
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.endOf('second').toString('datetime:ss.c')).toBe('1399/06/01 12:20:30.999');
@@ -1802,4 +1811,12 @@ test('endOf function', () => {
     expect(persianDate.endOf('month').toString('datetime:ss.c')).toBe('2020-06-30 23:59:59.999');
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.endOf('year').toString('datetime:ss.c')).toBe('2020-12-31 23:59:59.999');
+});
+
+test('valueOf function', () => {
+    persianDate.calendar('j').parse('1399-6-11');
+    expect(persianDate.valueOf()).toBe((new Date(2020, 8, 1, 0, 0, 0, 0)).getTime())
+    persianDate.calendar('g').parse('2020-6-11');
+    expect(persianDate.valueOf()).toBe((new Date(2020, 5, 11, 0, 0, 0, 0)).getTime())
+    perf.end()
 });

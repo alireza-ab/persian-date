@@ -1,33 +1,3 @@
-//                              ||                ||
-//              ----------------||----------------||----------------
-//             ||               ||                ||               ||
-//             ||                                                  ||
-//             ||                                                  ||
-//             ||                                                  ||
-//             ||                                                  ||
-//             ||       ***************      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||                     *      *              *      ||
-//             ||       ***************      ****************      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       *                                   *      ||
-//             ||       ***************                     *      ||
-//             ||                                                  ||
-//             ||                                                  ||
-//             ||                                                  ||
-//             ||                                                  ||
-//              ----------------------------------------------------
-
 ////////////////////---------- Are You Ready? ----------////////////////////
 ////////////////////------------- Let's Go -------------////////////////////
 ////////////////////---- Read Comments And Enjoy It ----////////////////////
@@ -41,9 +11,10 @@ import { CALENDAR, TIMETYPE, REGEX } from './utils.js'
 /**
  * A Date library for working with persian date
  * @class
- * @param {...Number|Date|Array|Null} date - the date that convert to persian date
+ * @param {Date|Array|Null|Object|String} date - the date that convert to persian date
+ * @param {String} [calendar='jalali'] - the calendar
  */
-const PersianDate = function () {
+const PersianDate = function (date, calendar) {
     'use strict'
 
     /**
@@ -162,9 +133,6 @@ const PersianDate = function () {
      * @returns {Date} Gregorian date
      */
     const jtg = (year, month, day, hour, minute, second, millisecond) => {
-        // if (!year)
-        //     [year, month, day, hour, minute, second, millisecond] = this.toArray();
-        // else {
         //plus sign before a variable, convert variable to int
         year = +year;
         month = +month || 1;
@@ -173,7 +141,6 @@ const PersianDate = function () {
         minute = +minute || 0;
         second = +second || 0;
         millisecond = +millisecond || 0;
-        // }
         let gYear, gMonth, gDay;
         if (year > 979) {
             gYear = 1600;
@@ -269,43 +236,20 @@ const PersianDate = function () {
     }
 
     /**
-     * get the day of the Jalali year
+     * get the day of the year
      * @param {Null|Number|String} month - the month of date that gives the day of the year
      * @param {Null|Number|String} day - the day of date that gives the day of the year
-     * @returns {Number} the day of the Jalali year
+     * @param {Null|Number|String} calendar - the calendar
+     * @returns {Number} the day of the year
      */
-    const getDayOfJYear = (month, day) => {
-        // if (!month)
-        //     [month, day] = [this.d.month, this.d.date];
+    const getDayOfYear = (year, month, day, calendar) => {
         //plus sign before a variable, convert variable to int
         month = +month;
         day = +day;
         while (--month != 0) {
-            day += this.clone().calendar('j').getDaysInMonth(0, month);
+            day += new PersianDate([year, month], calendar).getDaysInMonth();
         }
         return day;
-    }
-
-    /**
-     * get the day of the Gregorian year
-     * @param {Null|Date|Number|String} [year=Date.getFullYear()] - the year of date that gives the day of the year
-     * @param {Null|Number|String} [month=Date.getMonth()] - the month of date that gives the day of the year
-     * @param {Null|Number|String} [day=Date.getDate()] - the day of date that gives the day of the year
-     * @returns {Number} the day of the Gregorian year
-     */
-    const getDayOfGYear = (year, month, day) => {
-        // if (!year) {
-        //     let gDate = this.toDate();
-        //     [year, month, day] = [gDate.getFullYear(), gDate.getMonth(), gDate.getDate()];
-        // }
-        if (Object.prototype.toString.call(year) === '[object Date]') // if the year was an instance of Date
-            [year, month, day] = [year.getFullYear(), year.getMonth(), year.getDate()];
-        else
-            month--;
-        let date = new Date(year, month, day);
-        let startOfYear = new Date(year, 0, 0);
-        let diff = (date - startOfYear) + ((startOfYear.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
-        return Math.floor(diff / (1000 * 60 * 60 * 24));
     }
 
     /**
@@ -490,7 +434,7 @@ const PersianDate = function () {
                 month = this.d.month;
                 day = this.d.date;
             }
-            if ([year, month, day].some(e => String(e).search(/null|undifind|NaN/) != -1))
+            if ([year, month, day].some(e => String(e).search(/null|NaN/) != -1))
                 return false;
             if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
                 return false;
@@ -522,13 +466,14 @@ const PersianDate = function () {
         function (hour, minute, second, millisecond) {
             if (this.error)
                 return false;
-            if (!hour) {
-                hour = this.hour();
-                minute = this.minute();
-                second = this.second();
-                millisecond = this.millisecond();
+            if (hour == undefined) {
+                hour = this.d.hour;
+                minute = this.d.minute;
+                second = this.d.second;
+                millisecond = this.d.millisecond;
             }
-            if ([hour, minute, second, millisecond].some(e => String(e).search(/null|undifind|NaN/) != -1))
+
+            if ([hour, minute, second, millisecond].some(e => String(e).search(/null|NaN/) != -1))
                 return false;
             if (hour < 0 || hour > 23)
                 return false;
@@ -1281,7 +1226,7 @@ const PersianDate = function () {
             if (format == 'jde')
                 return dayOfWeek;
             //---------- Day of Year ----------//
-            let dayOfYear = getDayOfJYear(this.month('jM'), date);
+            let dayOfYear = getDayOfYear(this.year('jy'), this.month('jM'), date, 'j');
             if (format == 'jDDDD')
                 return addPrefix(dayOfYear, 3);
             if (format == 'jDDD')
@@ -1311,7 +1256,7 @@ const PersianDate = function () {
                 return getDayOfWeek(gDate, 'gregorian', 'array');
             if (format == 'de')
                 return dayOfWeek;
-            dayOfYear = getDayOfGYear(gDate);
+            dayOfYear = getDayOfYear(gDate.getFullYear(), gDate.getMonth() + 1, gDate.getDate(), 'g');
             //---------- Day of Year ----------//
             if (format == 'DDDD')
                 return addPrefix(dayOfYear, 3);
@@ -1620,21 +1565,22 @@ const PersianDate = function () {
      * @param {Null|Number|String} minute minute of date
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
-     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     * @returns {‌Boolean} if date valid, return true of false
+     * @throws {PersianDate} return the class
      */
-    PersianDate.prototype.isSame = function (year, month, day, hour, minute, second, millisecond) {
+    PersianDate.prototype.isSame = function (...date) {
         if (this.error)
             return false;
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(this.c, year, month, day, hour, minute, second, millisecond)
-        year = +year || 0;
-        month = +month || this.d.month;
-        day = +day || this.d.date;
-        hour = +hour || this.d.hour;
-        minute = +minute || this.d.minute;
-        second = +second || this.d.second;
-        millisecond = +millisecond || this.d.millisecond;
-        if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return this.clone().parse(year, month, day, hour, minute, second, millisecond).timestamp() == this.timestamp();
+        date = typesToArray(this.c, ...date)
+        date[0] = +date[0] || 0;
+        date[1] = +date[1] || this.d.month;
+        date[2] = +date[2] || this.d.date;
+        date[3] = +date[3] || this.d.hour;
+        date[4] = +date[4] || this.d.minute;
+        date[5] = +date[5] || this.d.second;
+        date[6] = +date[6] || this.d.millisecond;
+        if (this.isValid(...date))
+            return this.clone().parse(...date).timestamp() == this.timestamp();
         return false;
     }
 
@@ -1674,16 +1620,16 @@ const PersianDate = function () {
      * @param {Null|Number|String} millisecond millisecond of date
      * @returns {Array} array includes year, month, date, hour, minute, second, millinsecond
      */
-    const typesToArray = function (calendar, year, month, day, hour, minute, second, millisecond) {
-        //FIXME: check PersianDate and Date in diffrent calendar 
+    const typesToArray = function (calendar, year, month, date, hour, minute, second, millisecond) {
         if (!year) // if year not defined
             year = calendar == 'jalali' ? gtj() : new Date(); // return now
+        if (typeof year == 'string' && year.search(REGEX['separators']) != -1) {  // if type of year is String
+            year = year.split(/[/ -.,:\\]/);
+        }
         if (year instanceof PersianDate) // if type of year is PersianDate
             return year.calendar(calendar).toArray();
         else if (year instanceof Date) // if type of year is PersianDate
             return new PersianDate(year).calendar(calendar).toArray();
-        else if (typeof year == 'string' && year.search(REGEX['separators']) != -1) // if type of year is String
-            return year.split(/[/ -.,:\\]/);
         else if (Object.prototype.toString.call(year) === '[object Array]') // if type of year is Array
             return year;
         else if (Object.prototype.toString.call(year) === '[object Object]') // if type of year is Object
@@ -1696,25 +1642,7 @@ const PersianDate = function () {
                 year.s || year.second || year.seconds || 0,
                 year.ms || year.millisecond || year.milliseconds || 0,
             ];
-        return [year, month, day, hour, minute, second, millisecond];
-    }
-
-    /**
-     * convert the date to the unique number
-     * @since 1.2.0
-     * @param {Array} date - date that's want to number
-     * @returns {Number} uniqe number
-     */
-    const dateToNumber = (date) => {
-        let year = +date[0] || 0;
-        let month = +date[1] || 1;
-        let day = +date[2] || 1;
-        let hour = +date[3] || 0;
-        let minute = +date[4] || 0;
-        let second = +date[5] || 0;
-        let millisecond = +date[6] || 0;
-
-        return (((((year * 12 + month) * 31 + day) * 24 + hour) * 60 + minute) * 60 + second) * 1000 + millisecond;
+        return [year, month, date, hour, minute, second, millisecond];
     }
 
     /**
@@ -1749,15 +1677,13 @@ const PersianDate = function () {
      * @param {Null|Number|String} minute minute of date
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
-     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     * @returns {‌Boolean} if date valid, return true of false
+     * @throws {PersianDate} return the class
      */
-    PersianDate.prototype.isBefore = function (year, month, day, hour, minute, second, millisecond) {
+    PersianDate.prototype.isBefore = function (...date) {
         if (this.error)
             return false;
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(this.c, year, month, day, hour, minute, second, millisecond)
-        if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return this.clone().parse(year, month, day, hour, minute, second, millisecond).timestamp() > this.timestamp();
-        return false;
+        return compareDate(date, this, '>')
     }
 
     /**
@@ -1792,16 +1718,13 @@ const PersianDate = function () {
      * @param {Null|Number|String} minute minute of date
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
-     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     * @returns {‌Boolean} if date valid, return true of false
+     * @throws {PersianDate} return the class
      */
-    PersianDate.prototype.isAfter = function (year, month, day, hour, minute, second, millisecond) {
+    PersianDate.prototype.isAfter = function (...date) {
         if (this.error)
             return false;
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(this.c, year, month, day, hour, minute, second, millisecond)
-
-        if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return this.clone().parse(year, month, day, hour, minute, second, millisecond).timestamp() < this.timestamp();
-        return false;
+        return compareDate(date, this, '<')
     }
 
     ////////////////////--- Version 1.3.0 ---////////////////////
@@ -1845,7 +1768,6 @@ const PersianDate = function () {
         if (this.error)
             return this.error;
         if (!arguments.length) {
-            //FIXME:
             return this.d;
         }
         let formats = typesToArray(this.c, ...arguments);
@@ -1912,16 +1834,13 @@ const PersianDate = function () {
          * @param {Null|Number|String} minute minute of date
          * @param {Null|Number|String} second second of date
          * @param {Null|Number|String} millisecond millisecond of date
-         * @returns {PersianDate|‌Boolean} if date valid, return true of false
+         * @returns {‌Boolean} if date valid, return true of false
+         * @throws {PersianDate} return the class
          */
-    PersianDate.prototype.isSameOrBefore = function (year, month, day, hour, minute, second, millisecond) {
+    PersianDate.prototype.isSameOrBefore = function (...date) {
         if (this.error)
             return false;
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(this.c, year, month, day, hour, minute, second, millisecond)
-
-        if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return this.clone().parse(year, month, day, hour, minute, second, millisecond).timestamp() >= this.timestamp();
-        return false;
+        return compareDate(date, this, '>=')
     }
 
     /**
@@ -1956,17 +1875,13 @@ const PersianDate = function () {
      * @param {Null|Number|String} minute minute of date
      * @param {Null|Number|String} second second of date
      * @param {Null|Number|String} millisecond millisecond of date
-     * @returns {PersianDate|‌Boolean} if date valid, return true of false
+     * @returns {‌Boolean} if date valid, return true of false
+     * @throws {PersianDate} return the class
      */
-    PersianDate.prototype.isSameOrAfter = function (year, month, day, hour, minute, second, millisecond) {
+    PersianDate.prototype.isSameOrAfter = function (...date) {
         if (this.error)
             return false;
-        [year, month, day, hour, minute, second, millisecond] = typesToArray(this.c, year, month, day, hour, minute, second, millisecond)
-
-
-        if (this.isValid(year, month, day, hour, minute, second, millisecond))
-            return this.clone().parse(year, month, day, hour, minute, second, millisecond).timestamp() <= this.timestamp();
-        return false;
+        return compareDate(date, this, '<=')
     }
 
     /**
@@ -2019,7 +1934,8 @@ const PersianDate = function () {
      * @param {Null|String|Number} to.millisecond - millisecond of date
      * @param {Null|String|Number} to.milliseconds - millisecond of date
      * @param {String} method - determines that consider the dates themselves
-     * @returns {PersianDate|‌Boolean} if date valid, return true or false
+     * @returns {‌Boolean} if date valid, return true or false
+     * @throws {PersianDate} return the class
      */
     PersianDate.prototype.isBetween = function (from, to, method = '()') {
         if (this.error)
@@ -2084,64 +2000,53 @@ const PersianDate = function () {
     * @throws {false} if parameters not send or parameters is invalid, return false
     */
     PersianDate.prototype.min = function () {
-        if (!arguments.length) {
-            return false;
-        }
-        let args = Object.values(arguments).concat()
-        let argsNumber = args.map((date) => {
-            date = typesToArray(this.c, date);
-            if (this.isValid(...date))
-                return this.clone().parse(...date).timestamp()
-            return false
-        });
-        if (argsNumber.indexOf(false) != -1)
-            return false;
-        return args[argsNumber.indexOf(Math.min(...argsNumber))];
+        return mathOperation(arguments, this, 'min')
+        // if (!arguments.length) {
+        //     return false;
+        // }
+        // let args = Object.values(arguments).concat()
+        // let argsNumber = args.map((date) => {
+        //     date = typesToArray(this.c, date);
+        //     if (this.isValid(...date))
+        //         return this.clone().parse(...date).timestamp()
+        //     return false
+        // });
+        // if (argsNumber.indexOf(false) != -1)
+        //     return false;
+        // return args[argsNumber.indexOf(Math.min(...argsNumber))];
     }
 
     /**
-    * returns maximum date in arguments that passed
-    * @since 1.4.0
-    * @param {...String|PersianDate|Date|Array|Object} date - this parameters must be string or array or Object from date;
-    * @param {String} date.y - year of date
-    * @param {Null|String} date.year - year of date
-    * @param {Null|String} date.years - year of date
-    * @param {Null|String} date.M - month of date
-    * @param {Null|String} date.month - month of date
-    * @param {Null|String} date.months - month of date
-    * @param {Null|String} date.d - day of date
-    * @param {Null|String} date.day - day of date
-    * @param {Null|String} date.days - day of date
-    * @param {Null|String} date.date - day of date
-    * @param {Null|String} date.h - hour of date
-    * @param {Null|String} date.hour - hour of date
-    * @param {Null|String} date.hours - hour of date
-    * @param {Null|String} date.m - minute of date
-    * @param {Null|String} date.minute - minute of date
-    * @param {Null|String} date.minutes - minute of date
-    * @param {Null|String} date.s - second of date
-    * @param {Null|String} date.second - second of date
-    * @param {Null|String} date.seconds - second of date
-    * @param {Null|String} date.ms - millisecond of date
-    * @param {Null|String} date.millisecond - millisecond of date
-    * @param {Null|String} date.milliseconds - millisecond of date
-    * @returns {*} return maximum date
-    * @throws {false} if parameters not send or parameters is invalid, return false
-    */
+     * returns maximum date in arguments that passed
+     * @since 1.4.0
+     * @param {...String|PersianDate|Date|Array|Object} date - this parameters must be string or array or Object from date;
+     * @param {String} date.y - year of date
+     * @param {Null|String} date.year - year of date
+     * @param {Null|String} date.years - year of date
+     * @param {Null|String} date.M - month of date
+     * @param {Null|String} date.month - month of date
+     * @param {Null|String} date.months - month of date
+     * @param {Null|String} date.d - day of date
+     * @param {Null|String} date.day - day of date
+     * @param {Null|String} date.days - day of date
+     * @param {Null|String} date.date - day of date
+     * @param {Null|String} date.h - hour of date
+     * @param {Null|String} date.hour - hour of date
+     * @param {Null|String} date.hours - hour of date
+     * @param {Null|String} date.m - minute of date
+     * @param {Null|String} date.minute - minute of date
+     * @param {Null|String} date.minutes - minute of date
+     * @param {Null|String} date.s - second of date
+     * @param {Null|String} date.second - second of date
+     * @param {Null|String} date.seconds - second of date
+     * @param {Null|String} date.ms - millisecond of date
+     * @param {Null|String} date.millisecond - millisecond of date
+     * @param {Null|String} date.milliseconds - millisecond of date
+     * @returns {*} return maximum date
+     * @throws {false} if parameters not send or parameters is invalid, return false
+     */
     PersianDate.prototype.max = function () {
-        if (!arguments.length) {
-            return false;
-        }
-        let args = Object.values(arguments).flat()
-        let argsNumber = args.map((date) => {
-            date = typesToArray(this.c, date);
-            if (this.isValid(...date))
-                return this.clone().parse(...date).timestamp()
-            return false
-        });
-        if (argsNumber.indexOf(false) != -1)
-            return false;
-        return args[argsNumber.indexOf(Math.max(...argsNumber))];
+        return mathOperation(arguments, this, 'max')
     }
 
     /**
@@ -2417,6 +2322,7 @@ const PersianDate = function () {
             this.d = {};
         }
 
+
         if (!date.length)
             date[0] = new Date().getTime()
         // else 
@@ -2600,6 +2506,10 @@ const PersianDate = function () {
             return this;
     }
 
+    PersianDate.prototype.valueOf = function () {
+        return this.timestamp()
+    }
+
     /**
      * show warning for deprecated functions
      * @since 2.0.0
@@ -2655,15 +2565,49 @@ const PersianDate = function () {
         ] = date;
     }
 
+    /**
+     * compare the dates
+     * @since 2.0.0
+     * @param {PersianDate|Date|String|Array|Object} date - the date
+     * @param {PersianDate} instance - the instance of PersianDate
+     * @param {'>'|'>='|'<'|'<='} operator - the operator for compare
+     * @returns {‌Boolean} if date valid, return true of false
+     * @throws {PersianDate} return the class
+     */
+    const compareDate = (date, instance, operator) => {
+        date = typesToArray(instance.c, ...date)
 
-    //TODO: add nodejs support
-    //TODO: thats function not needed to date without create PersianDate must working for v2
-    //TODO: remove the excess comments
-    //TODO: remove dateToNumber function
-    //TODO: combine getWeekOfJYear and getWeekOfGYear function
-    //TODO: use shortest parameters -> (year, month, day, hour, minute, second, millisecond)
-    //TODO: combine isAfter and isBefore and ...
-    //TODO: add valueOf function
+        if (instance.isValid(...date))
+            return eval('instance.clone().parse(...date).timestamp() ' + operator + ' instance.timestamp()');
+        return false;
+    }
+
+    /**
+     * do the math operation on dates
+     * @since 1.4.0
+     * @param {...String|PersianDate|Date|Array|Object} values - the dates
+     * @param {PersianDate} instance - the instance of PersianDate
+     * @param {'min'|'max'} operation - the operation
+     * @returns {*} return maximum date
+     * @throws {false} if parameters not send or parameters is invalid, return false
+     */
+    const mathOperation = (values, instance, operation) => {
+        if (!values.length) {
+            return false;
+        }
+        let args = Object.values(values).concat()
+        let argsNumber = args.map((date) => {
+            date = typesToArray(instance.c, date);
+            if (instance.isValid(...date))
+                return instance.clone().parse(...date).timestamp()
+            return false
+        });
+        if (argsNumber.indexOf(false) != -1)
+            return false;
+        return eval('args[argsNumber.indexOf(Math.' + operation + '(...argsNumber))]');
+    }
+
+
     //TODO: check performance
     //TODO: git rm -rf --cached .
     //TODO: in doc, add jt, jh, jm and ...
@@ -2671,12 +2615,14 @@ const PersianDate = function () {
     //TODO: after writing the documentation complete the deprecated function warning
 
     //for next version
-    //TODO: add quarter and week and day to startOf and endOf
+    //TODO: add quarter and week and day to startOf and endOf function
+    //TODO: combine the add functions with sub functions
 
 
-    if (arguments.length)
-        //FIXME: use parse function
-        this.setDate(...arguments);
+    if (calendar)
+        this.calendar(calendar)
+    if (date)
+        this.fromGregorian(date);
     else
         this.now();
 
@@ -2684,8 +2630,5 @@ const PersianDate = function () {
 
 export default PersianDate
 
-////////////////////--- Thank You For Your Attention ---////////////////////
-////////////////////------ I'm Will Be Very Happy ------////////////////////
-////////////////////---- To Get To Know You Better! ----////////////////////
 ////////////////////- Email: Alibeikialireza@gmail.com -////////////////////
 ////////////////////--------- Have A Good Day  ---------////////////////////
