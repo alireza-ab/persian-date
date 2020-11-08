@@ -2609,7 +2609,6 @@ const PersianDate = function (date, calendar) {
 
 
     //TODO: check performance
-    //TODO: git rm -rf --cached .
     //TODO: in doc, add jt, jh, jm and ...
     //TODO: add versioning in doc for new functions
     //TODO: after writing the documentation complete the deprecated function warning
