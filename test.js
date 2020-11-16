@@ -11,7 +11,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 8,
-    date: 18
+    date: 25
 }
 
 test('create date and return now', () => {
@@ -34,17 +34,21 @@ test('create date with date and calendar', () => {
 
     expect(new PersianDate(['2021', '5', 8], 'g').toString('datetime:ss.c')).toBe('2021-05-08 00:00:00.0');
     expect(new PersianDate('2020-8-27', 'g').toString('datetime:ss.c')).toBe('2020-08-27 00:00:00.0');
+
+    expect(new PersianDate(['1400', '5', 8], 'j').toString('datetime:ss.c')).toBe('1400/05/08 00:00:00.0');
+    expect(new PersianDate('1400/8/27', 'j').toString('datetime:ss.c')).toBe('1400/08/27 00:00:00.0');
 });
 
 test('now function', () => {
     persianDate.calendar('j').now();
+    let date = new Date();
     expect(persianDate.year()).toBe(now.year);
     expect(persianDate.month()).toBe(now.month);
     expect(persianDate.date()).toBe(now.date);
-    expect(persianDate.hour()).toBe((new Date()).getHours());
-    expect(persianDate.minute()).toBe((new Date()).getMinutes());
-    expect(persianDate.second()).toBe((new Date()).getSeconds());
-    // expect(persianDate.millisecond()).toBe((new Date()).getMilliseconds());
+    expect(persianDate.hour()).toBe(date.getHours());
+    expect(persianDate.minute()).toBe(date.getMinutes());
+    expect(persianDate.second()).toBe(date.getSeconds());
+    expect(persianDate.millisecond()).toBe(date.getMilliseconds());
     expect(persianDate.calendar('g').now().toString('M/D/y, h:mm:ss A')).toBe(new Date().toLocaleString());
 });
 
@@ -823,23 +827,23 @@ test('date function', () => {
 });
 
 test('quarter function', () => {
-    persianDate.calendar('j').parse('1399-7-1');
+    persianDate.calendar('j').parse('1399-7-5');
     persianDate.quarter('2');
-    expect(persianDate.toString()).toBe('1399/04/01')
+    expect(persianDate.toString()).toBe('1399/04/05')
     persianDate.quarter('0');
-    expect(persianDate.toString()).toBe('1398/10/01')
-    persianDate.parse('1399-7-1');
+    expect(persianDate.toString()).toBe('1398/10/05')
+    persianDate.parse('1399-7-5');
     persianDate.quarter('5');
-    expect(persianDate.toString()).toBe('1400/03/01')
+    expect(persianDate.toString()).toBe('1400/03/05')
 
-    persianDate.calendar('g').parse('2020-7-1');
+    persianDate.calendar('g').parse('2020-7-5');
     persianDate.quarter('2');
-    expect(persianDate.toString()).toBe('2020-04-01')
+    expect(persianDate.toString()).toBe('2020-04-05')
     persianDate.quarter('0');
-    expect(persianDate.toString()).toBe('2019-10-01')
-    persianDate.parse('2020-7-1');
+    expect(persianDate.toString()).toBe('2019-10-05')
+    persianDate.parse('2020-7-5');
     persianDate.quarter('5');
-    expect(persianDate.toString()).toBe('2021-03-01')
+    expect(persianDate.toString()).toBe('2021-03-05')
 });
 
 test('week function', () => {
@@ -979,7 +983,6 @@ test('isSame function', () => {
     })).toBe(false)
     expect(persianDate.isSame('1399/6/1')).toBe(true)
     expect(persianDate.isSame('1399/13/1')).toBe(false)
-    expect(persianDate.isSame()).toBe(false)
     expect(persianDate.isSame()).toBe(false)
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.isSame(2020, '6', 1, '12', 20, 30, 235)).toBe(true)
@@ -1644,8 +1647,8 @@ test('diffForHumans function', () => {
     expect(persianDate.diffForHumans('1400/1/1 00:40')).toBe('40 دقیقه پیش')
     expect(persianDate.diffForHumans('1399/12/30 23:59:10')).toBe('1 دقیقه آینده')
     expect(persianDate.diffForHumans('1400/1/1 00:00:50')).toBe('1 دقیقه پیش')
-    expect(persianDate.diffForHumans('1399/12/30 23:59:30')).toBe('لحظاتی آینده')
-    expect(persianDate.diffForHumans('1400/1/1 00:00:30')).toBe('لحظاتی پیش')
+    expect(persianDate.diffForHumans('1399/12/30 23:59:30')).toBe('لحظات آینده')
+    expect(persianDate.diffForHumans('1400/1/1 00:00:30')).toBe('لحظات پیش')
     expect(persianDate.diffForHumans('1400/1/1')).toBe('هم اکنون')
     expect(persianDate.diffForHumans('1350/1/1', false)).toBe('50 سال')
     expect(persianDate.diffForHumans('1450/1/1', false)).toBe('50 سال')
@@ -1665,8 +1668,8 @@ test('diffForHumans function', () => {
     expect(persianDate.diffForHumans('2020/1/1 00:40')).toBe('40 دقیقه پیش')
     expect(persianDate.diffForHumans('2019/12/31 23:59:10')).toBe('1 دقیقه آینده')
     expect(persianDate.diffForHumans('2020/1/1 00:00:50')).toBe('1 دقیقه پیش')
-    expect(persianDate.diffForHumans('2019/12/31 23:59:30')).toBe('لحظاتی آینده')
-    expect(persianDate.diffForHumans('2020/1/1 00:00:30')).toBe('لحظاتی پیش')
+    expect(persianDate.diffForHumans('2019/12/31 23:59:30')).toBe('لحظات آینده')
+    expect(persianDate.diffForHumans('2020/1/1 00:00:30')).toBe('لحظات پیش')
     expect(persianDate.diffForHumans('2020/1/1')).toBe('هم اکنون')
     expect(persianDate.diffForHumans('1970/1/1', false)).toBe('50 سال')
     expect(persianDate.diffForHumans('2070/1/1', false)).toBe('50 سال')

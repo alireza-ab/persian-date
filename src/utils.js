@@ -140,7 +140,7 @@ const REGEX = {
     format: /j*(YYYY|YY|y|Qo|QO|Q|MMMM|MMM|MM|Mo|MO|M|DDDD|DDDo|DDDO|DDD|DD|Do|DO|D|dddd|ddd|dd|do|dO|de|d|ww|WW|wo|Wo|wO|WO|w|W|HH|hh|H|h|kk|k|mm|m|ss|s|CCCC|CCC|c|t|aa|a|A)/g,
     isNumeric: /^\d+$/, // this regex, checks input to see is a number or not
     separators: "\\/| |-|\\.|,|:", // find ['/',' ','-','.',',',':'] and split string to array by this symbols
-    betweenBacktick: /`(.*?)`/g, // find ['/',' ','-','.',',',':'] and split string to array by this symbols
+    betweenBacktick: /`(.*?)`/g, // find the texts between the backticks ==> `Alireza`
 };
 
 const TIMETYPE = function (hour, format) {

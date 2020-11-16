@@ -265,7 +265,6 @@ const PersianDate = function (date, calendar) {
         let firstOfYear = new PersianDate().calendar(calendar).parse(year);
         let firstOfYearDay = firstOfYear.date(dayOfYearFormat)
         let date = firstOfYear.clone().parse(year, month, day)
-        // let dayOfWeek = date.date(dayOfYearFormat)
         if (firstOfYearDay > 3)
             firstOfYear.addDay(7 - firstOfYearDay)
 
@@ -333,7 +332,10 @@ const PersianDate = function (date, calendar) {
      * @throws {PersianDate|String} if date invalid return class with error property with error property
      */
     PersianDate.prototype.setDate = function (...date) {
-        deprecate('"setDate" function is deprecated!\nuse "fromGregorian" function instead.')
+        deprecate(
+            '"setDate" function is deprecated! use "fromGregorian" function instead.\n' +
+            'https://alireza-ab.ir/persian-date/create-and-parse#from-gregorian-date'
+        )
         return this.fromGregorian(...date);
     }
 
@@ -412,10 +414,7 @@ const PersianDate = function (date, calendar) {
         function (year, month, day, hour, minute, second, millisecond) {
             if (this.error)
                 return false;
-            let result = this.isValidDate(year, month, day);
-            if (result)
-                return this.isValidTime(hour, minute, second, millisecond);
-            return false;
+            return (this.isValidDate(year, month, day) && this.isValidTime(hour, minute, second, millisecond))
         }
 
     /**
@@ -1336,24 +1335,6 @@ const PersianDate = function (date, calendar) {
             }
             let weekOfYear = getWeekOfYear(this.d.year, this.d.month, this.d.date, this.c)
             this.addWeek(+format - weekOfYear)
-            // let gDateFirstOfYear = this.c == 'jalali' ? jtg(this.d.year) : new Date(this.d.year);
-            // // day of first date of year --> 2020-1-1 -> Saturday -> 6
-            // let firstOfYear = getDayOfWeek(gDateFirstOfYear, this.c, 'array');
-            // let dayOfYear = +format * 7 - firstOfYear; // number of day that past from this week
-            // let month = 1;
-            // while (this.getDaysInMonth(this.d.year, month) <= dayOfYear) {
-            //     dayOfYear -= this.getDaysInMonth(this.d.year, month);
-            //     month++;
-            // }
-            // this.d.month = dayOfYear == 0 ? --month : month;
-            // if (dayOfYear <= 6 && month == 1)
-            //     this.d.date = 1;
-            // else {
-            //     let gDate = this.toDate();
-            //     this.d.date = dayOfYear || this.getDaysInMonth(this.d.year, month);
-            //     dayOfYear = 6 - getDayOfWeek(gDate, this.c, 'array') + (dayOfYear == 0 ? 1 : 0);
-            //     this.subDay(dayOfYear, false);
-            // }
             while (!this.isValidDate()) {
                 this.subDay(1, false);
             }
@@ -2001,19 +1982,6 @@ const PersianDate = function (date, calendar) {
     */
     PersianDate.prototype.min = function () {
         return mathOperation(arguments, this, 'min')
-        // if (!arguments.length) {
-        //     return false;
-        // }
-        // let args = Object.values(arguments).concat()
-        // let argsNumber = args.map((date) => {
-        //     date = typesToArray(this.c, date);
-        //     if (this.isValid(...date))
-        //         return this.clone().parse(...date).timestamp()
-        //     return false
-        // });
-        // if (argsNumber.indexOf(false) != -1)
-        //     return false;
-        // return args[argsNumber.indexOf(Math.min(...argsNumber))];
     }
 
     /**
@@ -2185,7 +2153,7 @@ const PersianDate = function (date, calendar) {
     ////////////////////--- Version 2.0.0 ---////////////////////
 
     /**
-     * return the object of PersianDate
+     * get the diffrence between two date in a human-readable format
      * @since 2.0.0
      * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
      * @returns {String} if date valid, return diff human-readable format
@@ -2203,7 +2171,7 @@ const PersianDate = function (date, calendar) {
         if (result == 0)
             return 'هم اکنون';
         else if (result < 45)
-            result = 'لحظاتی';
+            result = 'لحظات';
         else if ((result /= 60) < 45) // divide by 60, for getting minute
             result = Math.round(result) + ' ' + 'دقیقه';
         else if ((result /= 60) < 23.5) // divide by 60, for getting hour
@@ -2325,7 +2293,6 @@ const PersianDate = function (date, calendar) {
 
         if (!date.length)
             date[0] = new Date().getTime()
-        // else 
         if (this.isPersianDate(date[0])) {
             date = date[0].toArray()
         }
@@ -2607,25 +2574,22 @@ const PersianDate = function (date, calendar) {
         return eval('args[argsNumber.indexOf(Math.' + operation + '(...argsNumber))]');
     }
 
-
-    //TODO: check performance
-    //TODO: in doc, add jt, jh, jm and ...
-    //TODO: add versioning in doc for new functions
-    //TODO: after writing the documentation complete the deprecated function warning
-
-    //for next version
-    //TODO: add quarter and week and day to startOf and endOf function
-    //TODO: combine the add functions with sub functions
-
-
     if (calendar)
         this.calendar(calendar)
-    if (date)
-        this.fromGregorian(date);
+    if (date) {
+        if (calendar && calendar[0] == 'j')
+            this.fromJalali(date);
+        else
+            this.fromGregorian(date);
+    }
     else
         this.now();
 
 }
+
+//for next version
+//TODO: add quarter and week and day to startOf and endOf function
+//TODO: combine the add functions with sub functions
 
 export default PersianDate
 
