@@ -5,7 +5,7 @@ A lightweight but professional javascript library for working with Persian dates
 [![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://img.shields.io/npm/v/@alireza-ab/persian-date)
 
 ## Install
-
+test
 ```shell
 npm install @alireza-ab/persian-date
 ```
