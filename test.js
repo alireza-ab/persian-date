@@ -10,8 +10,8 @@ let persianDate = new PersianDate();
 
 const now = {
     year: 1399,
-    month: 8,
-    date: 25
+    month: 10,
+    date: 1
 }
 
 test('create date and return now', () => {
@@ -1320,6 +1320,7 @@ test('isBetween function', () => {
     expect(persianDate.isBetween('1399', '1400', '[)')).toBe(true)
     expect(persianDate.isBetween('1399/5', '1399/6', '[)')).toBe(false)
     expect(persianDate.isBetween('1399/5', '1399/6', '(]')).toBe(true)
+    expect(persianDate.isBetween('1398/11', '1399/7', '[]')).toBe(true)
     expect(persianDate.isBetween('1399/5/31', '1399/6/2')).toBe(true)
     expect(persianDate.isBetween('1399/6/1', '1399/6/1')).toBe(false)
     expect(persianDate.isBetween('1399/6/1', '1399/6/1', '[]')).toBe(true)
@@ -1344,6 +1345,7 @@ test('isBetween function', () => {
     expect(persianDate.isBetween('2020', '2021', '[)')).toBe(true)
     expect(persianDate.isBetween('2020-5', '2020-6', '[)')).toBe(false)
     expect(persianDate.isBetween('2020-5', '2020-6', '(]')).toBe(true)
+    expect(persianDate.isBetween('2019-11', '2020-7', '(]')).toBe(true)
     expect(persianDate.isBetween('2020-5-31', '2020-6-2')).toBe(true)
     expect(persianDate.isBetween('2020-6-1', '2020-6-1')).toBe(false)
     expect(persianDate.isBetween('2020-6-1', '2020-6-1', '[]')).toBe(true)
