@@ -2100,7 +2100,10 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isBetween = function (from, to, method = "()") {
 		if (this.error) return false;
+		let $this = this.clone();
 		from = typesToArray(this.c, from);
+		if (!from[2])
+			$this.date(1);
 		from = [
 			from[0] || this.d.year,
 			from[1] || this.d.month,
@@ -2120,10 +2123,9 @@ const PersianDate = function (date, calendar) {
 			to[5] || this.d.second,
 			to[6] || this.d.millisecond,
 		];
+
 		if (!(this.isValid(...from) && this.isValid(...to)))
 			return false;
-
-		let $this = this.clone().date(1);
 
 		return (
 			(method[0] === "["
