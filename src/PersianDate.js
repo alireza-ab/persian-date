@@ -2653,7 +2653,8 @@ const PersianDate = function (date, calendar) {
 //TODO: combine the add functions with sub functions
 //TODO: add the special character for get in all calendars
 //TODO: do better isSame - isBetween - clone --> if is possible
-//TODO: add doc for "`" character in toString function
+//TODO: add doc for "`" and "?" character in toString function
+//TODO: refactor
 
 export default PersianDate;
 
