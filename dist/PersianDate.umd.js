@@ -1173,6 +1173,7 @@ const PersianDate = function (date, calendar) {
 				return "###";
 			}
 		);
+		format = format.replace(/\?/g, this.c == 'jalali' ? 'j' : '')
 		if (this.c == "jalali")
 			format = format
 				.replace(/datetime/gi, "jYYYY/jMM/jDD HH:mm")
@@ -1494,10 +1495,11 @@ const PersianDate = function (date, calendar) {
 			return this;
 		} else {
 			if (!format) format = this.c == "jalali" ? "jw" : "w";
+			let date = this.c == "jalali" ? [this.d.year, this.d.month, this.d.date] : gtj(this.toDate())
 			let weekOfYear = getWeekOfYear(
-				this.d.year,
-				this.d.month,
-				this.d.date,
+				date[0],
+				date[1],
+				date[2],
 				this.c
 			);
 			if (format == "jw" || format == "jW") return weekOfYear;

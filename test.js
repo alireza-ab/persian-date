@@ -3,6 +3,7 @@ const perf = require('@alireza-ab/performance-check');
 // import PersianDate from './src/PersianDate.js'
 
 let persianDate = new PersianDate();
+let date = new Date();
 
 ////////////////////------------- ATTENTION -------------////////////////////
 //                  please change now date and start test                  //
@@ -11,7 +12,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 10,
-    date: 2
+    date: 4
 }
 
 test('create date and return now', () => {
@@ -19,13 +20,13 @@ test('create date and return now', () => {
     expect(persianDate.year()).toBe(now.year);
     expect(persianDate.month()).toBe(now.month);
     expect(persianDate.date()).toBe(now.date);
-    expect(persianDate.hour()).toBe((new Date()).getHours());
-    expect(persianDate.minute()).toBe((new Date()).getMinutes());
-    // expect(persianDate.second()).toBe((new Date()).getSeconds());
-    // expect(persianDate.millisecond()).toBe((new Date()).getMilliseconds());
+    expect(persianDate.hour()).toBe(date.getHours());
+    expect(persianDate.minute()).toBe(date.getMinutes());
+    expect(persianDate.second()).toBe(date.getSeconds());
+    expect(persianDate.millisecond()).toBe(date.getMilliseconds());
 
-    // expect(persianDate.calendar('g').toDate().toString()).toBe(new Date().toString());
-    expect(new PersianDate().calendar('g').toDate().toString()).toBe(new Date().toString());
+    expect(persianDate.calendar('g').toDate().toString()).toBe(date.toString());
+    expect(new PersianDate().calendar('g').toDate().toString()).toBe(date.toString());
 });
 
 test('create date with date and calendar', () => {
@@ -745,6 +746,8 @@ test('toString function with jalali calendar', () => {
     expect(persianDate.toString('`the value is:` date')).toBe('the value is: 1400/01/01')
     expect(persianDate.toString('jYYYY `is a good year.`')).toBe('1400 is a good year.')
     expect(persianDate.toString("`it's` h `O'Clock`")).toBe("it's 3 O'Clock")
+
+    expect(persianDate.toString("`what's the date?` ?YYYY ?MM ?DD")).toBe("what's the date? 1400 01 01")
 });
 
 test('toString function with gregorian calendar', () => {
@@ -764,8 +767,8 @@ test('toString function with gregorian calendar', () => {
         .toBe('287|دویست و هشتاد و هفتم|دویست و هشتاد و هفتمین|287|11|یازدهم|یازدهمین|11')
     expect(persianDate.toString('dddd|ddd|dd|do|dO|d|de')).toBe('Wednesday|Wed|We|4th|4th|3|4')
     expect(persianDate.toString('jdddd|jddd|jdd|jdo|jdO|jd|jde')).toBe('چهارشنبه|چهارشنبه|چ|پنجم|پنجمین|4|5')
-    // expect(persianDate.toString('ww|WW|wo|Wo|wO|WO|w|W')).toBe('01|01|1st|1st|1st|1st|1|1')
-    // expect(persianDate.toString('jww|jWW|jwo|jWo|jwO|jWO|jw|jW')).toBe('42|42|چهل و دوم|چهل و دوم|چهل و دومین|چهل و دومین|42|42')
+    expect(persianDate.toString('ww|WW|wo|Wo|wO|WO|w|W')).toBe('01|01|1st|1st|1st|1st|1|1')
+    expect(persianDate.toString('jww|jWW|jwo|jWo|jwO|jWO|jw|jW')).toBe('41|41|چهل و یکم|چهل و یکم|چهل و یکمین|چهل و یکمین|41|41')
     expect(persianDate.toString('HH|hh|H|h|kk|k')).toBe('15|03|15|3|15|15')
     expect(persianDate.toString('mm|m')).toBe('54|54')
     expect(persianDate.toString('ss|s')).toBe('56|56')
@@ -775,6 +778,8 @@ test('toString function with gregorian calendar', () => {
     expect(persianDate.toString('`the value is:` date')).toBe('the value is: 2020-01-01')
     expect(persianDate.toString('YYYY `is a good year.`')).toBe('2020 is a good year.')
     expect(persianDate.toString("`it's` h `O'Clock`")).toBe("it's 3 O'Clock")
+
+    expect(persianDate.toString("`what's the date?` ?YYYY ?MM ?DD")).toBe("what's the date? 2020 01 01")
 })
 
 test('year function', () => {
