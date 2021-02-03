@@ -11,10 +11,10 @@ import { CALENDAR, TIMETYPE, REGEX } from "./utils.js";
 /**
  * A Date library for working with persian date
  * @class
- * @param {Date|Array|Null|Object|String} date - the date that convert to persian date
- * @param {String} [calendar='jalali'] - the calendar
+ * @param {Date|Array|Null|Object|String} dateVal - the date that convert to persian date
+ * @param {String} [calendarVal='jalali'] - the calendar
  */
-const PersianDate = function (date, calendar) {
+const PersianDate = function (dateVal, calendarVal) {
 	"use strict";
 
 	/**
@@ -53,20 +53,18 @@ const PersianDate = function (date, calendar) {
 	const gtj = (year, month, day, hour, minute, second, millisecond) => {
 		let date;
 		if (!year) date = new Date();
-		else if (
-			Object.prototype.toString.call(year) === "[object Date]"
-		)
+		else if (Object.prototype.toString.call(year) === "[object Date]")
 			// if the year was an instance of Date
 			date = year;
 		else
 			date = new Date(
-				year,
-				month || 0,
-				day || 1,
-				hour || 0,
-				minute || 0,
-				second || 0,
-				millisecond || 0
+				REGEX["isNumeric"].test(year) ? year : 0,
+				REGEX["isNumeric"].test(month) ? month : 0,
+				REGEX["isNumeric"].test(day) ? day : 1,
+				REGEX["isNumeric"].test(hour) ? hour : 0,
+				REGEX["isNumeric"].test(minute) ? minute : 0,
+				REGEX["isNumeric"].test(second) ? second : 0,
+				REGEX["isNumeric"].test(millisecond) ? millisecond : 0
 			);
 		day = date.getDate();
 		month = date.getMonth() + 1; // Because the output of getMonth() start from zero, add one
@@ -115,9 +113,7 @@ const PersianDate = function (date, calendar) {
 			days = (days - 1) % 365;
 		}
 		jMonth =
-			days < 186
-				? 1 + parseInt(days / 31)
-				: 7 + parseInt((days - 186) / 30);
+			days < 186 ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
 		jDay = 1 + (days < 186 ? days % 31 : (days - 186) % 30);
 		return [jYear, jMonth, jDay, hour, minute, second, millisecond];
 	};
@@ -135,13 +131,13 @@ const PersianDate = function (date, calendar) {
 	 */
 	const jtg = (year, month, day, hour, minute, second, millisecond) => {
 		//plus sign before a variable, convert variable to int
-		year = +year;
-		month = +month || 1;
-		day = +day || 1;
-		hour = +hour || 0;
-		minute = +minute || 0;
-		second = +second || 0;
-		millisecond = +millisecond || 0;
+		year = REGEX["isNumeric"].test(year) ? +year : 1;
+		month = REGEX["isNumeric"].test(month) ? +month : 1;
+		day = REGEX["isNumeric"].test(day) ? +day : 1;
+		hour = REGEX["isNumeric"].test(hour) ? +hour : 0;
+		minute = REGEX["isNumeric"].test(minute) ? +minute : 0;
+		second = REGEX["isNumeric"].test(second) ? +second : 0;
+		millisecond = REGEX["isNumeric"].test(millisecond) ? +millisecond : 0;
 		let gYear, gMonth, gDay;
 		if (year > 979) {
 			gYear = 1600;
@@ -173,9 +169,7 @@ const PersianDate = function (date, calendar) {
 		let daysOfMonths = [
 			0,
 			31,
-			(gYear % 4 == 0 && gYear % 100 != 0) || gYear % 400 == 0
-				? 29
-				: 28,
+			(gYear % 4 == 0 && gYear % 100 != 0) || gYear % 400 == 0 ? 29 : 28,
 			31,
 			30,
 			31,
@@ -193,15 +187,7 @@ const PersianDate = function (date, calendar) {
 			gDay -= v;
 		}
 
-		return new Date(
-			gYear,
-			gMonth - 1,
-			gDay,
-			hour,
-			minute,
-			second,
-			millisecond
-		);
+		return new Date(gYear, gMonth - 1, gDay, hour, minute, second, millisecond);
 	};
 
 	/**
@@ -215,9 +201,7 @@ const PersianDate = function (date, calendar) {
 	const getDayLabel = (date = new Date(), calendar = "jalali") => {
 		if (Object.prototype.toString.call(date) === "[object Date]")
 			// if the year was an instance of Date
-			return CALENDAR[calendar]["days"]["label"][
-				date.getDay()
-			];
+			return CALENDAR[calendar]["days"]["label"][date.getDay()];
 		return showError("تاریخ نامعتبر", this);
 	};
 
@@ -237,9 +221,8 @@ const PersianDate = function (date, calendar) {
 		if (Object.prototype.toString.call(date) === "[object Date]") {
 			// if the year was an instance of Date
 			return (
-				CALENDAR[calendar]["days"]["weekNumber"][
-				date.getDay()
-				] + (mode != "standard" ? 0 : 1)
+				CALENDAR[calendar]["days"]["weekNumber"][date.getDay()] +
+				(mode != "standard" ? 0 : 1)
 			);
 		}
 		return showError("تاریخ نامعتبر", this);
@@ -257,10 +240,7 @@ const PersianDate = function (date, calendar) {
 		month = +month;
 		day = +day;
 		while (--month != 0) {
-			day += new PersianDate(
-				[year, month],
-				calendar
-			).getDaysInMonth();
+			day += new PersianDate([year, month], calendar).getDaysInMonth();
 		}
 		return day;
 	};
@@ -275,16 +255,12 @@ const PersianDate = function (date, calendar) {
 	 */
 	const getWeekOfYear = (year, month, day, calendar) => {
 		let dayOfYearFormat = calendar == "jalali" ? "jd" : "d";
-		let firstOfYear = new PersianDate()
-			.calendar(calendar)
-			.parse(year);
+		let firstOfYear = new PersianDate().calendar(calendar).parse(year);
 		let firstOfYearDay = firstOfYear.date(dayOfYearFormat);
 		let date = firstOfYear.clone().parse(year, month, day);
 		if (firstOfYearDay > 3) firstOfYear.addDay(7 - firstOfYearDay);
 
-		let weekNumber = Math.ceil(
-			date.diff(firstOfYear, "date", true) / 7
-		);
+		let weekNumber = Math.ceil(date.diff(firstOfYear, "date", true) / 7);
 
 		let weeksInYear = date.clone().getWeeksInYear();
 		return weekNumber > weeksInYear ? weeksInYear : weekNumber;
@@ -408,10 +384,7 @@ const PersianDate = function (date, calendar) {
 			let remainder = year % 33;
 			return array.includes(remainder);
 		} else {
-			return (
-				(year % 4 == 0 && year % 100 != 0) ||
-				year % 400 == 0
-			);
+			return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 		}
 	};
 
@@ -456,28 +429,17 @@ const PersianDate = function (date, calendar) {
 			month = this.d.month;
 			day = this.d.date;
 		}
-		if (
-			[year, month, day].some(
-				(e) => String(e).search(/null|NaN/) != -1
-			)
-		)
+		if ([year, month, day].some((e) => String(e).search(/null|NaN/) != -1))
 			return false;
 		if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
 			return false;
 		if (this.c == "jalali") {
-			if (month >= 7 && month <= 11 && day == 31)
-				return false;
+			if (month >= 7 && month <= 11 && day == 31) return false;
 			if (month == 12 && day == 31) return false;
-			if (month == 12 && day == 30 && !this.isLeapYear(year))
-				return false;
+			if (month == 12 && day == 30 && !this.isLeapYear(year)) return false;
 		} else {
-			if ([2, 4, 6, 9, 11].includes(month) && day == 31)
-				return false;
-			if (
-				month == 2 &&
-				(day == 30 ||
-					(day == 29 && !this.isLeapYear(year)))
-			)
+			if ([2, 4, 6, 9, 11].includes(month) && day == 31) return false;
+			if (month == 2 && (day == 30 || (day == 29 && !this.isLeapYear(year))))
 				return false;
 		}
 		return true;
@@ -531,10 +493,7 @@ const PersianDate = function (date, calendar) {
 		if (this.error) return this.error;
 		if (this.c == "jalali") {
 			if (month >= 1 && month <= 6) return 31;
-			if (
-				(month > 6 && month <= 11) ||
-				this.isLeapYear(year)
-			) {
+			if ((month > 6 && month <= 11) || this.isLeapYear(year)) {
 				return 30;
 			}
 			return 29;
@@ -575,10 +534,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.addMonth = function (
-		month = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.addMonth = function (month = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!month) return this;
 		if (month < 0)
@@ -622,8 +578,7 @@ const PersianDate = function (date, calendar) {
 			return this.subDay(Math.abs(day));
 		day = +day; //plus sign before a variable, convert variable to int
 
-		let dayToStartNextMonth =
-			this.getDaysInMonth() - this.d.date + 1; // dayToStartNextMonth -> Number of day to start of next month
+		let dayToStartNextMonth = this.getDaysInMonth() - this.d.date + 1; // dayToStartNextMonth -> Number of day to start of next month
 		if (dayToStartNextMonth > day) {
 			this.d.date += day;
 		} else {
@@ -651,10 +606,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.addQuarter = function (
-		quarter = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.addQuarter = function (quarter = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!quarter) return this;
 		if (quarter < 0)
@@ -708,8 +660,7 @@ const PersianDate = function (date, calendar) {
 			this.d.hour = hour;
 		} else this.d.hour += hour;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -721,10 +672,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.addMinute = function (
-		minute = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.addMinute = function (minute = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!minute) return this;
 		if (minute < 0)
@@ -742,8 +690,7 @@ const PersianDate = function (date, calendar) {
 			this.d.minute = minute;
 		} else this.d.minute += minute;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -755,10 +702,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.addSecond = function (
-		second = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.addSecond = function (second = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!second) return this;
 		if (second < 0)
@@ -776,8 +720,7 @@ const PersianDate = function (date, calendar) {
 			this.d.second = second;
 		} else this.d.second += second;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -810,8 +753,7 @@ const PersianDate = function (date, calendar) {
 			this.d.millisecond = millisecond;
 		} else this.d.millisecond += millisecond;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -825,7 +767,7 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
 		if (!year) return this;
-		this.d.year -= year = Math.abs(year); //plus sign before a variable, convert variable to int
+		this.d.year -= Math.abs(year);
 		while (checkDate && !this.isValidDate()) this.subDay(1, false);
 		return this;
 	};
@@ -838,10 +780,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.subMonth = function (
-		month = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.subMonth = function (month = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!month) return this;
 		month = Math.abs(month); //plus sign before a variable, convert variable to int
@@ -903,10 +842,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.subQuarter = function (
-		quarter = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.subQuarter = function (quarter = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!quarter) return this;
 		quarter = Math.abs(quarter);
@@ -951,8 +887,7 @@ const PersianDate = function (date, calendar) {
 			this.d.hour = 24 - hour;
 		} else this.d.hour -= hour;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -964,10 +899,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.subMinute = function (
-		minute = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.subMinute = function (minute = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!minute) return this;
 		minute = Math.abs(minute);
@@ -982,8 +914,7 @@ const PersianDate = function (date, calendar) {
 			this.d.minute = 60 - minute;
 		} else this.d.minute -= minute;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -995,10 +926,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
-	PersianDate.prototype.subSecond = function (
-		second = 1,
-		checkDate = true
-	) {
+	PersianDate.prototype.subSecond = function (second = 1, checkDate = true) {
 		if (this.error) return this.error;
 		if (!second) return this;
 		second = Math.abs(second);
@@ -1013,8 +941,7 @@ const PersianDate = function (date, calendar) {
 			this.d.second = 60 - second;
 		} else this.d.second -= second;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -1044,8 +971,7 @@ const PersianDate = function (date, calendar) {
 			this.d.millisecond = 1000 - millisecond;
 		} else this.d.millisecond -= millisecond;
 
-		while (checkDate && !this.isValidTime())
-			this.subMillisecond(1, false);
+		while (checkDate && !this.isValidTime()) this.subMillisecond(1, false);
 		return this;
 	};
 
@@ -1058,14 +984,11 @@ const PersianDate = function (date, calendar) {
 	PersianDate.prototype.toString = function (format = "date") {
 		if (this.error) return this.error;
 		let texts = [];
-		format = format.replace(
-			REGEX["betweenBacktick"],
-			(matched, text) => {
-				texts.push(text);
-				return "###";
-			}
-		);
-		format = format.replace(/\?/g, this.c == 'jalali' ? 'j' : '')
+		format = format.replace(REGEX["betweenBacktick"], (matched, text) => {
+			texts.push(text);
+			return "###";
+		});
+		format = format.replace(/\?/g, this.c == "jalali" ? "j" : "");
 		if (this.c == "jalali")
 			format = format
 				.replace(/datetime/gi, "jYYYY/jMM/jDD HH:mm")
@@ -1081,28 +1004,16 @@ const PersianDate = function (date, calendar) {
 		for (const i of matchedFormat) {
 			dateString += format.substring(0, format.indexOf(i));
 			if (i.search(/Y|y/) != -1) dateString += this.year(i);
-			else if (i.search(/Q/) != -1)
-				dateString += this.quarter(i);
-			else if (i.search(/M/) != -1)
-				dateString += this.month(i);
-			else if (i.search(/Q/) != -1)
-				dateString += this.quarter(i);
-			else if (i.search(/D|d/) != -1)
-				dateString += this.date(i);
-			else if (i.search(/W|w/) != -1)
-				dateString += this.week(i);
-			else if (i.search(/H|h|k/) != -1)
-				dateString += this.hour(i);
-			else if (i.search(/m/) != -1)
-				dateString += this.minute(i);
-			else if (i.search(/s/) != -1)
-				dateString += this.second(i);
-			else if (i.search(/c|C/) != -1)
-				dateString += this.millisecond(i);
-			else if (i.search(/t/) != -1)
-				dateString += this.timestamp();
-			else if (i.search(/a|A/) != -1)
-				dateString += TIMETYPE(this.d.hour, i);
+			else if (i.search(/M/) != -1) dateString += this.month(i);
+			else if (i.search(/Q/) != -1) dateString += this.quarter(i);
+			else if (i.search(/D|d/) != -1) dateString += this.date(i);
+			else if (i.search(/W|w/) != -1) dateString += this.week(i);
+			else if (i.search(/H|h|k/) != -1) dateString += this.hour(i);
+			else if (i.search(/m/) != -1) dateString += this.minute(i);
+			else if (i.search(/s/) != -1) dateString += this.second(i);
+			else if (i.search(/c|C/) != -1) dateString += this.millisecond(i);
+			else if (i.search(/t/) != -1) dateString += this.timestamp();
+			else if (i.search(/a|A/) != -1) dateString += TIMETYPE(this.d.hour, i);
 
 			format = format.substr(format.indexOf(i) + i.length);
 		}
@@ -1129,18 +1040,12 @@ const PersianDate = function (date, calendar) {
 			}
 			return this;
 		} else {
-			if (!format)
-				format = this.c == "jalali" ? "jYYYY" : "YYYY";
-			let year =
-				this.c == "jalali"
-					? this.d.year
-					: gtj(this.toDate())[0];
+			if (!format) format = this.c == "jalali" ? "jYYYY" : "YYYY";
+			let year = this.c == "jalali" ? this.d.year : gtj(this.toDate())[0];
 			if (format == "jYYYY" || format == "jy") return year;
 			if (format == "jYY") return String(year).slice(-2);
 			let gYear =
-				this.c == "jalali"
-					? this.toDate().getFullYear()
-					: this.d.year;
+				this.c == "jalali" ? this.toDate().getFullYear() : this.d.year;
 			if (format == "YYYY" || format == "y") return gYear;
 			if (format == "YY") return String(gYear).slice(-2);
 			return year;
@@ -1160,7 +1065,7 @@ const PersianDate = function (date, calendar) {
 		if (REGEX["isNumeric"].test(format)) {
 			if (format < 1) {
 				this.d.month = 1;
-				return this.subMonth(--format);
+				return this.subMonth(format - 1);
 			} else if (format > 12) {
 				this.d.month = 12;
 				return this.addMonth(format - 12);
@@ -1172,31 +1077,22 @@ const PersianDate = function (date, calendar) {
 			return this;
 		} else {
 			if (!format) format = this.c == "jalali" ? "jM" : "M";
-			let month =
-				this.c == "jalali"
-					? this.d.month
-					: gtj(this.toDate())[1];
+			let month = this.c == "jalali" ? this.d.month : gtj(this.toDate())[1];
 			if (format == "jMM") return addPrefix(month, 2);
 			if (format == "jM") return month;
 			if (format == "jMMMM" || format == "jMMM")
 				return CALENDAR["jalali"]["months"][month];
 			if (format == "jMo") return ordinalNumber(month);
-			if (format == "jMO")
-				return ordinalNumber(month, "jalali", 2);
+			if (format == "jMO") return ordinalNumber(month, "jalali", 2);
 			let gMonth =
-				this.c == "jalali"
-					? this.toDate().getMonth() + 1
-					: this.d.month;
+				this.c == "jalali" ? this.toDate().getMonth() + 1 : this.d.month;
 			if (format == "M") return gMonth;
 			if (format == "MM") return addPrefix(gMonth, 2);
-			if (format == "MMMM")
-				return CALENDAR["gregorian"]["months"][gMonth];
+			if (format == "MMMM") return CALENDAR["gregorian"]["months"][gMonth];
 			if (format == "Mo" || format == "MO")
 				return ordinalNumber(gMonth, "gregorian");
 			if (format == "MMM")
-				return CALENDAR["gregorian"]["months"][
-					gMonth
-				].slice(0, 3);
+				return CALENDAR["gregorian"]["months"][gMonth].slice(0, 3);
 			return month;
 		}
 	};
@@ -1215,7 +1111,7 @@ const PersianDate = function (date, calendar) {
 			let daysInMonth = this.getDaysInMonth();
 			if (format < 1) {
 				this.d.date = 1;
-				return this.subDay(--format);
+				return this.subDay(format - 1);
 			} else if (format > daysInMonth) {
 				this.d.date = daysInMonth;
 				return this.addDay(format - daysInMonth);
@@ -1227,28 +1123,20 @@ const PersianDate = function (date, calendar) {
 			return this;
 		} else {
 			if (!format) format = this.c == "jalali" ? "jD" : "D";
-			let date =
-				this.c == "jalali"
-					? this.d.date
-					: gtj(this.toDate())[2];
+			let date = this.c == "jalali" ? this.d.date : gtj(this.toDate())[2];
 			//---------- Day of Month ----------//
 			if (format == "jDD") return addPrefix(date, 2);
 			if (format == "jD") return date;
 			if (format == "jDo") return ordinalNumber(date);
-			if (format == "jDO")
-				return ordinalNumber(date, "jalali", 2);
+			if (format == "jDO") return ordinalNumber(date, "jalali", 2);
 			//---------- Day of Week ----------//
 			let gDate = this.toDate();
-			if (format == "jdddd" || format == "jddd")
-				return getDayLabel(gDate);
-			if (format == "jdd")
-				return getDayLabel(gDate).slice(0, 1);
+			if (format == "jdddd" || format == "jddd") return getDayLabel(gDate);
+			if (format == "jdd") return getDayLabel(gDate).slice(0, 1);
 			let dayOfWeek = getDayOfWeek(gDate);
 			if (format == "jdo") return ordinalNumber(dayOfWeek);
-			if (format == "jdO")
-				return ordinalNumber(dayOfWeek, "jalali", 2);
-			if (format == "jd")
-				return getDayOfWeek(gDate, "jalali", "array");
+			if (format == "jdO") return ordinalNumber(dayOfWeek, "jalali", 2);
+			if (format == "jd") return getDayOfWeek(gDate, "jalali", "array");
 			if (format == "jde") return dayOfWeek;
 			//---------- Day of Year ----------//
 			let dayOfYear = getDayOfYear(
@@ -1260,39 +1148,20 @@ const PersianDate = function (date, calendar) {
 			if (format == "jDDDD") return addPrefix(dayOfYear, 3);
 			if (format == "jDDD") return dayOfYear;
 			if (format == "jDDDo") return ordinalNumber(dayOfYear);
-			if (format == "jDDDO")
-				return ordinalNumber(dayOfYear, "jalali", 2);
+			if (format == "jDDDO") return ordinalNumber(dayOfYear, "jalali", 2);
 			//---------- Day of Month ----------//
-			if (format == "DD")
-				return addPrefix(gDate.getDate(), 2);
+			if (format == "DD") return addPrefix(gDate.getDate(), 2);
 			if (format == "D") return gDate.getDate();
 			if (format == "Do" || format == "DO")
-				return ordinalNumber(
-					gDate.getDate(),
-					"gregorian"
-				);
+				return ordinalNumber(gDate.getDate(), "gregorian");
 			//---------- Day of Week ----------//
-			if (format == "dddd")
-				return getDayLabel(gDate, "gregorian");
-			if (format == "ddd")
-				return getDayLabel(gDate, "gregorian").slice(
-					0,
-					3
-				);
-			if (format == "dd")
-				return getDayLabel(gDate, "gregorian").slice(
-					0,
-					2
-				);
+			if (format == "dddd") return getDayLabel(gDate, "gregorian");
+			if (format == "ddd") return getDayLabel(gDate, "gregorian").slice(0, 3);
+			if (format == "dd") return getDayLabel(gDate, "gregorian").slice(0, 2);
 			dayOfWeek = getDayOfWeek(gDate, "gregorian");
 			if (format == "do" || format == "dO")
 				return ordinalNumber(dayOfWeek, "gregorian");
-			if (format == "d")
-				return getDayOfWeek(
-					gDate,
-					"gregorian",
-					"array"
-				);
+			if (format == "d") return getDayOfWeek(gDate, "gregorian", "array");
 			if (format == "de") return dayOfWeek;
 			dayOfYear = getDayOfYear(
 				gDate.getFullYear(),
@@ -1322,7 +1191,7 @@ const PersianDate = function (date, calendar) {
 		if (REGEX["isNumeric"].test(format)) {
 			if (format < 1) {
 				this.d.month = 1;
-				return this.subQuarter(--format);
+				return this.subQuarter(format - 1);
 			} else if (format > 4) {
 				this.d.month = 12;
 				return this.addQuarter(format - 4);
@@ -1335,18 +1204,13 @@ const PersianDate = function (date, calendar) {
 		} else {
 			if (!format) format = this.c == "jalali" ? "jQ" : "Q";
 			let quarter = Math.ceil(
-				(this.c == "jalali"
-					? this.d.month
-					: gtj(this.toDate())[1]) / 3
+				(this.c == "jalali" ? this.d.month : gtj(this.toDate())[1]) / 3
 			);
 			if (format == "jQ") return quarter;
 			if (format == "jQo") return ordinalNumber(quarter);
-			if (format == "jQO")
-				return ordinalNumber(quarter, "jalali", 2);
+			if (format == "jQO") return ordinalNumber(quarter, "jalali", 2);
 			quarter = Math.ceil(
-				(this.c == "jalali"
-					? this.toDate().getMonth() + 1
-					: this.d.month) / 3
+				(this.c == "jalali" ? this.toDate().getMonth() + 1 : this.d.month) / 3
 			);
 			if (format == "Q") return quarter;
 			if (format == "Qo" || format == "QO")
@@ -1369,7 +1233,7 @@ const PersianDate = function (date, calendar) {
 			let weeksInYear = this.getWeeksInYear();
 			if (format < 1) {
 				this.week(1);
-				return this.subWeek(--format);
+				return this.subWeek(format - 1);
 			} else if (format > weeksInYear) {
 				this.week(weeksInYear);
 				return this.addWeek(format - weeksInYear);
@@ -1387,18 +1251,14 @@ const PersianDate = function (date, calendar) {
 			return this;
 		} else {
 			if (!format) format = this.c == "jalali" ? "jw" : "w";
-			let date = this.c == "jalali" ? [this.d.year, this.d.month, this.d.date] : gtj(this.toDate())
-			let weekOfYear = getWeekOfYear(
-				date[0],
-				date[1],
-				date[2],
-				this.c
-			);
+			let date =
+				this.c == "jalali"
+					? [this.d.year, this.d.month, this.d.date]
+					: gtj(this.toDate());
+			let weekOfYear = getWeekOfYear(date[0], date[1], date[2], this.c);
 			if (format == "jw" || format == "jW") return weekOfYear;
-			if (format == "jww" || format == "jWW")
-				return addPrefix(weekOfYear, 2);
-			if (format == "jwo" || format == "jWo")
-				return ordinalNumber(weekOfYear);
+			if (format == "jww" || format == "jWW") return addPrefix(weekOfYear, 2);
+			if (format == "jwo" || format == "jWo") return ordinalNumber(weekOfYear);
 			if (format == "jwO" || format == "jWO")
 				return ordinalNumber(weekOfYear, "jalali", 2);
 			weekOfYear = getWeekOfYear(
@@ -1408,14 +1268,8 @@ const PersianDate = function (date, calendar) {
 				"gregorian"
 			);
 			if (format == "w" || format == "W") return weekOfYear;
-			if (format == "ww" || format == "WW")
-				return addPrefix(weekOfYear, 2);
-			if (
-				format == "wo" ||
-				format == "Wo" ||
-				format == "wO" ||
-				format == "WO"
-			)
+			if (format == "ww" || format == "WW") return addPrefix(weekOfYear, 2);
+			if (format == "wo" || format == "Wo" || format == "wO" || format == "WO")
 				return ordinalNumber(weekOfYear, "gregorian");
 			return weekOfYear;
 		}
@@ -1434,14 +1288,13 @@ const PersianDate = function (date, calendar) {
 		if (REGEX["isNumeric"].test(format)) {
 			if (format < 0) {
 				this.d.hour = 0;
-				return this.subHour(--format);
+				return this.subHour(format - 1);
 			} else if (format > 23) {
 				this.d.hour = 23;
 				return this.addHour(format - 23);
 			}
 			this.d.hour = +format;
-			while (!this.isValidTime())
-				this.subMillisecond(1, false);
+			while (!this.isValidTime()) this.subMillisecond(1, false);
 			return this;
 		} else {
 			let hour = this.d.hour;
@@ -1467,11 +1320,9 @@ const PersianDate = function (date, calendar) {
 		if (this.error) return this.error;
 		format = String(format).trim();
 		if (REGEX["isNumeric"].test(format)) {
-			if (format < 0 || format > 59)
-				return this.addMinute(format);
+			if (format < 0 || format > 59) return this.addMinute(format);
 			this.d.minute = +format;
-			while (!this.isValidTime())
-				this.subMillisecond(1, false);
+			while (!this.isValidTime()) this.subMillisecond(1, false);
 			return this;
 		} else {
 			if (format == "m") return this.d.minute;
@@ -1491,11 +1342,9 @@ const PersianDate = function (date, calendar) {
 		if (this.error) return this.error;
 		format = String(format).trim();
 		if (REGEX["isNumeric"].test(format)) {
-			if (format < 0 || format > 59)
-				return this.addSecond(format);
+			if (format < 0 || format > 59) return this.addSecond(format);
 			this.d.second = +format;
-			while (!this.isValidTime())
-				this.subMillisecond(1, false);
+			while (!this.isValidTime()) this.subMillisecond(1, false);
 			return this;
 		} else {
 			if (format == "s") return this.d.second;
@@ -1515,17 +1364,13 @@ const PersianDate = function (date, calendar) {
 		if (this.error) return this.error;
 		format = String(format).trim();
 		if (REGEX["isNumeric"].test(format)) {
-			if (format < 0 || format > 999)
-				return this.addMillisecond(format);
+			if (format < 0 || format > 999) return this.addMillisecond(format);
 			this.d.millisecond = +format;
-			while (!this.isValidTime())
-				this.subMillisecond(1, false);
+			while (!this.isValidTime()) this.subMillisecond(1, false);
 			return this;
 		} else {
-			if (format == "CCC" || format == "c")
-				return this.d.millisecond;
-			if (format == "CCCC")
-				return addPrefix(this.d.millisecond, 3);
+			if (format == "CCC" || format == "c") return this.d.millisecond;
+			if (format == "CCCC") return addPrefix(this.d.millisecond, 3);
 			return this.d.millisecond;
 		}
 	};
@@ -1554,7 +1399,10 @@ const PersianDate = function (date, calendar) {
 	 * @returns {PersianDate} returns the clone of this date
 	 */
 	PersianDate.prototype.clone = function () {
-		return new PersianDate().calendar(this.c).parse(this.d);
+		return Object.assign(
+			Object.create(Object.getPrototypeOf(this)),
+			JSON.parse(JSON.stringify(this))
+		);
 	};
 
 	/**
@@ -1595,13 +1443,10 @@ const PersianDate = function (date, calendar) {
 	PersianDate.prototype.isSame = function (...date) {
 		if (this.error) return false;
 		date = typesToArray(this.c, ...date);
-		date[0] = +date[0] || 0;
-		date[1] = +date[1] || this.d.month;
-		date[2] = +date[2] || this.d.date;
-		date[3] = +date[3] || this.d.hour;
-		date[4] = +date[4] || this.d.minute;
-		date[5] = +date[5] || this.d.second;
-		date[6] = +date[6] || this.d.millisecond;
+		date = this.toArray().map((value, i) =>
+			REGEX["isNumeric"].test(date[i]) ? date[i] : value
+		);
+
 		if (this.isValid(...date))
 			return (
 				this.clone()
@@ -1660,10 +1505,7 @@ const PersianDate = function (date, calendar) {
 		if (!year)
 			// if year not defined
 			year = calendar == "jalali" ? gtj() : new Date(); // return now
-		if (
-			typeof year == "string" &&
-			year.search(REGEX["separators"]) != -1
-		) {
+		if (typeof year == "string" && year.search(REGEX["separators"]) != -1) {
 			// if type of year is String
 			year = year.split(/[/ -.,:\\]/);
 		}
@@ -1672,35 +1514,20 @@ const PersianDate = function (date, calendar) {
 			return year.calendar(calendar).toArray();
 		else if (year instanceof Date)
 			// if type of year is PersianDate
-			return new PersianDate(year)
-				.calendar(calendar)
-				.toArray();
-		else if (
-			Object.prototype.toString.call(year) ===
-			"[object Array]"
-		)
+			return new PersianDate(year).calendar(calendar).toArray();
+		else if (Object.prototype.toString.call(year) === "[object Array]")
 			// if type of year is Array
 			return year;
-		else if (
-			Object.prototype.toString.call(year) ===
-			"[object Object]"
-		)
+		else if (Object.prototype.toString.call(year) === "[object Object]")
 			// if type of year is Object
 			return [
 				year.y || year.year || year.years,
 				year.M || year.month || year.months || 1,
-				year.d ||
-				year.day ||
-				year.days ||
-				year.date ||
-				1,
+				year.d || year.day || year.days || year.date || 1,
 				year.h || year.hour || year.hours || 0,
 				year.m || year.minute || year.minutes || 0,
 				year.s || year.second || year.seconds || 0,
-				year.ms ||
-				year.millisecond ||
-				year.milliseconds ||
-				0,
+				year.ms || year.millisecond || year.milliseconds || 0,
 			];
 		return [year, month, date, hour, minute, second, millisecond];
 	};
@@ -1742,7 +1569,7 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isBefore = function (...date) {
 		if (this.error) return false;
-		return compareDate(date, this, ">");
+		return compareDate(this, "<", date);
 	};
 
 	/**
@@ -1782,7 +1609,7 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isAfter = function (...date) {
 		if (this.error) return false;
-		return compareDate(date, this, "<");
+		return compareDate(this, ">", date);
 	};
 
 	////////////////////--- Version 1.3.0 ---////////////////////
@@ -1896,7 +1723,7 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isSameOrBefore = function (...date) {
 		if (this.error) return false;
-		return compareDate(date, this, ">=");
+		return compareDate(this, "<=", date);
 	};
 
 	/**
@@ -1936,7 +1763,7 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isSameOrAfter = function (...date) {
 		if (this.error) return false;
-		return compareDate(date, this, "<=");
+		return compareDate(this, ">=", date);
 	};
 
 	/**
@@ -1994,41 +1821,52 @@ const PersianDate = function (date, calendar) {
 	 */
 	PersianDate.prototype.isBetween = function (from, to, method = "()") {
 		if (this.error) return false;
-		let $this = this.clone();
+		// let $this = this.clone();
 		from = typesToArray(this.c, from);
-		if (!from[2])
-			$this.date(1);
-		from = [
-			from[0] || this.d.year,
-			from[1] || this.d.month,
-			from[2] || 1,
-			from[3] || this.d.hour,
-			from[4] || this.d.minute,
-			from[5] || this.d.second,
-			from[6] || this.d.millisecond,
-		];
-		to = typesToArray(this.c, to);
-		to = [
-			to[0] || this.d.year,
-			to[1] || this.d.month,
-			to[2] || 1,
-			to[3] || this.d.hour,
-			to[4] || this.d.minute,
-			to[5] || this.d.second,
-			to[6] || this.d.millisecond,
-		];
+		let date = this.toArray();
+		if (!from[2]) date[2] = 1;
+		// $this.date(1);
+		from = date.map((value, i) =>
+			REGEX["isNumeric"].test(from[i]) ? from[i] : value
+		);
 
-		if (!(this.isValid(...from) && this.isValid(...to)))
-			return false;
+		// from = [
+		// 	from[0] || this.d.year,
+		// 	from[1] || this.d.month,
+		// 	from[2] || 1,
+		// 	from[3] || this.d.hour,
+		// 	from[4] || this.d.minute,
+		// 	from[5] || this.d.second,
+		// 	from[6] || this.d.millisecond,
+		// ];
+		to = typesToArray(this.c, to);
+		// to = [
+		// 	to[0] || this.d.year,
+		// 	to[1] || this.d.month,
+		// 	to[2] || 1,
+		// 	to[3] || this.d.hour,
+		// 	to[4] || this.d.minute,
+		// 	to[5] || this.d.second,
+		// 	to[6] || this.d.millisecond,
+		// ];
+		to = date.map((value, i) =>
+			REGEX["isNumeric"].test(to[i]) ? to[i] : value
+		);
+
+		if (!(this.isValid(...from) && this.isValid(...to))) return false;
 
 		return (
-			(method[0] === "["
-				? $this.isSameOrAfter(from)
-				: $this.isAfter(from)) &&
-			(method[1] === "]"
-				? $this.isSameOrBefore(to)
-				: $this.isBefore(to))
+			compareDate(this, method[0] === "[" ? ">=" : ">", from) &&
+			compareDate(this, method[1] === "]" ? "<=" : "<", to)
 		);
+		// return (
+		// 	(method[0] === "["
+		// 		? $this.isSameOrAfter(from)
+		// 		: $this.isAfter(from)) &&
+		// 	(method[1] === "]"
+		// 		? $this.isSameOrBefore(to)
+		// 		: $this.isBefore(to))
+		// );
 	};
 
 	////////////////////--- Version 1.4.0 ---////////////////////
@@ -2147,18 +1985,13 @@ const PersianDate = function (date, calendar) {
 			case "M":
 			case "month":
 			case "months":
-				result =
-					this.d.year * 12 +
-					this.d.month -
-					(+date[0] * 12 + +date[1]);
+				result = this.d.year * 12 + this.d.month - (+date[0] * 12 + +date[1]);
 				break;
 			case "d":
 			case "date":
 			case "day":
 			case "days":
-				result = Math.ceil(
-					result / 1000 / 60 / 60 / 24
-				);
+				result = Math.ceil(result / 1000 / 60 / 60 / 24);
 				break;
 			case "h":
 			case "hour":
@@ -2178,8 +2011,6 @@ const PersianDate = function (date, calendar) {
 			case "ms":
 			case "millisecond":
 			case "milliseconds":
-			default:
-				result = result;
 		}
 		return addOne ? result + (result >= 0 ? 1 : -1) : result;
 	};
@@ -2265,8 +2096,7 @@ const PersianDate = function (date, calendar) {
 		else if ((result /= 24) < 26)
 			// divide by 24, for getting day
 			result = Math.round(result) + " " + "روز";
-		else if (result < 320)
-			result = Math.round(result / 30) + " " + "ماه";
+		else if (result < 320) result = Math.round(result / 30) + " " + "ماه";
 		else result = Math.round(result / 365) + " " + "سال";
 		return result + (suffix ? " " + prefix : "");
 	};
@@ -2386,14 +2216,12 @@ const PersianDate = function (date, calendar) {
 		date[0] = +date[0];
 
 		if (date.length > 1) {
-			if (!this.isValid(...date))
-				return showError("تاریخ نامعتبر", this);
+			if (!this.isValid(...date)) return showError("تاریخ نامعتبر", this);
 			--date[1]; // this is month; becuse the Date get month from 0, subtract one
 		}
 
 		date = new Date(...date);
-		if (date == "Invalid Date")
-			return showError("تاریخ نامعتبر", this);
+		if (date == "Invalid Date") return showError("تاریخ نامعتبر", this);
 		if (this.c == "jalali") setJalaliDate(gtj(date), this);
 		else setGregorianDate(date, this);
 		return this;
@@ -2408,8 +2236,7 @@ const PersianDate = function (date, calendar) {
 	PersianDate.prototype.calendar = function (calendar) {
 		if (!calendar) return this.c;
 		if (calendar[0] == "j" && this.c[0] == "g") {
-			if (!this.error)
-				setJalaliDate(gtj(this.toDate()), this);
+			if (!this.error) setJalaliDate(gtj(this.toDate()), this);
 			this.c = "jalali";
 		} else if (calendar[0] == "g" && this.c[0] == "j") {
 			if (!this.error) setGregorianDate(this.toDate(), this);
@@ -2547,10 +2374,7 @@ const PersianDate = function (date, calendar) {
 	 * @returns {Boolean} if input was timestamp, return true
 	 */
 	const isTimestamp = (timestamp) => {
-		return (
-			Number(timestamp) != NaN &&
-			Math.floor(timestamp / 10000) > 0
-		);
+		return !isNaN(timestamp) && Math.floor(timestamp / 10000) > 0;
 	};
 
 	/**
@@ -2598,14 +2422,14 @@ const PersianDate = function (date, calendar) {
 	 * @returns {‌Boolean} if date valid, return true of false
 	 * @throws {PersianDate} return the class
 	 */
-	const compareDate = (date, instance, operator) => {
+	const compareDate = (instance, operator, date) => {
 		date = typesToArray(instance.c, ...date);
 
 		if (instance.isValid(...date))
 			return eval(
-				"instance.clone().parse(...date).timestamp() " +
+				"instance.timestamp()" +
 				operator +
-				" instance.timestamp()"
+				"instance.clone().parse(...date).timestamp()"
 			);
 		return false;
 	};
@@ -2635,22 +2459,21 @@ const PersianDate = function (date, calendar) {
 		});
 		if (argsNumber.indexOf(false) != -1) return false;
 		return eval(
-			"args[argsNumber.indexOf(Math." +
-			operation +
-			"(...argsNumber))]"
+			"args[argsNumber.indexOf(Math." + operation + "(...argsNumber))]"
 		);
 	};
 
-	if (calendar) this.calendar(calendar);
-	if (date) {
-		if (calendar && calendar[0] == "j") this.fromJalali(date);
-		else this.fromGregorian(date);
+	if (calendarVal) this.calendar(calendarVal);
+	if (dateVal) {
+		if (calendarVal && calendarVal[0] == "j") this.fromJalali(dateVal);
+		else this.fromGregorian(dateVal);
 	} else this.now();
 };
 
 //for next version
 //TODO: add quarter and week and day to startOf and endOf function
 //TODO: combine the add functions with sub functions
+//TODO: add time fuction just for change time
 //TODO: add the special character for get in all calendars
 //TODO: do better isSame - isBetween - clone --> if is possible
 //TODO: add doc for "`" and "?" character in toString function

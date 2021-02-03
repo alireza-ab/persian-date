@@ -3,7 +3,6 @@ const perf = require('@alireza-ab/performance-check');
 // import PersianDate from './src/PersianDate.js'
 
 let persianDate = new PersianDate();
-let date = new Date();
 
 ////////////////////------------- ATTENTION -------------////////////////////
 //                  please change now date and start test                  //
@@ -11,12 +10,14 @@ let date = new Date();
 
 const now = {
     year: 1399,
-    month: 10,
-    date: 4
+    month: 11,
+    date: 15
 }
 
 test('create date and return now', () => {
     perf.start()
+    let date = new Date();
+    persianDate.now()
     expect(persianDate.year()).toBe(now.year);
     expect(persianDate.month()).toBe(now.month);
     expect(persianDate.date()).toBe(now.date);
@@ -989,6 +990,7 @@ test('isSame function', () => {
     expect(persianDate.isSame('1399/6/1')).toBe(true)
     expect(persianDate.isSame('1399/13/1')).toBe(false)
     expect(persianDate.isSame()).toBe(false)
+    expect(persianDate.isSame(1399, '6', 1, '12', 20, 30, 0)).toBe(false)
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.isSame(2020, '6', 1, '12', 20, 30, 235)).toBe(true)
     expect(persianDate.isSame([2020, 7])).toBe(false)
@@ -1006,6 +1008,7 @@ test('isSame function', () => {
     expect(persianDate.isSame('2020-6-1')).toBe(true)
     expect(persianDate.isSame('2020-13-1')).toBe(false)
     expect(persianDate.isSame()).toBe(false)
+    expect(persianDate.isSame(2020, '6', 1, '12', 20, 30, 0)).toBe(false)
 });
 
 ////////////////////--- Version 1.2.0 ---////////////////////

@@ -2,6 +2,7 @@
 
 A **lightweight** but **professional** library for working with **Persian dates**.
 This supports **Persian (Jalali)** and **gregorian** calendar and from v2.0 supports **Nodejs**.
+Also, you can use it in **nuxtjs** without any problems.
 
 [![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://www.npmjs.com/package/@alireza-ab/persian-date)
 
