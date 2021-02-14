@@ -6,6 +6,12 @@ Also, you can use it in **nuxtjs** without any problems.
 
 [![npm version](https://img.shields.io/npm/v/@alireza-ab/persian-date)](https://www.npmjs.com/package/@alireza-ab/persian-date)
 
+## Features
+
+- **nuxt** support
+- **nodejs** support
+- **Persian (jalali)** and **Gregorian** calendar
+
 ## Documentation
 
 For full documentation, visit [https://alireza-ab.ir/persian-date](https://alireza-ab.ir/persian-date)
