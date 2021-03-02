@@ -766,6 +766,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
 	PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
+		if (this.error) return this.error;
 		if (!year) return this;
 		this.d.year -= Math.abs(year);
 		while (checkDate && !this.isValidDate()) this.subDay(1, false);
@@ -2326,7 +2327,11 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (unit[0] == "h") return this;
 		this.d.hour = 0;
 		if (unit[0] == "d") return this;
+		if (unit[0] == 'w')
+			return this.subDay(getDayOfWeek(this.toDate(), this.c, 'array'));
 		this.d.date = 1;
+		if (unit[0] == 'q')
+			return this.quarter(this.quarter())
 		if (unit == "M" || unit == "month") return this;
 		this.d.month = 1;
 		if (unit[0] == "y") return this;
@@ -2347,6 +2352,13 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (unit[0] == "h") return this;
 		this.d.hour = 23;
 		if (unit[0] == "d") return this;
+		if (unit[0] == 'w')
+			return this.addDay(7 - getDayOfWeek(this.toDate(), this.c));
+		if (unit[0] == 'q') {
+			this.quarter(this.quarter()).addMonth(2)
+			this.d.date = this.getDaysInMonth();
+			return this;
+		}
 		this.d.date = this.getDaysInMonth();
 		if (unit == "M" || unit == "month") return this;
 		this.d.month = 12;
@@ -2356,6 +2368,46 @@ const PersianDate = function (dateVal, calendarVal) {
 
 	PersianDate.prototype.valueOf = function () {
 		return this.timestamp();
+	};
+
+	////////////////////--- Version 2.3.0 ---////////////////////
+
+	/**
+	 * change the time
+	 * @since 2.3.0
+	 * @param {String} time - the new time
+	 * @returns {PersianDate|Array} if set the time, returns class,
+	 * else returns an array of time
+	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 */
+	PersianDate.prototype.time = function (...time) {
+		if (this.error) return this.error;
+		if (!time.length)
+			return this.toArray().slice(3)
+		let times = []
+		if (time[0] instanceof PersianDate)
+			times = time[0].calendar(this.c).time();
+		else if (time[0] instanceof Date)
+			times = [
+				time[0].getHours(),
+				time[0].getMinutes(),
+				time[0].getSeconds(),
+				time[0].getMilliseconds()
+			]
+		else if (Object.prototype.toString.call(time[0]) === "[object Object]")
+			times = [
+				time[0].h || time[0].hour || time[0].hours || 0,
+				time[0].m || time[0].minute || time[0].minutes || 0,
+				time[0].s || time[0].second || time[0].seconds || 0,
+				time[0].ms || time[0].millisecond || time[0].milliseconds || 0,
+			];
+		else
+			times = typesToArray(this.c, ...time)
+		if (this.isValidTime(...times)) {
+			return this.hour(times[0] || 0).minute(times[1] || 0).second(times[2] || 0).millisecond(times[3] || 0)
+		}
+		else
+			return showError("تاریخ نامعتبر", this)
 	};
 
 	/**
@@ -2471,12 +2523,10 @@ const PersianDate = function (dateVal, calendarVal) {
 };
 
 //for next version
-//TODO: add quarter and week and day to startOf and endOf function
 //TODO: combine the add functions with sub functions
 //TODO: add time fuction just for change time
 //TODO: add the special character for get in all calendars
-//TODO: do better isSame - isBetween - clone --> if is possible
-//TODO: add doc for "`" and "?" character in toString function
+//TODO: convert to class
 //TODO: refactor
 
 export default PersianDate;
