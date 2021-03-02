@@ -11,7 +11,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 11,
-    date: 26
+    date: 15
 }
 
 test('create date and return now', () => {
@@ -55,7 +55,7 @@ test('now function', () => {
 });
 
 ////////////////////------------- ATTENTION -------------////////////////////
-//         "setDate" is deprecated. "fromGregorian" replaced this.         //
+//         "setDate" is deprecated. "fromGregorian" replaces this.         //
 /////////////////////////////////////////////////////////////////////////////
 
 /*test('setDate function with all parameters', () => {
@@ -1779,12 +1779,8 @@ test('startOf function', () => {
     expect(persianDate.startOf('hour').toString('datetime:ss.c')).toBe('1399/06/01 12:00:00.0');
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.startOf('date').toString('datetime:ss.c')).toBe('1399/06/01 00:00:00.0');
-    persianDate.calendar('j').parse('1399/6/20 12:20:30.235');
-    expect(persianDate.startOf('week').toString('datetime:ss.c')).toBe('1399/06/15 00:00:00.0');
-    persianDate.calendar('j').parse('1399/6/20 12:20:30.235');
-    expect(persianDate.startOf('month').toString('datetime:ss.c')).toBe('1399/06/01 00:00:00.0');
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
-    expect(persianDate.startOf('quarter').toString('datetime:ss.c')).toBe('1399/04/01 00:00:00.0');
+    expect(persianDate.startOf('month').toString('datetime:ss.c')).toBe('1399/06/01 00:00:00.0');
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.startOf('year').toString('datetime:ss.c')).toBe('1399/01/01 00:00:00.0');
 
@@ -1797,11 +1793,7 @@ test('startOf function', () => {
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.startOf('date').toString('datetime:ss.c')).toBe('2020-06-01 00:00:00.0');
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
-    expect(persianDate.startOf('week').toString('datetime:ss.c')).toBe('2020-05-31 00:00:00.0');
-    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.startOf('month').toString('datetime:ss.c')).toBe('2020-06-01 00:00:00.0');
-    persianDate.calendar('g').parse('2020-6-20 12:20:30.235');
-    expect(persianDate.startOf('quarter').toString('datetime:ss.c')).toBe('2020-04-01 00:00:00.0');
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.startOf('year').toString('datetime:ss.c')).toBe('2020-01-01 00:00:00.0');
 });
@@ -1816,11 +1808,7 @@ test('endOf function', () => {
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.endOf('date').toString('datetime:ss.c')).toBe('1399/06/01 23:59:59.999');
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
-    expect(persianDate.endOf('week').toString('datetime:ss.c')).toBe('1399/06/07 23:59:59.999');
-    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.endOf('month').toString('datetime:ss.c')).toBe('1399/06/31 23:59:59.999');
-    persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
-    expect(persianDate.endOf('quarter').toString('datetime:ss.c')).toBe('1399/06/31 23:59:59.999');
     persianDate.calendar('j').parse('1399/6/1 12:20:30.235');
     expect(persianDate.endOf('year').toString('datetime:ss.c')).toBe('1399/12/30 23:59:59.999');
 
@@ -1833,11 +1821,7 @@ test('endOf function', () => {
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.endOf('date').toString('datetime:ss.c')).toBe('2020-06-01 23:59:59.999');
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
-    expect(persianDate.endOf('week').toString('datetime:ss.c')).toBe('2020-06-06 23:59:59.999');
-    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.endOf('month').toString('datetime:ss.c')).toBe('2020-06-30 23:59:59.999');
-    persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
-    expect(persianDate.endOf('quarter').toString('datetime:ss.c')).toBe('2020-06-30 23:59:59.999');
     persianDate.calendar('g').parse('2020-6-1 12:20:30.235');
     expect(persianDate.endOf('year').toString('datetime:ss.c')).toBe('2020-12-31 23:59:59.999');
 });
@@ -1847,43 +1831,5 @@ test('valueOf function', () => {
     expect(persianDate.valueOf()).toBe((new Date(2020, 8, 1, 0, 0, 0, 0)).getTime())
     persianDate.calendar('g').parse('2020-6-11');
     expect(persianDate.valueOf()).toBe((new Date(2020, 5, 11, 0, 0, 0, 0)).getTime())
-});
-
-test('time function', () => {
-    persianDate.calendar('j').parse('1399-7-1');
-    persianDate.time('12:20:30.235');
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time(12, 20, 30, 235);
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time([12, 20, 30, 235]);
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time({ h: 12, m: 20, s: 30, ms: 235 });
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time(persianDate.clone().parse('1398/10/5 23:05:45.568'));
-    expect(persianDate.toString('time:ss.c')).toBe('23:05:45.568')
-    persianDate.time(new Date(2020, 5, 6, 23, 5, 45, 568));
-    expect(persianDate.toString('time:ss.c')).toBe('23:05:45.568')
-    persianDate.time('5');
-    expect(persianDate.toString('time:ss.c')).toBe('05:00:00.0')
-    persianDate.time('0');
-    expect(persianDate.toString('time:ss.c')).toBe('00:00:00.0')
-
-    persianDate.calendar('g').parse('2020-7-1');
-    persianDate.time('12:20:30.235');
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time(12, 20, 30, 235);
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time([12, 20, 30, 235]);
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time({ h: 12, m: 20, s: 30, ms: 235 });
-    expect(persianDate.toString('time:ss.c')).toBe('12:20:30.235')
-    persianDate.time(persianDate.clone().parse('2020-5-6 23:05:45.568'));
-    expect(persianDate.toString('time:ss.c')).toBe('23:05:45.568')
-    persianDate.time(new Date(2020, 5, 6, 23, 5, 45, 568));
-    expect(persianDate.toString('time:ss.c')).toBe('23:05:45.568')
-    persianDate.time('5');
-    expect(persianDate.toString('time:ss.c')).toBe('05:00:00.0')
-    persianDate.time('0');
-    expect(persianDate.toString('time:ss.c')).toBe('00:00:00.0')
     perf.end()
 });

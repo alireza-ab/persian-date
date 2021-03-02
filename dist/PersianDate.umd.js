@@ -7,21 +7,104 @@
 		exports["PersianDate"] = factory();
 	else
 		root["PersianDate"] = factory();
-})(self, function() {
-return /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/PersianDate.js");
+/******/ })
+/************************************************************************/
+/******/ ({
 
 /***/ "./src/PersianDate.js":
 /*!****************************!*\
   !*** ./src/PersianDate.js ***!
   \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 ////////////////////---------- Are You Ready? ----------////////////////////
 ////////////////////------------- Let's Go -------------////////////////////
@@ -83,13 +166,13 @@ const PersianDate = function (dateVal, calendarVal) {
 			date = year;
 		else
 			date = new Date(
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(year) ? year : 0,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(month) ? month : 0,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(day) ? day : 1,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(hour) ? hour : 0,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(minute) ? minute : 0,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(second) ? second : 0,
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(millisecond) ? millisecond : 0
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(year) ? year : 0,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(month) ? month : 0,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(day) ? day : 1,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(hour) ? hour : 0,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(minute) ? minute : 0,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(second) ? second : 0,
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(millisecond) ? millisecond : 0
 			);
 		day = date.getDate();
 		month = date.getMonth() + 1; // Because the output of getMonth() start from zero, add one
@@ -156,13 +239,13 @@ const PersianDate = function (dateVal, calendarVal) {
 	 */
 	const jtg = (year, month, day, hour, minute, second, millisecond) => {
 		//plus sign before a variable, convert variable to int
-		year = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(year) ? +year : 1;
-		month = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(month) ? +month : 1;
-		day = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(day) ? +day : 1;
-		hour = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(hour) ? +hour : 0;
-		minute = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(minute) ? +minute : 0;
-		second = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(second) ? +second : 0;
-		millisecond = _utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(millisecond) ? +millisecond : 0;
+		year = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(year) ? +year : 1;
+		month = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(month) ? +month : 1;
+		day = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(day) ? +day : 1;
+		hour = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(hour) ? +hour : 0;
+		minute = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(minute) ? +minute : 0;
+		second = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(second) ? +second : 0;
+		millisecond = _utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(millisecond) ? +millisecond : 0;
 		let gYear, gMonth, gDay;
 		if (year > 979) {
 			gYear = 1600;
@@ -226,7 +309,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	const getDayLabel = (date = new Date(), calendar = "jalali") => {
 		if (Object.prototype.toString.call(date) === "[object Date]")
 			// if the year was an instance of Date
-			return _utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR[calendar]["days"]["label"][date.getDay()];
+			return _utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"][calendar]["days"]["label"][date.getDay()];
 		return showError("تاریخ نامعتبر", this);
 	};
 
@@ -246,7 +329,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (Object.prototype.toString.call(date) === "[object Date]") {
 			// if the year was an instance of Date
 			return (
-				_utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR[calendar]["days"]["weekNumber"][date.getDay()] +
+				_utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"][calendar]["days"]["weekNumber"][date.getDay()] +
 				(mode != "standard" ? 0 : 1)
 			);
 		}
@@ -300,7 +383,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @example 1st | اول | اولین
 	 */
 	const ordinalNumber = (number, calendar = "jalali", mode = 1) => {
-		return _utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR[calendar].ordinalNumbers(number, mode);
+		return _utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"][calendar].ordinalNumbers(number, mode);
 	};
 
 	/**
@@ -791,7 +874,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 */
 	PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
-		if (this.error) return this.error;
 		if (!year) return this;
 		this.d.year -= Math.abs(year);
 		while (checkDate && !this.isValidDate()) this.subDay(1, false);
@@ -1010,7 +1092,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.toString = function (format = "date") {
 		if (this.error) return this.error;
 		let texts = [];
-		format = format.replace(_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.betweenBacktick, (matched, text) => {
+		format = format.replace(_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["betweenBacktick"], (matched, text) => {
 			texts.push(text);
 			return "###";
 		});
@@ -1025,7 +1107,7 @@ const PersianDate = function (dateVal, calendarVal) {
 				.replace(/datetime/gi, "YYYY-MM-DD HH:mm")
 				.replace(/date/gi, "YYYY-MM-DD")
 				.replace(/time/gi, "HH:mm");
-		let matchedFormat = format.match(_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.format);
+		let matchedFormat = format.match(_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["format"]);
 		let dateString = "";
 		for (const i of matchedFormat) {
 			dateString += format.substring(0, format.indexOf(i));
@@ -1039,7 +1121,7 @@ const PersianDate = function (dateVal, calendarVal) {
 			else if (i.search(/s/) != -1) dateString += this.second(i);
 			else if (i.search(/c|C/) != -1) dateString += this.millisecond(i);
 			else if (i.search(/t/) != -1) dateString += this.timestamp();
-			else if (i.search(/a|A/) != -1) dateString += (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.TIMETYPE)(this.d.hour, i);
+			else if (i.search(/a|A/) != -1) dateString += Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["TIMETYPE"])(this.d.hour, i);
 
 			format = format.substr(format.indexOf(i) + i.length);
 		}
@@ -1059,7 +1141,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.year = function (format = "") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			this.d.year = +format;
 			if (!this.isValidDate()) {
 				return this.addYear(format);
@@ -1088,7 +1170,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.month = function (format = "") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 1) {
 				this.d.month = 1;
 				return this.subMonth(format - 1);
@@ -1107,18 +1189,18 @@ const PersianDate = function (dateVal, calendarVal) {
 			if (format == "jMM") return addPrefix(month, 2);
 			if (format == "jM") return month;
 			if (format == "jMMMM" || format == "jMMM")
-				return _utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR.jalali.months[month];
+				return _utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"]["jalali"]["months"][month];
 			if (format == "jMo") return ordinalNumber(month);
 			if (format == "jMO") return ordinalNumber(month, "jalali", 2);
 			let gMonth =
 				this.c == "jalali" ? this.toDate().getMonth() + 1 : this.d.month;
 			if (format == "M") return gMonth;
 			if (format == "MM") return addPrefix(gMonth, 2);
-			if (format == "MMMM") return _utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR.gregorian.months[gMonth];
+			if (format == "MMMM") return _utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"]["gregorian"]["months"][gMonth];
 			if (format == "Mo" || format == "MO")
 				return ordinalNumber(gMonth, "gregorian");
 			if (format == "MMM")
-				return _utils_js__WEBPACK_IMPORTED_MODULE_0__.CALENDAR.gregorian.months[gMonth].slice(0, 3);
+				return _utils_js__WEBPACK_IMPORTED_MODULE_0__["CALENDAR"]["gregorian"]["months"][gMonth].slice(0, 3);
 			return month;
 		}
 	};
@@ -1133,7 +1215,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.date = function (format = "") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			let daysInMonth = this.getDaysInMonth();
 			if (format < 1) {
 				this.d.date = 1;
@@ -1214,7 +1296,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.quarter = function (format = "") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 1) {
 				this.d.month = 1;
 				return this.subQuarter(format - 1);
@@ -1255,7 +1337,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.week = function (format = "") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			let weeksInYear = this.getWeeksInYear();
 			if (format < 1) {
 				this.week(1);
@@ -1311,7 +1393,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.hour = function (format = "H") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 0) {
 				this.d.hour = 0;
 				return this.subHour(format - 1);
@@ -1345,7 +1427,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.minute = function (format = "m") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 0 || format > 59) return this.addMinute(format);
 			this.d.minute = +format;
 			while (!this.isValidTime()) this.subMillisecond(1, false);
@@ -1367,7 +1449,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.second = function (format = "s") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 0 || format > 59) return this.addSecond(format);
 			this.d.second = +format;
 			while (!this.isValidTime()) this.subMillisecond(1, false);
@@ -1389,7 +1471,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.millisecond = function (format = "c") {
 		if (this.error) return this.error;
 		format = String(format).trim();
-		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(format)) {
+		if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(format)) {
 			if (format < 0 || format > 999) return this.addMillisecond(format);
 			this.d.millisecond = +format;
 			while (!this.isValidTime()) this.subMillisecond(1, false);
@@ -1470,7 +1552,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (this.error) return false;
 		date = typesToArray(this.c, ...date);
 		date = this.toArray().map((value, i) =>
-			_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(date[i]) ? date[i] : value
+			_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(date[i]) ? date[i] : value
 		);
 
 		if (this.isValid(...date))
@@ -1531,7 +1613,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (!year)
 			// if year not defined
 			year = calendar == "jalali" ? gtj() : new Date(); // return now
-		if (typeof year == "string" && year.search(_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.separators) != -1) {
+		if (typeof year == "string" && year.search(_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["separators"]) != -1) {
 			// if type of year is String
 			year = year.split(/[/ -.,:\\]/);
 		}
@@ -1853,7 +1935,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (!from[2]) date[2] = 1;
 		// $this.date(1);
 		from = date.map((value, i) =>
-			_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(from[i]) ? from[i] : value
+			_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(from[i]) ? from[i] : value
 		);
 
 		// from = [
@@ -1876,7 +1958,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		// 	to[6] || this.d.millisecond,
 		// ];
 		to = date.map((value, i) =>
-			_utils_js__WEBPACK_IMPORTED_MODULE_0__.REGEX.isNumeric.test(to[i]) ? to[i] : value
+			_utils_js__WEBPACK_IMPORTED_MODULE_0__["REGEX"]["isNumeric"].test(to[i]) ? to[i] : value
 		);
 
 		if (!(this.isValid(...from) && this.isValid(...to))) return false;
@@ -2352,11 +2434,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (unit[0] == "h") return this;
 		this.d.hour = 0;
 		if (unit[0] == "d") return this;
-		if (unit[0] == 'w')
-			return this.subDay(getDayOfWeek(this.toDate(), this.c, 'array'));
 		this.d.date = 1;
-		if (unit[0] == 'q')
-			return this.quarter(this.quarter())
 		if (unit == "M" || unit == "month") return this;
 		this.d.month = 1;
 		if (unit[0] == "y") return this;
@@ -2377,13 +2455,6 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (unit[0] == "h") return this;
 		this.d.hour = 23;
 		if (unit[0] == "d") return this;
-		if (unit[0] == 'w')
-			return this.addDay(7 - getDayOfWeek(this.toDate(), this.c));
-		if (unit[0] == 'q') {
-			this.quarter(this.quarter()).addMonth(2)
-			this.d.date = this.getDaysInMonth();
-			return this;
-		}
 		this.d.date = this.getDaysInMonth();
 		if (unit == "M" || unit == "month") return this;
 		this.d.month = 12;
@@ -2393,46 +2464,6 @@ const PersianDate = function (dateVal, calendarVal) {
 
 	PersianDate.prototype.valueOf = function () {
 		return this.timestamp();
-	};
-
-	////////////////////--- Version 2.3.0 ---////////////////////
-
-	/**
-	 * change the time
-	 * @since 2.3.0
-	 * @param {String} time - the new time
-	 * @returns {PersianDate|Array} if set the time, returns class,
-	 * else returns an array of time
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
-	 */
-	PersianDate.prototype.time = function (...time) {
-		if (this.error) return this.error;
-		if (!time.length)
-			return this.toArray().slice(3)
-		let times = []
-		if (time[0] instanceof PersianDate)
-			times = time[0].calendar(this.c).time();
-		else if (time[0] instanceof Date)
-			times = [
-				time[0].getHours(),
-				time[0].getMinutes(),
-				time[0].getSeconds(),
-				time[0].getMilliseconds()
-			]
-		else if (Object.prototype.toString.call(time[0]) === "[object Object]")
-			times = [
-				time[0].h || time[0].hour || time[0].hours || 0,
-				time[0].m || time[0].minute || time[0].minutes || 0,
-				time[0].s || time[0].second || time[0].seconds || 0,
-				time[0].ms || time[0].millisecond || time[0].milliseconds || 0,
-			];
-		else
-			times = typesToArray(this.c, ...time)
-		if (this.isValidTime(...times)) {
-			return this.hour(times[0] || 0).minute(times[1] || 0).second(times[2] || 0).millisecond(times[3] || 0)
-		}
-		else
-			return showError("تاریخ نامعتبر", this)
 	};
 
 	/**
@@ -2548,13 +2579,15 @@ const PersianDate = function (dateVal, calendarVal) {
 };
 
 //for next version
+//TODO: add quarter and week and day to startOf and endOf function
 //TODO: combine the add functions with sub functions
 //TODO: add time fuction just for change time
 //TODO: add the special character for get in all calendars
-//TODO: convert to class
+//TODO: do better isSame - isBetween - clone --> if is possible
+//TODO: add doc for "`" and "?" character in toString function
 //TODO: refactor
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PersianDate);
+/* harmony default export */ __webpack_exports__["default"] = (PersianDate);
 
 ////////////////////- Email: Alibeikialireza@gmail.com -////////////////////
 ////////////////////--------- Have A Good Day  ---------////////////////////
@@ -2566,14 +2599,14 @@ const PersianDate = function (dateVal, calendarVal) {
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! exports provided: CALENDAR, TIMETYPE, REGEX */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CALENDAR": () => (/* binding */ CALENDAR),
-/* harmony export */   "TIMETYPE": () => (/* binding */ TIMETYPE),
-/* harmony export */   "REGEX": () => (/* binding */ REGEX)
-/* harmony export */ });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CALENDAR", function() { return CALENDAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TIMETYPE", function() { return TIMETYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REGEX", function() { return REGEX; });
 const CALENDAR = {
     jalali: {
         months: {
@@ -2756,66 +2789,6 @@ const TIMETYPE = function (hour, format) {
 
 /***/ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__("./src/PersianDate.js");
-/******/ })()
-.default;
+/******/ })["default"];
 });
 //# sourceMappingURL=PersianDate.umd.js.map
