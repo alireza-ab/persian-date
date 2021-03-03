@@ -3,6 +3,7 @@
 	"version": "2.2.0",
 	"description": "A lightweight but professional library for working with Persian dates",
 	"main": "./dist/PersianDate.min.js",
+	"typings": "./typings/PersianDate.d.ts",
 	"scripts": {
 		"test": "jest",
 		"build": "webpack",

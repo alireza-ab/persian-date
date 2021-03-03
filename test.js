@@ -10,8 +10,8 @@ let persianDate = new PersianDate();
 
 const now = {
     year: 1399,
-    month: 11,
-    date: 26
+    month: 12,
+    date: 13
 }
 
 test('create date and return now', () => {
@@ -149,6 +149,12 @@ test('parse function without parameter', () => {
 });
 
 test('isLeapYear function', () => {
+    // static
+    expect(PersianDate.isLeapYear(1399, 'j')).toBe(true);
+    expect(PersianDate.isLeapYear(1400, 'j')).toBe(false);
+    expect(PersianDate.isLeapYear(2020, 'g')).toBe(true);
+    expect(PersianDate.isLeapYear(2021, 'g')).toBe(false);
+    // non static
     expect(persianDate.calendar('j').isLeapYear(1399)).toBe(true);
     expect(persianDate.calendar('j').parse(1400).isLeapYear()).toBe(false);
     expect(persianDate.calendar('g').parse(2020).isLeapYear()).toBe(true);
@@ -1208,6 +1214,7 @@ test('toObject function with numeric parameter', () => {
 });
 
 test('isDate function', () => {
+    // static
     persianDate.calendar('j')
     expect(persianDate.isDate(new Date)).toBe(true)
     expect(persianDate.isDate(new PersianDate)).toBe(false)
@@ -1216,9 +1223,14 @@ test('isDate function', () => {
     expect(persianDate.isDate(new Date)).toBe(true)
     expect(persianDate.isDate(new PersianDate)).toBe(false)
     expect(persianDate.isDate('2020-1-1')).toBe(false)
+    // non static
+    expect(PersianDate.isDate(new Date)).toBe(true)
+    expect(PersianDate.isDate(new PersianDate)).toBe(false)
+    expect(PersianDate.isDate('2020-1-1')).toBe(false)
 })
 
 test('isPersianDate function', () => {
+    // static
     persianDate.calendar('j')
     expect(persianDate.isPersianDate(new Date)).toBe(false)
     expect(persianDate.isPersianDate(new PersianDate)).toBe(true)
@@ -1229,6 +1241,11 @@ test('isPersianDate function', () => {
     expect(persianDate.isPersianDate(new PersianDate)).toBe(true)
     expect(persianDate.isPersianDate(new PersianDate().calendar('g'))).toBe(true)
     expect(persianDate.isPersianDate('2020-1-1')).toBe(false)
+    // non static
+    expect(PersianDate.isPersianDate(new Date)).toBe(false)
+    expect(PersianDate.isPersianDate(new PersianDate)).toBe(true)
+    expect(PersianDate.isPersianDate(new PersianDate().calendar('g'))).toBe(true)
+    expect(PersianDate.isPersianDate('2020-1-1')).toBe(false)
 })
 
 test('isSameOrBefore function', () => {
@@ -1848,6 +1865,8 @@ test('valueOf function', () => {
     persianDate.calendar('g').parse('2020-6-11');
     expect(persianDate.valueOf()).toBe((new Date(2020, 5, 11, 0, 0, 0, 0)).getTime())
 });
+
+////////////////////--- Version 2.3.0 ---////////////////////
 
 test('time function', () => {
     persianDate.calendar('j').parse('1399-7-1');

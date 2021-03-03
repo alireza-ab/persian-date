@@ -8,11 +8,32 @@
 /////////////////////////////////////////////////////////////////////////////
 import { CALENDAR, TIMETYPE, REGEX } from "./utils.js";
 
+const isLeapYear = function (year, calendar) {
+	if (calendar[0] === "j") {
+		let array =
+			year > 1342
+				? [1, 5, 9, 13, 17, 22, 26, 30]
+				: [1, 5, 9, 13, 17, 21, 26, 30];
+		let remainder = year % 33;
+		return array.includes(remainder);
+	} else {
+		return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+	}
+};
+
+const isDate = function (date) {
+	return date instanceof Date;
+};
+
+const isPersianDate = function (date) {
+	return date instanceof PersianDate;
+};
+
 /**
  * A Date library for working with persian date
  * @class
- * @param {Date|Array|Null|Object|String} dateVal - the date that convert to persian date
- * @param {String} [calendarVal='jalali'] - the calendar
+ * @param {Date|Array|Null|Object|String} date - the date that convert to persian date
+ * @param {String} [calendar='jalali'] - the calendar
  */
 const PersianDate = function (dateVal, calendarVal) {
 	"use strict";
@@ -195,7 +216,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Date} date - the date that received day
 	 * @param {'jalali'|'gregorian'} calendar - the calendar
 	 * @returns {String} returns day label
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
 	 * @example Saturday | شنبه
 	 */
 	const getDayLabel = (date = new Date(), calendar = "jalali") => {
@@ -210,8 +230,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Date} date - the date that received day of week
 	 * @param {'jalali', 'gregorian'} calendar - the calendar
 	 * @param {'standard','array'} mode - standard mode start from 1 and array mode start from 0
-	 * @returns {Number} the number of the day of week
-	 * @throws {PersianDate} if date invalid return class with error property
+	 * @returns {Number|String} the number of the day of week
 	 */
 	const getDayOfWeek = (
 		date = new Date(),
@@ -230,6 +249,7 @@ const PersianDate = function (dateVal, calendarVal) {
 
 	/**
 	 * get the day of the year
+	 * @param {Null|String|Number} year - the year of date
 	 * @param {Null|Number|String} month - the month of date that gives the day of the year
 	 * @param {Null|Number|String} day - the day of date that gives the day of the year
 	 * @param {Null|Number|String} calendar - the calendar
@@ -292,6 +312,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	/**
 	 * make error and delete this.d
 	 * @param {String} errorText - Error Text
+	 * @param {PersianDate} instance - the PersianDate instance
 	 * @returns {PersianDate} make error and return class
 	 */
 	const showError = (errorText, instance) => {
@@ -361,7 +382,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {PersianDate} return class with persian date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+		 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.parse = function (...date) {
 		if (this.c == "jalali") return this.fromJalali(...date);
@@ -376,16 +397,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	PersianDate.prototype.isLeapYear = function (year) {
 		if (this.error) return false;
 		if (!year) year = this.year();
-		if (this.c == "jalali") {
-			let array =
-				year > 1342
-					? [1, 5, 9, 13, 17, 22, 26, 30]
-					: [1, 5, 9, 13, 17, 21, 26, 30];
-			let remainder = year % 33;
-			return array.includes(remainder);
-		} else {
-			return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-		}
+		return isLeapYear(year, this.c)
 	};
 
 	/**
@@ -485,6 +497,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Number} year - year of date that returns number of days in month
 	 * @param {?Number} month - month of date that returns number of days in month
 	 * @returns {Number} number of days in month
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.getDaysInMonth = function (
 		year = this.d.year,
@@ -513,7 +526,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addYear = function (year = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -532,7 +545,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addMonth = function (month = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -568,7 +581,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addDay = function (day = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -604,7 +617,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addQuarter = function (quarter = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -622,7 +635,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addWeek = function (week = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -640,7 +653,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addHour = function (hour = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -670,7 +683,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addMinute = function (minute = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -700,7 +713,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addSecond = function (second = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -730,7 +743,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.addMillisecond = function (
 		millisecond = 1,
@@ -763,7 +776,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subYear = function (year = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -779,7 +792,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subMonth = function (month = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -811,7 +824,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subDay = function (day = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -841,7 +854,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subQuarter = function (quarter = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -856,7 +869,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subWeek = function (week = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -871,7 +884,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subHour = function (hour = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -898,7 +911,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subMinute = function (minute = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -925,7 +938,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subSecond = function (second = 1, checkDate = true) {
 		if (this.error) return this.error;
@@ -952,7 +965,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {?Boolean} checkDate checks the result that the date is valid,
 	 * If not valid, it will be deducted from the day to be valid
 	 * @returns {PersianDate} return class with new date
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.subMillisecond = function (
 		millisecond = 1,
@@ -980,7 +993,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * returns date as string with specify format
 	 * @param {?String} [format=date] - formatting date to string
 	 * @returns {String} date string
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.toString = function (format = "date") {
 		if (this.error) return this.error;
@@ -1029,7 +1042,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=jYYYY] - a number for set the year or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the year, returns class,
 	 * else returns a number or string from year
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.year = function (format = "") {
 		if (this.error) return this.error;
@@ -1058,7 +1071,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=jM] - a number for set the month or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the month, returns class,
 	 * else returns a number or string from month
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.month = function (format = "") {
 		if (this.error) return this.error;
@@ -1103,7 +1116,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=jD] - a number for set the day in month or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the day, returns class,
 	 * else returns a number or string from day
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.date = function (format = "") {
 		if (this.error) return this.error;
@@ -1184,7 +1197,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=jQ] - a number for set the quarter or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the quarter, returns class,
 	 * else returns a number or string from quarter
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.quarter = function (format = "") {
 		if (this.error) return this.error;
@@ -1225,7 +1238,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=jw] - a number for set the week or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the week, returns class,
 	 * else returns a number or string from week
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.week = function (format = "") {
 		if (this.error) return this.error;
@@ -1281,7 +1294,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=H] - a number for set the hour or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the hour, returns class,
 	 * else returns a number or string from hour
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.hour = function (format = "H") {
 		if (this.error) return this.error;
@@ -1315,7 +1328,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=m] - a number for set the minute or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the minute, returns class,
 	 * else returns a number or string from minute
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.minute = function (format = "m") {
 		if (this.error) return this.error;
@@ -1337,7 +1350,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=s] - a number for set the second or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the second, returns class,
 	 * else returns a number or string from second
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.second = function (format = "s") {
 		if (this.error) return this.error;
@@ -1359,7 +1372,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} [format=c] - a number for set the millisecond or a format for formatting
 	 * @returns {PersianDate|String|Number} if set the millisecond, returns class,
 	 * else returns a number or string from millisecond
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.millisecond = function (format = "c") {
 		if (this.error) return this.error;
@@ -1381,7 +1394,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} value - a number for set the millisecond
 	 * @returns {PersianDate|Number} if set the timestamp, returns class,
 	 * else returns timestamp (number)
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.timestamp = function (value) {
 		if (this.error) return this.error;
@@ -1439,7 +1452,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isSame = function (...date) {
 		if (this.error) return false;
@@ -1566,7 +1578,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isBefore = function (...date) {
 		if (this.error) return false;
@@ -1606,7 +1617,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isAfter = function (...date) {
 		if (this.error) return false;
@@ -1648,7 +1658,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} secondFormat second format
 	 * @param {Null|Number|String} millisecondFormat millisecond format
 	 * @returns {Object} if date valid, return Object of date
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.toObject = function () {
 		if (this.error) return this.error;
@@ -1673,9 +1683,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {*} date date that must be checked
 	 * @returns {Boolean} if date is a native js Date, return true
 	 */
-	PersianDate.prototype.isDate = function (date) {
-		return date instanceof Date;
-	};
+	PersianDate.prototype.isDate = isDate
 
 	/**
 	 * checks date is a PersianDate object
@@ -1683,9 +1691,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {*} date date that must be checked
 	 * @returns {Boolean} if date is a PersianDate, return true
 	 */
-	PersianDate.prototype.isPersianDate = function (date) {
-		return date instanceof PersianDate;
-	};
+	PersianDate.prototype.isPersianDate = isPersianDate
 
 	/**
 	 * checks this date is same or before the another date
@@ -1720,7 +1726,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isSameOrBefore = function (...date) {
 		if (this.error) return false;
@@ -1760,7 +1765,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isSameOrAfter = function (...date) {
 		if (this.error) return false;
@@ -1818,7 +1822,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|String|Number} to.milliseconds - millisecond of date
 	 * @param {String} method - determines that consider the dates themselves
 	 * @returns {‌Boolean} if date valid, return true or false
-	 * @throws {PersianDate} return the class
 	 */
 	PersianDate.prototype.isBetween = function (from, to, method = "()") {
 		if (this.error) return false;
@@ -1965,8 +1968,9 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|String|Number} date.millisecond - millisecond of date
 	 * @param {Null|String|Number} date.milliseconds - millisecond of date
 	 * @param {String} unit - the unit of the measurment
+	 * @param {Boolean} addOne - add one day to result
 	 * @returns {Number} diffrence
-	 * @throws {Boolean} if dates invalid, returns false
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.diff = function (date, unit, addOne = false) {
 		if (this.error) return this.error;
@@ -2051,7 +2055,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} secondFormat second format
 	 * @param {Null|Number|String} millisecondFormat millisecond format
 	 * @returns {Object} if date valid, return array of date
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.toArray = function () {
 		if (this.error) return this.error;
@@ -2075,9 +2079,32 @@ const PersianDate = function (dateVal, calendarVal) {
 	/**
 	 * get the diffrence between two date in a human-readable format
 	 * @since 2.0.0
-	 * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
+	 * @param {PersianDate|Date|String|Array|Object} date - this param must be PersianDate or string or array or Object from date
+	 * @param {String|Number} date.y - year of date
+	 * @param {Null|String|Number} date.year - year of date
+	 * @param {Null|String|Number} date.years - year of date
+	 * @param {Null|String|Number} date.M - month of date
+	 * @param {Null|String|Number} date.month - month of date
+	 * @param {Null|String|Number} date.months - month of date
+	 * @param {Null|String|Number} date.d - day of date
+	 * @param {Null|String|Number} date.day - day of date
+	 * @param {Null|String|Number} date.days - day of date
+	 * @param {Null|String|Number} date.date - day of date
+	 * @param {Null|String|Number} date.h - hour of date
+	 * @param {Null|String|Number} date.hour - hour of date
+	 * @param {Null|String|Number} date.hours - hour of date
+	 * @param {Null|String|Number} date.m - minute of date
+	 * @param {Null|String|Number} date.minute - minute of date
+	 * @param {Null|String|Number} date.minutes - minute of date
+	 * @param {Null|String|Number} date.s - second of date
+	 * @param {Null|String|Number} date.second - second of date
+	 * @param {Null|String|Number} date.seconds - second of date
+	 * @param {Null|String|Number} date.ms - millisecond of date
+	 * @param {Null|String|Number} date.millisecond - millisecond of date
+	 * @param {Null|String|Number} date.milliseconds - millisecond of date
+	 * @param {Boolean} suffix - add suffix or not
 	 * @returns {String} if date valid, return diff human-readable format
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.diffForHumans = function (date, suffix = true) {
 		if (this.error) return this.error;
@@ -2135,7 +2162,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {PersianDate} return class with persian date
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.fromJalali = function (...date) {
 		if (this.error) {
@@ -2194,7 +2221,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
 	 * @returns {PersianDate} return class with persian date
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.fromGregorian = function (...date) {
 		if (this.error) {
@@ -2272,37 +2299,8 @@ const PersianDate = function (dateVal, calendarVal) {
 	/**
 	 * return the Date instance of PersianDate
 	 * @since 2.0.0
-	 * @param {String|Array|Object|Number} yearForamt - this param must be string or array or Object from date or year
-	 * @param {String|Number} yearForamt.y - year format
-	 * @param {Null|String|Number} yearForamt.year - year format
-	 * @param {Null|String|Number} yearForamt.years - year format
-	 * @param {Null|String|Number} yearForamt.M - month format
-	 * @param {Null|String|Number} yearForamt.month - month format
-	 * @param {Null|String|Number} yearForamt.months - month format
-	 * @param {Null|String|Number} yearForamt.d - day format
-	 * @param {Null|String|Number} yearForamt.day - day format
-	 * @param {Null|String|Number} yearForamt.days - day format
-	 * @param {Null|String|Number} yearForamt.date - day format
-	 * @param {Null|String|Number} yearForamt.h - hour format
-	 * @param {Null|String|Number} yearForamt.hour - hour format
-	 * @param {Null|String|Number} yearForamt.hours - hour format
-	 * @param {Null|String|Number} yearForamt.m - minute format
-	 * @param {Null|String|Number} yearForamt.minute - minute format
-	 * @param {Null|String|Number} yearForamt.minutes - minute format
-	 * @param {Null|String|Number} yearForamt.s - second format
-	 * @param {Null|String|Number} yearForamt.second - second format
-	 * @param {Null|String|Number} yearForamt.seconds - second format
-	 * @param {Null|String|Number} yearForamt.ms - millisecond format
-	 * @param {Null|String|Number} yearForamt.millisecond - millisecond format
-	 * @param {Null|String|Number} yearForamt.milliseconds - millisecond format
-	 * @param {Null|Number|String} monthFormat month format
-	 * @param {Null|Number|String} dayFormat day format
-	 * @param {Null|Number|String} hourFormat hour format
-	 * @param {Null|Number|String} minuteFormat minute format
-	 * @param {Null|Number|String} secondFormat second format
-	 * @param {Null|Number|String} millisecondFormat millisecond format
 	 * @returns {Date} if date valid, return Date instance of date
-	 * @throws {String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.toDate = function () {
 		if (this.error) return this.error;
@@ -2375,10 +2373,22 @@ const PersianDate = function (dateVal, calendarVal) {
 	/**
 	 * change the time
 	 * @since 2.3.0
-	 * @param {String} time - the new time
+	 * @param {PersianDate|Date|String|Array|Object|Number} time - the new time
+	 * @param {Null|String|Number} time.h - hour of date
+	 * @param {Null|String|Number} time.hour - hour of date
+	 * @param {Null|String|Number} time.hours - hour of date
+	 * @param {Null|String|Number} time.m - minute of date
+	 * @param {Null|String|Number} time.minute - minute of date
+	 * @param {Null|String|Number} time.minutes - minute of date
+	 * @param {Null|String|Number} time.s - second of date
+	 * @param {Null|String|Number} time.second - second of date
+	 * @param {Null|String|Number} time.seconds - second of date
+	 * @param {Null|String|Number} time.ms - millisecond of date
+	 * @param {Null|String|Number} time.millisecond - millisecond of date
+	 * @param {Null|String|Number} time.milliseconds - millisecond of date
 	 * @returns {PersianDate|Array} if set the time, returns class,
 	 * else returns an array of time
-	 * @throws {PersianDate|String} if date invalid return class with error property with error property
+	 * @throws {String} if date invalid return error message
 	 */
 	PersianDate.prototype.time = function (...time) {
 		if (this.error) return this.error;
@@ -2472,7 +2482,6 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {PersianDate} instance - the instance of PersianDate
 	 * @param {'>'|'>='|'<'|'<='} operator - the operator for compare
 	 * @returns {‌Boolean} if date valid, return true of false
-	 * @throws {PersianDate} return the class
 	 */
 	const compareDate = (instance, operator, date) => {
 		date = typesToArray(instance.c, ...date);
@@ -2522,7 +2531,35 @@ const PersianDate = function (dateVal, calendarVal) {
 	} else this.now();
 };
 
+/**
+	 * receives year and determined that is leap year or not
+	 * @static
+	 * @param {Number} year - the year to be determined is a leap or not
+	 * @param {"jalali"|"gregorian"} calendar - the calendar
+	 * @returns {Boolean} if is leap year, returns true
+	 */
+PersianDate.__proto__.isLeapYear = isLeapYear;
+
+/**
+	 * checks date is a native js Date object
+	 * @static
+	 * @since 1.3.0
+	 * @param {*} date date that must be checked
+	 * @returns {Boolean} if date is a native js Date, return true
+	 */
+PersianDate.__proto__.isDate = isDate
+
+/**
+ * checks date is a PersianDate object
+ * @static
+ * @since 1.3.0
+ * @param {*} date date that must be checked
+ * @returns {Boolean} if date is a PersianDate, return true
+ */
+PersianDate.__proto__.isPersianDate = isPersianDate
+
 //for next version
+//FIXME: static methods and non static methods --> do better
 //TODO: combine the add functions with sub functions
 //TODO: add time fuction just for change time
 //TODO: add the special character for get in all calendars
