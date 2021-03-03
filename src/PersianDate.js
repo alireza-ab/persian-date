@@ -2558,12 +2558,7 @@ PersianDate.__proto__.isDate = isDate
  */
 PersianDate.__proto__.isPersianDate = isPersianDate
 
-//for next version
-//FIXME: static methods and non static methods --> do better
-//TODO: combine the add functions with sub functions
-//TODO: add time fuction just for change time
-//TODO: add the special character for get in all calendars
-//TODO: convert to class
+//TODO: add localization
 //TODO: refactor
 
 export default PersianDate;
