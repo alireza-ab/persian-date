@@ -235,6 +235,30 @@ declare class PersianDate {
 		millisecond?: number
 	): boolean;
 	/**
+	 * checks the date and time
+	 * @static
+	 * @since 2.4.0
+	 * @param {"jalali"|"gregorian"} calendar - the calendar
+	 * @param {?Number} year - year of date that will be checked
+	 * @param {?Number} month - month of date that will be checked
+	 * @param {?Number} day - day of date that will be checked
+	 * @param {?Number} hour - hour of date that will be checked
+	 * @param {?Number} minute - minute of date that will be checked
+	 * @param {?Number} second - second of date that will be checked
+	 * @param {?Number} millisecond - millisecond of date that will be checked
+	 * @returns {Boolean} if is valid, returns true
+	 */
+	static isValid(
+		calendar: CalendarName,
+		year?: number,
+		month?: number,
+		day?: number,
+		hour?: number,
+		minute?: number,
+		second?: number,
+		millisecond?: number
+	): boolean;
+	/**
 	 * checks the persian date
 	 * @param {?Number} year - year of date that will be checked
 	 * @param {?Number} month - month of date that will be checked
@@ -242,6 +266,22 @@ declare class PersianDate {
 	 * @returns {Boolean} if is valid date, returns true
 	 */
 	isValidDate(year?: number, month?: number, day?: number): boolean;
+	/**
+	 * checks the date
+	 * @static
+	 * @since 2.4.0
+	 * @param {"jalali"|"gregorian"} calendar - the calendar
+	 * @param {?Number} year - year of date that will be checked
+	 * @param {?Number} month - month of date that will be checked
+	 * @param {?Number} day - day of date that will be checked
+	 * @returns {Boolean} if is valid date, returns true
+	 */
+	static isValidDate(
+		calendar: CalendarName,
+		year?: number,
+		month?: number,
+		day?: number
+	): boolean;
 	/**
 	 * checks the time
 	 * @param {?Number} hour - hour of date that will be checked
@@ -251,6 +291,22 @@ declare class PersianDate {
 	 * @returns {Boolean} if is valid time, returns true
 	 */
 	isValidTime(
+		hour?: number,
+		minute?: number,
+		second?: number,
+		millisecond?: number
+	): boolean;
+	/**
+	 * checks the time
+	 * @static
+	 * @since 2.4.0
+	 * @param {?Number} hour - hour of date that will be checked
+	 * @param {?Number} minute - minute of date that will be checked
+	 * @param {?Number} second - second of date that will be checked
+	 * @param {?Number} millisecond - millisecond of date that will be checked
+	 * @returns {Boolean} if is valid time, returns true
+	 */
+	static isValidTime(
 		hour?: number,
 		minute?: number,
 		second?: number,

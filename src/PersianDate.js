@@ -29,6 +29,58 @@ const isPersianDate = function (date) {
 	return date instanceof PersianDate;
 };
 
+const isValidDate = function (calendar, year, month, day) {
+	if ([year, month, day].some((e) => String(e).search(/null|NaN/) != -1))
+		return false;
+	if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
+		return false;
+	if (calendar[0] == "j") {
+		if (month >= 7 && month <= 11 && day == 31) return false;
+		if (month == 12 && day == 31) return false;
+		if (month == 12 && day == 30 && !isLeapYear(year, calendar)) return false;
+	} else {
+		if ([2, 4, 6, 9, 11].includes(month) && day == 31) return false;
+		if (month == 2 && (day == 30 || (day == 29 && !isLeapYear(year, calendar))))
+			return false;
+	}
+	return true;
+};
+
+const isValidTime = function (
+	hour,
+	minute,
+	second,
+	millisecond
+) {
+	if (
+		[hour, minute, second, millisecond].some(
+			(e) => String(e).search(/null|NaN/) != -1
+		)
+	)
+		return false;
+	if (hour < 0 || hour > 23) return false;
+	if (minute < 0 || minute > 59) return false;
+	if (second < 0 || second > 59) return false;
+	if (millisecond < 0 || millisecond > 999) return false;
+	return true;
+};
+
+const isValid = function (
+	calendar,
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	millisecond
+) {
+	return (
+		isValidDate(calendar, year, month, day) &&
+		isValidTime(hour, minute, second, millisecond)
+	);
+};
+
 /**
  * A Date library for working with persian date
  * @class
@@ -441,20 +493,7 @@ const PersianDate = function (dateVal, calendarVal) {
 			month = this.d.month;
 			day = this.d.date;
 		}
-		if ([year, month, day].some((e) => String(e).search(/null|NaN/) != -1))
-			return false;
-		if (year < 0 || month > 12 || month < 1 || day > 31 || day < 1)
-			return false;
-		if (this.c == "jalali") {
-			if (month >= 7 && month <= 11 && day == 31) return false;
-			if (month == 12 && day == 31) return false;
-			if (month == 12 && day == 30 && !this.isLeapYear(year)) return false;
-		} else {
-			if ([2, 4, 6, 9, 11].includes(month) && day == 31) return false;
-			if (month == 2 && (day == 30 || (day == 29 && !this.isLeapYear(year))))
-				return false;
-		}
-		return true;
+		return isValidDate(this.c, year, month, day)
 	};
 
 	/**
@@ -478,18 +517,7 @@ const PersianDate = function (dateVal, calendarVal) {
 			second = this.d.second;
 			millisecond = this.d.millisecond;
 		}
-
-		if (
-			[hour, minute, second, millisecond].some(
-				(e) => String(e).search(/null|NaN/) != -1
-			)
-		)
-			return false;
-		if (hour < 0 || hour > 23) return false;
-		if (minute < 0 || minute > 59) return false;
-		if (second < 0 || second > 59) return false;
-		if (millisecond < 0 || millisecond > 999) return false;
-		return true;
+		return isValidTime(hour, minute, second, millisecond)
 	};
 
 	/**
@@ -2172,7 +2200,7 @@ const PersianDate = function (dateVal, calendarVal) {
 
 		if (!date.length) date = gtj();
 		else if (this.isPersianDate(date[0])) date = date[0].toArray();
-		else date = typesToArray(this.c, ...date);
+		else date = typesToArray("jalali", ...date);
 		if (this.c == "jalali") {
 			//plus sign before a variable, convert variable to int
 			this.d.year = +date[0];
@@ -2233,7 +2261,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		if (this.isPersianDate(date[0])) {
 			date = date[0].toArray();
 		} else if (!isTimestamp(date[0])) {
-			date = typesToArray(this.c, ...date);
+			date = typesToArray('gregorian', ...date);
 			date[6] = +date[6] || 0;
 			date[5] = +date[5] || 0;
 			date[4] = +date[4] || 0;
@@ -2244,7 +2272,7 @@ const PersianDate = function (dateVal, calendarVal) {
 		date[0] = +date[0];
 
 		if (date.length > 1) {
-			if (!this.isValid(...date)) return showError("تاریخ نامعتبر", this);
+			if (!isValid('gregorian', ...date)) return showError("تاریخ نامعتبر", this);
 			--date[1]; // this is month; becuse the Date get month from 0, subtract one
 		}
 
@@ -2532,31 +2560,72 @@ const PersianDate = function (dateVal, calendarVal) {
 };
 
 /**
-	 * receives year and determined that is leap year or not
-	 * @static
-	 * @param {Number} year - the year to be determined is a leap or not
-	 * @param {"jalali"|"gregorian"} calendar - the calendar
-	 * @returns {Boolean} if is leap year, returns true
-	 */
-PersianDate.__proto__.isLeapYear = isLeapYear;
+ * receives year and determined that is leap year or not
+ * @static
+ * @since 2.3.0
+ * @param {Number} year - the year to be determined is a leap or not
+ * @param {"jalali"|"gregorian"} calendar - the calendar
+ * @returns {Boolean} if is leap year, returns true
+ */
+PersianDate.isLeapYear = isLeapYear;
 
 /**
-	 * checks date is a native js Date object
-	 * @static
-	 * @since 1.3.0
-	 * @param {*} date date that must be checked
-	 * @returns {Boolean} if date is a native js Date, return true
-	 */
-PersianDate.__proto__.isDate = isDate
+ * checks date is a native js Date object
+ * @static
+ * @since 2.3.0
+ * @param {*} date date that must be checked
+ * @returns {Boolean} if date is a native js Date, return true
+ */
+PersianDate.isDate = isDate
 
 /**
  * checks date is a PersianDate object
  * @static
- * @since 1.3.0
+ * @since 2.3.0
  * @param {*} date date that must be checked
  * @returns {Boolean} if date is a PersianDate, return true
  */
-PersianDate.__proto__.isPersianDate = isPersianDate
+PersianDate.isPersianDate = isPersianDate
+
+/**
+ * checks the date and time
+ * @static
+ * @since 2.4.0
+ * @param {"jalali"|"gregorian"} calendar - the calendar
+ * @param {?Number} year - year of date that will be checked
+ * @param {?Number} month - month of date that will be checked
+ * @param {?Number} day - day of date that will be checked
+ * @param {?Number} hour - hour of date that will be checked
+ * @param {?Number} minute - minute of date that will be checked
+ * @param {?Number} second - second of date that will be checked
+ * @param {?Number} millisecond - millisecond of date that will be checked
+ * @returns {Boolean} if is valid, returns true
+ */
+PersianDate.isValid = isValid
+
+/**
+ * checks the date
+ * @static
+ * @since 2.4.0
+ * @param {"jalali"|"gregorian"} calendar - the calendar
+ * @param {?Number} year - year of date that will be checked
+ * @param {?Number} month - month of date that will be checked
+ * @param {?Number} day - day of date that will be checked
+ * @returns {Boolean} if is valid date, returns true
+ */
+PersianDate.isValidDate = isValidDate
+
+/**
+ * checks the time
+ * @static
+ * @since 2.4.0
+ * @param {?Number} hour - hour of date that will be checked
+ * @param {?Number} minute - minute of date that will be checked
+ * @param {?Number} second - second of date that will be checked
+ * @param {?Number} millisecond - millisecond of date that will be checked
+ * @returns {Boolean} if is valid time, returns true
+ */
+PersianDate.isValidTime = isValidTime
 
 //TODO: add localization
 //TODO: refactor

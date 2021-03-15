@@ -11,7 +11,7 @@ let persianDate = new PersianDate();
 const now = {
     year: 1399,
     month: 12,
-    date: 13
+    date: 25
 }
 
 test('create date and return now', () => {
@@ -162,11 +162,25 @@ test('isLeapYear function', () => {
 });
 
 test('isValid function with valid date', () => {
+    // static
+    expect(PersianDate.isValid('j', 1399, 12, 30, 10, 20, 15, 123)).toBe(true);
+    expect(PersianDate.isValid('g', 2020, 8, 31, 10, 20, 15, 123)).toBe(true);
+    // non static
     expect(persianDate.calendar('j').isValid()).toBe(true);
     expect(persianDate.calendar('g').isValid()).toBe(true);
 });
 
 test('isValid function with invalid date', () => {
+    // static
+    persianDate.calendar('j').parse('1399', '45')
+    expect(PersianDate.isValid('j', 1399, 45)).toBe(false);
+    persianDate.calendar('j').parse('1399', '12', '31')
+    expect(PersianDate.isValid('j', 1399, 12, 31)).toBe(false);
+    persianDate.calendar('g').parse('2020-45')
+    expect(PersianDate.isValid('g', 2020, 45)).toBe(false);
+    persianDate.calendar('g').parse('2020-2-30')
+    expect(PersianDate.isValid('g', 2020, 2, 30)).toBe(false);
+    // non static
     persianDate.calendar('j').parse('1399', '45')
     expect(persianDate.isValid()).toBe(false);
     persianDate.calendar('j').parse('1399', '12', '31')
@@ -178,6 +192,10 @@ test('isValid function with invalid date', () => {
 });
 
 test('isValid function with invalid time', () => {
+    // static
+    expect(PersianDate.isValid('j', 1399, 10, 10, 25)).toBe(false);
+    expect(PersianDate.isValid('g', 2020, 10, 10, 25)).toBe(false);
+    // non static
     persianDate.hour('25');
     expect(persianDate.isValid()).toBe(false);
 });
