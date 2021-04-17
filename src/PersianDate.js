@@ -2424,7 +2424,7 @@ const PersianDate = function (dateVal, calendarVal) {
 			return this.toArray().slice(3)
 		let times = []
 		if (time[0] instanceof PersianDate)
-			times = time[0].calendar(this.c).time();
+			times = time[0].time();
 		else if (time[0] instanceof Date)
 			times = [
 				time[0].getHours(),
