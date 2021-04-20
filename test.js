@@ -11,7 +11,7 @@ let persianDate = new PersianDate();
 const now = {
 	year: 1400,
 	month: 1,
-	date: 28,
+	date: 31,
 };
 
 test("create date and return now", () => {
@@ -155,17 +155,15 @@ test("parse function with array parameter", () => {
 });
 
 test("parse function with object parameter", () => {
-	persianDate
-		.calendar("j")
-		.parse({
-			year: "1399",
-			M: "6",
-			date: "6",
-			hour: "14",
-			minutes: "45",
-			s: "4",
-			ms: "54",
-		});
+	persianDate.calendar("j").parse({
+		year: "1399",
+		M: "6",
+		date: "6",
+		hour: "14",
+		minutes: "45",
+		s: "4",
+		ms: "54",
+	});
 	expect(persianDate.year()).toBe(1399);
 	expect(persianDate.month()).toBe(6);
 	expect(persianDate.date()).toBe(6);
@@ -173,17 +171,15 @@ test("parse function with object parameter", () => {
 	expect(persianDate.minute()).toBe(45);
 	expect(persianDate.second()).toBe(4);
 	expect(persianDate.millisecond()).toBe(54);
-	persianDate
-		.calendar("g")
-		.parse({
-			year: "2020",
-			M: "6",
-			date: "6",
-			hour: "14",
-			minutes: "45",
-			s: "4",
-			ms: "54",
-		});
+	persianDate.calendar("g").parse({
+		year: "2020",
+		M: "6",
+		date: "6",
+		hour: "14",
+		minutes: "45",
+		s: "4",
+		ms: "54",
+	});
 	expect(persianDate.toDate()).toEqual(
 		new Date("2020", "5", "6", "14", "45", "4", "54")
 	);
@@ -198,10 +194,10 @@ test("parse function without parameter", () => {
 
 test("isLeapYear function", () => {
 	// static
-	expect(PersianDate.isLeapYear(1399, "j")).toBe(true);
-	expect(PersianDate.isLeapYear(1400, "j")).toBe(false);
-	expect(PersianDate.isLeapYear(2020, "g")).toBe(true);
-	expect(PersianDate.isLeapYear(2021, "g")).toBe(false);
+	expect(PersianDate.isLeapYear("j", 1399)).toBe(true);
+	expect(PersianDate.isLeapYear("j", 1400)).toBe(false);
+	expect(PersianDate.isLeapYear("g", 2020)).toBe(true);
+	expect(PersianDate.isLeapYear("g", 2021)).toBe(false);
 	// non static
 	expect(persianDate.calendar("j").isLeapYear(1399)).toBe(true);
 	expect(persianDate.calendar("j").parse(1400).isLeapYear()).toBe(false);
@@ -220,13 +216,9 @@ test("isValid function with valid date", () => {
 
 test("isValid function with invalid date", () => {
 	// static
-	persianDate.calendar("j").parse("1399", "45");
 	expect(PersianDate.isValid("j", 1399, 45)).toBe(false);
-	persianDate.calendar("j").parse("1399", "12", "31");
 	expect(PersianDate.isValid("j", 1399, 12, 31)).toBe(false);
-	persianDate.calendar("g").parse("2020-45");
 	expect(PersianDate.isValid("g", 2020, 45)).toBe(false);
-	persianDate.calendar("g").parse("2020-2-30");
 	expect(PersianDate.isValid("g", 2020, 2, 30)).toBe(false);
 	// non static
 	persianDate.calendar("j").parse("1399", "45");
@@ -239,16 +231,53 @@ test("isValid function with invalid date", () => {
 	expect(persianDate.isValid()).toBe(false);
 });
 
+test("isValid function with valid time", () => {
+	// static
+	expect(PersianDate.isValid("j", 1399, 10, 10, 12)).toBe(true);
+	expect(PersianDate.isValid("g", 2020, 10, 10, 12)).toBe(true);
+	// non static
+	persianDate.calendar("j").parse("1399/12/20 12:12");
+	expect(persianDate.isValid()).toBe(true);
+});
+
 test("isValid function with invalid time", () => {
 	// static
 	expect(PersianDate.isValid("j", 1399, 10, 10, 25)).toBe(false);
 	expect(PersianDate.isValid("g", 2020, 10, 10, 25)).toBe(false);
 	// non static
-	persianDate.hour("25");
+	persianDate.calendar("j").parse("1399/12/20 45:12");
 	expect(persianDate.isValid()).toBe(false);
 });
 
 test("getDaysInMonth function", () => {
+	// static
+	expect(PersianDate.getDaysInMonth("j", 1398, 12)).toBe(29);
+	expect(PersianDate.getDaysInMonth("j", 1399, 12)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 11)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 10)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 9)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 8)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 7)).toBe(30);
+	expect(PersianDate.getDaysInMonth("j", 1399, 6)).toBe(31);
+	expect(PersianDate.getDaysInMonth("j", 1399, 5)).toBe(31);
+	expect(PersianDate.getDaysInMonth("j", 1399, 4)).toBe(31);
+	expect(PersianDate.getDaysInMonth("j", 1399, 3)).toBe(31);
+	expect(PersianDate.getDaysInMonth("j", 1399, 2)).toBe(31);
+	expect(PersianDate.getDaysInMonth("j", 1399, 1)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 1)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 2)).toBe(29);
+	expect(PersianDate.getDaysInMonth("g", 2020, 3)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 4)).toBe(30);
+	expect(PersianDate.getDaysInMonth("g", 2020, 5)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 6)).toBe(30);
+	expect(PersianDate.getDaysInMonth("g", 2020, 7)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 8)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 9)).toBe(30);
+	expect(PersianDate.getDaysInMonth("g", 2020, 10)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2020, 11)).toBe(30);
+	expect(PersianDate.getDaysInMonth("g", 2020, 12)).toBe(31);
+	expect(PersianDate.getDaysInMonth("g", 2021, 2)).toBe(28);
+	// non static
 	persianDate.calendar("j").parse(1398, 12);
 	expect(persianDate.getDaysInMonth()).toBe(29);
 	persianDate.year(1399).month(12);
@@ -1375,6 +1404,10 @@ test("toObject function with numeric parameter", () => {
 
 test("isDate function", () => {
 	// static
+	expect(PersianDate.isDate(new Date())).toBe(true);
+	expect(PersianDate.isDate(new PersianDate())).toBe(false);
+	expect(PersianDate.isDate("2020-1-1")).toBe(false);
+	// non static
 	persianDate.calendar("j");
 	expect(persianDate.isDate(new Date())).toBe(true);
 	expect(persianDate.isDate(new PersianDate())).toBe(false);
@@ -1383,14 +1416,15 @@ test("isDate function", () => {
 	expect(persianDate.isDate(new Date())).toBe(true);
 	expect(persianDate.isDate(new PersianDate())).toBe(false);
 	expect(persianDate.isDate("2020-1-1")).toBe(false);
-	// non static
-	expect(PersianDate.isDate(new Date())).toBe(true);
-	expect(PersianDate.isDate(new PersianDate())).toBe(false);
-	expect(PersianDate.isDate("2020-1-1")).toBe(false);
 });
 
 test("isPersianDate function", () => {
 	// static
+	expect(PersianDate.isPersianDate(new Date())).toBe(false);
+	expect(PersianDate.isPersianDate(new PersianDate())).toBe(true);
+	expect(PersianDate.isPersianDate(new PersianDate().calendar("g"))).toBe(true);
+	expect(PersianDate.isPersianDate("2020-1-1")).toBe(false);
+	// non static
 	persianDate.calendar("j");
 	expect(persianDate.isPersianDate(new Date())).toBe(false);
 	expect(persianDate.isPersianDate(new PersianDate())).toBe(true);
@@ -1401,11 +1435,6 @@ test("isPersianDate function", () => {
 	expect(persianDate.isPersianDate(new PersianDate())).toBe(true);
 	expect(persianDate.isPersianDate(new PersianDate().calendar("g"))).toBe(true);
 	expect(persianDate.isPersianDate("2020-1-1")).toBe(false);
-	// non static
-	expect(PersianDate.isPersianDate(new Date())).toBe(false);
-	expect(PersianDate.isPersianDate(new PersianDate())).toBe(true);
-	expect(PersianDate.isPersianDate(new PersianDate().calendar("g"))).toBe(true);
-	expect(PersianDate.isPersianDate("2020-1-1")).toBe(false);
 });
 
 test("isSameOrBefore function", () => {
@@ -1986,9 +2015,9 @@ test("fromJalali function", () => {
 	persianDate.fromJalali({ year: 1399, month: 10, date: 21 });
 	expect(persianDate.toString("datetime:ss.c")).toBe("1399/10/21 00:00:00.0");
 	let p = new PersianDate();
-	persianDate.fromJalali(p);
+	persianDate.fromJalali(p.calendar("g"));
 	expect(persianDate.toString("datetime:ss.c")).toBe(
-		p.toString("datetime:ss.c")
+		p.calendar("j").toString("datetime:ss.c")
 	);
 	expect(persianDate.fromJalali().toString("datetime")).toEqual(
 		persianDate.clone().now().toString("datetime")
@@ -2002,7 +2031,6 @@ test("fromJalali function", () => {
 	expect(persianDate.toString("datetime:ss.c")).toBe("2021-03-25 00:00:00.0");
 	persianDate.fromJalali({ year: 1399, month: 8, date: 1 });
 	expect(persianDate.toString("datetime:ss.c")).toBe("2020-10-22 00:00:00.0");
-	p = new PersianDate();
 	persianDate.fromJalali(p);
 	expect(persianDate.toString("datetime:ss.c")).toBe(
 		p.calendar("g").toString("datetime:ss.c")
@@ -2059,9 +2087,9 @@ test("fromGregorian function", () => {
 		ms: "452",
 	});
 	expect(persianDate.toString("datetime:ss.c")).toBe("2020-07-27 11:05:08.452");
-	persianDate.fromGregorian(p.calendar("g"));
+	persianDate.fromGregorian(p.calendar("j"));
 	expect(persianDate.toString("datetime:ss.c")).toBe(
-		p.toString("datetime:ss.c")
+		p.calendar("g").toString("datetime:ss.c")
 	);
 	expect(persianDate.fromGregorian()).toEqual(persianDate.clone().now());
 });
@@ -2280,5 +2308,15 @@ test("time function", () => {
 	expect(persianDate.toString("time:ss.c")).toBe("05:00:00.0");
 	persianDate.time("0");
 	expect(persianDate.toString("time:ss.c")).toBe("00:00:00.0");
+});
+
+test("test errors", () => {
+	const d1 = new PersianDate();
+	const d2 = new PersianDate();
+
+	expect(d1.isValid()).toBe(true);
+	expect(d2.parse(1400, 13).isValid()).toBe(false);
+	expect(persianDate.isValid()).toBe(true);
+
 	perf.end();
 });

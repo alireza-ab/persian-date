@@ -13,8 +13,9 @@
 		"url": "https://github.com/alireza-ab/persian-date/issues"
 	},
 	"scripts": {
+		"build": "webpack",
 		"test": "jest",
-		"build": "webpack"
+		"bt": "yarn build && yarn test"
 	},
 	"keywords": [
 		"javascript",
@@ -34,6 +35,5 @@
 		"jest": "^26.6.3",
 		"webpack": "^5.33.2",
 		"webpack-cli": "^4.6.0"
-	},
-	"dependencies": {}
+	}
 }

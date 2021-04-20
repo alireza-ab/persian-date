@@ -148,10 +148,9 @@ declare class PersianDate {
 	/**
 	 * make error and delete this.d
 	 * @param {String} errorText - Error Text
-	 * @param {PersianDate} instance - the PersianDate instance
 	 * @returns {PersianDate} make error and return class
 	 */
-	private showError;
+	private invalid;
 	/**
 	 * make current date in persian calendar
 	 * @returns {PersianDate} make current date and return class
@@ -209,11 +208,11 @@ declare class PersianDate {
 	/**
 	 * receives year and determined that is leap year or not
 	 * @static
-	 * @param {Number} year - the year to be determined is a leap or not
 	 * @param {"jalali"|"gregorian"} calendar - the calendar
+	 * @param {Number} year - the year to be determined is a leap or not
 	 * @returns {Boolean} if is leap year, returns true
 	 */
-	static isLeapYear(year: number, calendar: CalendarName): boolean;
+	static isLeapYear(calendar: CalendarName, year: number): boolean;
 	/**
 	 * checks the persian date and time
 	 * @param {?Number} year - year of date that will be checked
@@ -320,6 +319,19 @@ declare class PersianDate {
 	 * @throws {String} if date invalid return error message
 	 */
 	getDaysInMonth(year?: number, month?: number): number | string;
+	/**
+	 * returns number of days in month
+	 * @param {"jalali"|"gregorian"} calendar - the calendar
+	 * @param {?Number} year - year of date that returns number of days in month
+	 * @param {?Number} month - month of date that returns number of days in month
+	 * @returns {Number} number of days in month
+	 * @throws {String} if date invalid return error message
+	 */
+	static getDaysInMonth(
+		calendar: CalendarName,
+		year?: number,
+		month?: number
+	): number | string;
 	/**
 	 * add to year
 	 * @param {?Number|String} [year=1] - a number for add with year
@@ -1172,7 +1184,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
 	 * @returns {PersianDate} return class with persian date
-	 * @throws {String} if date invalid return error message
+	 * @throws {PersianDate} if date invalid return class with error
 	 */
 	fromJalali(
 		year?: AllDateInput,
@@ -1216,7 +1228,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
 	 * @returns {PersianDate} return class with persian date
-	 * @throws {String} if date invalid return error message
+	 * @throws {PersianDate} if date invalid return class with error
 	 */
 	fromGregorian(
 		year?: AllDateInput,
@@ -1281,15 +1293,21 @@ declare class PersianDate {
 	 * @param {Null|String|Number} time.milliseconds - millisecond of date
 	 * @returns {PersianDate|Array} if set the time, returns class,
 	 * else returns an array of time
-	 * @throws {String} if date invalid return error message
+	 * @throws {String} if time invalid return error text
 	 */
 	time(...time: AllDateInput[]): PersianDate | [] | string;
 	/**
-	 * show warning for deprecated functions
+	 * show warning
 	 * @since 2.0.0
 	 * @param {String} msg - the message for warning
 	 */
-	private deprecate;
+	private warn;
+	/**
+	 * show error
+	 * @since 3.0.0
+	 * @param {String} msg - the message for error
+	 */
+	private error;
 	/**
 	 * check the input is timestamp
 	 * @since 2.0.0
@@ -1301,30 +1319,26 @@ declare class PersianDate {
 	 * set the date with Date instance
 	 * @since 2.0.0
 	 * @param {Date} date - the Date instance
-	 * @param {PersianDate} instance - the PersianDate instance
 	 */
 	private setGregorianDate;
 	/**
-	 * set the date with array of persian date
+	 * set the date with Date instance
 	 * @since 2.0.0
-	 * @param {Array} date - the array of persian date
-	 * @param {PersianDate} instance - the PersianDate instance
+	 * @param {Date} date - the Date
 	 */
 	private setJalaliDate;
 	/**
 	 * compare the dates
 	 * @since 2.0.0
-	 * @param {PersianDate} instance - the instance of PersianDate
-	 * @param {'>'|'>='|'<'|'<='} operator - the operator for compare
 	 * @param {PersianDate|Date|String|Array|Object} date - the date
+	 * @param {'>'|'>='|'<'|'<='|'=='} operator - the operator for compare
 	 * @returns {‌Boolean} if date valid, return true of false
 	 */
-	private compareDate;
+	private compare;
 	/**
 	 * do the math operation on dates
 	 * @since 1.4.0
 	 * @param {String|PersianDate|Date|Array|Object} values - the dates
-	 * @param {PersianDate} instance - the instance of PersianDate
 	 * @param {'min'|'max'} operation - the operation
 	 * @returns {*} return maximum date
 	 * @throws {false} if parameters not send or parameters is invalid, return false
