@@ -10,8 +10,8 @@ let persianDate = new PersianDate();
 
 const now = {
 	year: 1400,
-	month: 1,
-	date: 31,
+	month: 3,
+	date: 4,
 };
 
 test("create date and return now", () => {
@@ -27,9 +27,7 @@ test("create date and return now", () => {
 	expect(persianDate.millisecond()).toBe(date.getMilliseconds());
 
 	expect(persianDate.calendar("g").toDate().toString()).toBe(date.toString());
-	expect(new PersianDate().calendar("g").toDate().toString()).toBe(
-		date.toString()
-	);
+	expect(new PersianDate(null, "g").toDate().toString()).toBe(date.toString());
 });
 
 test("create date with date and calendar", () => {

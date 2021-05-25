@@ -71,87 +71,6 @@ declare class PersianDate {
 	private error?;
 	constructor(date?: AllDateInput, calendar?: CalendarName);
 	/**
-	 * Gregorian to Jalali
-	 * @param {Null|Date|Number|String} [year=new Date()] - Gregorian year
-	 * @param {Null|String|Number} [month=1] - Gregorian month
-	 * @param {Null|String|Number} [day=1] - Gregorian day
-	 * @param {Null|String|Number} [hour=0] - Gregorian hour
-	 * @param {Null|String|Number} [minute=0] - Gregorian minute
-	 * @param {Null|String|Number} [second=0] - Gregorian second
-	 * @param {Null|String|Number} [millisecond=0] - Gregorian millisecond
-	 * @returns {Array} Jalali date
-	 */
-	private gtj;
-	/**
-	 * Jalali to Gregorian
-	 * @param {Null|String|Number} year - Jalali year
-	 * @param {Null|String|Number} [month=1] -  Jalali month
-	 * @param {Null|String|Number} [day=1] -  Jalali day
-	 * @param {Null|String|Number} [hour=0] -  Jalali hour
-	 * @param {Null|String|Number} [minute=0] -  Jalali minute
-	 * @param {Null|String|Number} [second=0] -  Jalali second
-	 * @param {Null|String|Number} [millisecond=0] -  Jalali millisecond
-	 * @returns {Date} Gregorian date
-	 */
-	private jtg;
-	/**
-	 * get label of day
-	 * @param {Date} date - the date that received day
-	 * @param {'jalali'|'gregorian'} calendar - the calendar
-	 * @returns {String} returns day label
-	 * @example Saturday | شنبه
-	 */
-	private getDayLabel;
-	/**
-	 * get the day of the week
-	 * @param {Date} date - the date that received day of week
-	 * @param {'jalali', 'gregorian'} calendar - the calendar
-	 * @param {'standard','array'} mode - standard mode start from 1 and array mode start from 0
-	 * @returns {Number|String} the number of the day of week
-	 */
-	private getDayOfWeek;
-	/**
-	 * get the day of the year
-	 * @param {Null|String|Number} year - the year of date
-	 * @param {Null|String|Number} month - the month of date
-	 * @param {Null|String|Number} day - the day of date
-	 * @param {'jalali'|'gregorian'} calendar - the calendar
-	 * @returns {Number} the day of the year
-	 */
-	private getDayOfYear;
-	/**
-	 * get the week of the year
-	 * @param {Null|String|Number} year - the year of date
-	 * @param {Null|String|Number} month - the month of date
-	 * @param {Null|String|Number} day - the day of date
-	 * @param {String} calendar - the calendar
-	 * @returns {Number} the week of the year
-	 */
-	private getWeekOfYear;
-	/**
-	 * returns the ordinal number of that number sent to it
-	 * @param {Number|String} number - the number that gives ordinal number --> from 1 to 366
-	 * @param {'jalali','gregorian'} calendar - the calendar
-	 * @param {?Number} mode  - 'jalali' calendar have two mode of ordinal number
-	 * @returns {String} ordinal number
-	 * @example 1st | اول | اولین
-	 */
-	private ordinalNumber;
-	/**
-	 * add a prefix to the text in the number of characters that the text has less
-	 * @param {String|Number} text - a text need prefix
-	 * @param {Number} length - length of text
-	 * @param {String} [prefix=0] - string for add before of text
-	 * @returns {String} text with or wihtout prefix
-	 */
-	private addPrefix;
-	/**
-	 * make error and delete this.d
-	 * @param {String} errorText - Error Text
-	 * @returns {PersianDate} make error and return class
-	 */
-	private invalid;
-	/**
 	 * make current date in persian calendar
 	 * @returns {PersianDate} make current date and return class
 	 */
@@ -636,41 +555,6 @@ declare class PersianDate {
 		second?: DateInput,
 		millisecond?: DateInput
 	): boolean;
-	/**
-	 * convert String or Array or Object or PersianDate to Array
-	 * @since 1.2.0
-	 * @param {String|Array|Object|Number} year - this param must be string or array or Object from date or year
-	 * @param {String|Number} year.y - year of date
-	 * @param {Null|String|Number} year.year - year of date
-	 * @param {Null|String|Number} year.years - year of date
-	 * @param {Null|String|Number} year.M - month of date
-	 * @param {Null|String|Number} year.month - month of date
-	 * @param {Null|String|Number} year.months - month of date
-	 * @param {Null|String|Number} year.d - day of date
-	 * @param {Null|String|Number} year.day - day of date
-	 * @param {Null|String|Number} year.days - day of date
-	 * @param {Null|String|Number} year.date - day of date
-	 * @param {Null|String|Number} year.h - hour of date
-	 * @param {Null|String|Number} year.hour - hour of date
-	 * @param {Null|String|Number} year.hours - hour of date
-	 * @param {Null|String|Number} year.m - minute of date
-	 * @param {Null|String|Number} year.minute - minute of date
-	 * @param {Null|String|Number} year.minutes - minute of date
-	 * @param {Null|String|Number} year.s - second of date
-	 * @param {Null|String|Number} year.second - second of date
-	 * @param {Null|String|Number} year.seconds - second of date
-	 * @param {Null|String|Number} year.ms - millisecond of date
-	 * @param {Null|String|Number} year.millisecond - millisecond of date
-	 * @param {Null|String|Number} year.milliseconds - millisecond of date
-	 * @param {Null|String|Number} month month of date
-	 * @param {Null|String|Number} day day of date
-	 * @param {Null|String|Number} hour hour of date
-	 * @param {Null|String|Number} minute minute of date
-	 * @param {Null|String|Number} second second of date
-	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {Array} array includes year, month, date, hour, minute, second, millinsecond
-	 */
-	private typesToArray;
 	/**
 	 * checks this date is before the another date
 	 * @since 1.2.0
@@ -1296,53 +1180,5 @@ declare class PersianDate {
 	 * @throws {String} if time invalid return error text
 	 */
 	time(...time: AllDateInput[]): PersianDate | [] | string;
-	/**
-	 * show warning
-	 * @since 2.0.0
-	 * @param {String} msg - the message for warning
-	 */
-	private warn;
-	/**
-	 * show error
-	 * @since 3.0.0
-	 * @param {String} msg - the message for error
-	 */
-	private error;
-	/**
-	 * check the input is timestamp
-	 * @since 2.0.0
-	 * @param {Number|String} timestamp - input that must be checked
-	 * @returns {Boolean} if input was timestamp, return true
-	 */
-	private isTimestamp;
-	/**
-	 * set the date with Date instance
-	 * @since 2.0.0
-	 * @param {Date} date - the Date instance
-	 */
-	private setGregorianDate;
-	/**
-	 * set the date with Date instance
-	 * @since 2.0.0
-	 * @param {Date} date - the Date
-	 */
-	private setJalaliDate;
-	/**
-	 * compare the dates
-	 * @since 2.0.0
-	 * @param {PersianDate|Date|String|Array|Object} date - the date
-	 * @param {'>'|'>='|'<'|'<='|'=='} operator - the operator for compare
-	 * @returns {‌Boolean} if date valid, return true of false
-	 */
-	private compare;
-	/**
-	 * do the math operation on dates
-	 * @since 1.4.0
-	 * @param {String|PersianDate|Date|Array|Object} values - the dates
-	 * @param {'min'|'max'} operation - the operation
-	 * @returns {*} return maximum date
-	 * @throws {false} if parameters not send or parameters is invalid, return false
-	 */
-	private mathOperation;
 }
 export default PersianDate;
