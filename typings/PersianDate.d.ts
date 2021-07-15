@@ -23,6 +23,14 @@ declare type Unit =
 	| "ms"
 	| "millisecond"
 	| "milliseconds";
+declare type AllUnit =
+	| Unit
+	| "w"
+	| "week"
+	| "weeks"
+	| "q"
+	| "quarter"
+	| "quarters";
 declare type DateArray = [
 	year?: DateInput,
 	month?: DateInput,
@@ -117,7 +125,7 @@ declare class PersianDate {
 		minute?: DateInput,
 		second?: DateInput,
 		millisecond?: DateInput
-	): PersianDate | string;
+	): PersianDate;
 	/**
 	 * receives year and determined that is leap year or not
 	 * @param {?Number} year - the year to be determined is a leap or not
@@ -237,7 +245,7 @@ declare class PersianDate {
 	 * @returns {Number} number of days in month
 	 * @throws {String} if date invalid return error message
 	 */
-	getDaysInMonth(year?: number, month?: number): number | string;
+	getDaysInMonth(year?: number, month?: number): number;
 	/**
 	 * returns number of days in month
 	 * @param {"jalali"|"gregorian"} calendar - the calendar
@@ -250,7 +258,7 @@ declare class PersianDate {
 		calendar: CalendarName,
 		year?: number,
 		month?: number
-	): number | string;
+	): number;
 	/**
 	 * add to year
 	 * @param {?Number|String} [year=1] - a number for add with year
@@ -259,7 +267,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addYear(year?: DateInput, checkDate?: boolean): PersianDate | string;
+	addYear(year?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to month
 	 * @param {?Number|String} [month=1] - a number for add with month
@@ -268,7 +276,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addMonth(month?: DateInput, checkDate?: boolean): PersianDate | string;
+	addMonth(month?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to day
 	 * @param {?Number|String} [day=1] - a number for add with day
@@ -277,7 +285,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addDay(day?: DateInput, checkDate?: boolean): PersianDate | string;
+	addDay(day?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to quarter
 	 * @param {?Number|String} [quarter=1] - a number for add with quarter
@@ -286,7 +294,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addQuarter(quarter?: DateInput, checkDate?: boolean): PersianDate | string;
+	addQuarter(quarter?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to week
 	 * @param {?Number|String} [week=1] - a number for add with week
@@ -295,7 +303,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addWeek(week?: DateInput, checkDate?: boolean): PersianDate | string;
+	addWeek(week?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to hour
 	 * @param {?Number|String} [hour=1] - a number for add with hour
@@ -304,7 +312,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addHour(hour?: DateInput, checkDate?: boolean): PersianDate | string;
+	addHour(hour?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to minute
 	 * @param {?Number|String} [minute=1] - a number for add with minute
@@ -313,7 +321,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addMinute(minute?: DateInput, checkDate?: boolean): PersianDate | string;
+	addMinute(minute?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to second
 	 * @param {?Number|String} [second=1] - a number for add with second
@@ -322,7 +330,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addSecond(second?: DateInput, checkDate?: boolean): PersianDate | string;
+	addSecond(second?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * add to millisecond
 	 * @param {?Number|String} [millisecond=1] - a number for add with millisecond
@@ -331,10 +339,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	addMillisecond(
-		millisecond?: DateInput,
-		checkDate?: boolean
-	): PersianDate | string;
+	addMillisecond(millisecond?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from year
 	 * @param {?Number|String} [year=1] - a number for subtract from year
@@ -343,7 +348,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subYear(year?: DateInput, checkDate?: boolean): PersianDate | string;
+	subYear(year?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from month
 	 * @param {?Number|String} [month=1] - a number for subtract from month
@@ -352,7 +357,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subMonth(month?: DateInput, checkDate?: boolean): PersianDate | string;
+	subMonth(month?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from day
 	 * @param {?Number|String} [day=1] - a number for subtract from day
@@ -361,7 +366,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subDay(day?: DateInput, checkDate?: boolean): PersianDate | string;
+	subDay(day?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from quarter
 	 * @param {?Number|String} [quarter=1] - a number for subtract from quarter
@@ -370,7 +375,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subQuarter(quarter?: DateInput, checkDate?: boolean): PersianDate | string;
+	subQuarter(quarter?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from week
 	 * @param {?Number|String} [week=1] - a number for subtract from week
@@ -379,7 +384,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subWeek(week?: DateInput, checkDate?: boolean): PersianDate | string;
+	subWeek(week?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from hour
 	 * @param {?Number|String} [hour=1] - a number for subtract from hour
@@ -388,7 +393,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subHour(hour?: DateInput, checkDate?: boolean): PersianDate | string;
+	subHour(hour?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from minute
 	 * @param {?Number|String} [minute=1] - a number for subtract from minute
@@ -397,7 +402,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subMinute(minute?: DateInput, checkDate?: boolean): PersianDate | string;
+	subMinute(minute?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from second
 	 * @param {?Number|String} [second=1] - a number for subtract from second
@@ -406,7 +411,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subSecond(second?: DateInput, checkDate?: boolean): PersianDate | string;
+	subSecond(second?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * subtract from millisecond
 	 * @param {?Number|String} [millisecond=1] - a number for subtract from millisecond
@@ -415,10 +420,7 @@ declare class PersianDate {
 	 * @returns {PersianDate} return class with new date
 	 * @throws {String} if date invalid return error message
 	 */
-	subMillisecond(
-		millisecond?: DateInput,
-		checkDate?: boolean
-	): PersianDate | string;
+	subMillisecond(millisecond?: DateInput, checkDate?: boolean): PersianDate;
 	/**
 	 * returns date as string with specify format
 	 * @param {?String} [format=date] - formatting date to string
@@ -433,7 +435,8 @@ declare class PersianDate {
 	 * else returns a number or string from year
 	 * @throws {String} if date invalid return error message
 	 */
-	year(format?: DateInput): PersianDate | string | number;
+	year(): number;
+	year(format: DateInput): PersianDate;
 	/**
 	 * get or set month
 	 * @param {Null|String|Number} [format=jM] - a number for set the month or a format for formatting
@@ -441,7 +444,8 @@ declare class PersianDate {
 	 * else returns a number or string from month
 	 * @throws {String} if date invalid return error message
 	 */
-	month(format?: DateInput): PersianDate | string | number;
+	month(): number;
+	month(format: DateInput): PersianDate;
 	/**
 	 * get or set day in month
 	 * @param {Null|String|Number} [format=jD] - a number for set the day in month or a format for formatting
@@ -449,7 +453,8 @@ declare class PersianDate {
 	 * else returns a number or string from day
 	 * @throws {String} if date invalid return error message
 	 */
-	date(format?: DateInput): PersianDate | string | number;
+	date(): number;
+	date(format: DateInput): PersianDate;
 	/**
 	 * get or set quarter
 	 * @param {Null|String|Number} [format=jQ] - a number for set the quarter or a format for formatting
@@ -457,7 +462,8 @@ declare class PersianDate {
 	 * else returns a number or string from quarter
 	 * @throws {String} if date invalid return error message
 	 */
-	quarter(format?: DateInput): PersianDate | string | number;
+	quarter(): number;
+	quarter(format: DateInput): PersianDate;
 	/**
 	 * get or set week
 	 * @param {Null|String|Number} [format=jw] - a number for set the week or a format for formatting
@@ -465,7 +471,8 @@ declare class PersianDate {
 	 * else returns a number or string from week
 	 * @throws {String} if date invalid return error message
 	 */
-	week(format?: DateInput): PersianDate | string | number;
+	week(): number;
+	week(format: DateInput): PersianDate;
 	/**
 	 * get or set hour
 	 * @param {Null|String|Number} [format=H] - a number for set the hour or a format for formatting
@@ -473,7 +480,8 @@ declare class PersianDate {
 	 * else returns a number or string from hour
 	 * @throws {String} if date invalid return error message
 	 */
-	hour(format?: DateInput): PersianDate | string | number;
+	hour(): number;
+	hour(format: DateInput): PersianDate;
 	/**
 	 * get or set minute
 	 * @param {Null|String|Number} [format=m] - a number for set the minute or a format for formatting
@@ -481,7 +489,8 @@ declare class PersianDate {
 	 * else returns a number or string from minute
 	 * @throws {String} if date invalid return error message
 	 */
-	minute(format?: DateInput): PersianDate | string | number;
+	minute(): number;
+	minute(format: DateInput): PersianDate;
 	/**
 	 * get or set second
 	 * @param {Null|String|Number} [format=s] - a number for set the second or a format for formatting
@@ -489,7 +498,8 @@ declare class PersianDate {
 	 * else returns a number or string from second
 	 * @throws {String} if date invalid return error message
 	 */
-	second(format?: DateInput): PersianDate | string | number;
+	second(): number;
+	second(format: DateInput): PersianDate;
 	/**
 	 * get or set millisecond
 	 * @param {Null|String|Number} [format=c] - a number for set the millisecond or a format for formatting
@@ -497,7 +507,8 @@ declare class PersianDate {
 	 * else returns a number or string from millisecond
 	 * @throws {String} if date invalid return error message
 	 */
-	millisecond(format?: DateInput): PersianDate | string | number;
+	millisecond(): number;
+	millisecond(format: DateInput): PersianDate;
 	/**
 	 * get timestamp or set date from timestamp
 	 * @param {Null|String|Number} value - a number for set the millisecond
@@ -505,7 +516,8 @@ declare class PersianDate {
 	 * else returns timestamp (number)
 	 * @throws {String} if date invalid return error message
 	 */
-	timestamp(value?: DateInput): PersianDate | number | string;
+	timestamp(): number;
+	timestamp(format: DateInput): PersianDate;
 	/**
 	 * get clone of this date
 	 * @since 1.1.0
@@ -544,7 +556,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} minute minute of date
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is same to the argument, return true of false
 	 */
 	isSame(
 		year?: AllDateInput,
@@ -587,7 +599,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} minute minute of date
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is before the argument, return true of false
 	 */
 	isBefore(
 		year?: AllDateInput,
@@ -630,7 +642,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} minute minute of date
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is after the argument, return true of false
 	 */
 	isAfter(
 		year?: AllDateInput,
@@ -684,17 +696,15 @@ declare class PersianDate {
 		minuteFormat?: DateInput,
 		secondFormat?: DateInput,
 		millisecondFormat?: DateInput
-	):
-		| {
-				year?: DateInput;
-				month?: DateInput;
-				date?: DateInput;
-				hour?: DateInput;
-				minute?: DateInput;
-				second?: DateInput;
-				millisecond?: DateInput;
-		  }
-		| string;
+	): {
+		year?: DateInput;
+		month?: DateInput;
+		date?: DateInput;
+		hour?: DateInput;
+		minute?: DateInput;
+		second?: DateInput;
+		millisecond?: DateInput;
+	};
 	/**
 	 * checks date is a native js Date object
 	 * @since 1.3.0
@@ -757,7 +767,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} minute minute of date
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is samr or before the argument, return true of false
 	 */
 	isSameOrBefore(
 		year?: AllDateInput,
@@ -800,7 +810,7 @@ declare class PersianDate {
 	 * @param {Null|String|Number} minute minute of date
 	 * @param {Null|String|Number} second second of date
 	 * @param {Null|String|Number} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is same or after the argument, return true of false
 	 */
 	isSameOrAfter(
 		year?: AllDateInput,
@@ -861,13 +871,42 @@ declare class PersianDate {
 	 * @param {Null|String|Number} to.millisecond - millisecond of date
 	 * @param {Null|String|Number} to.milliseconds - millisecond of date
 	 * @param {String} [method='()'] - determines that consider the dates themselves
-	 * @returns {‌Boolean} if date valid, return true or false
+	 * @returns {‌Boolean} if this date is between the arguments, return true of false
 	 */
 	isBetween(
 		from: AllDateInput,
 		to: AllDateInput,
 		method?: "()" | "[]" | "[)" | "(]"
 	): boolean;
+	/**
+	 * checks this date is in array of dates
+	 * @since 2.6.0
+	 * @param {(PersianDate|Date|String|Array|Object)[]} array - this param must be array of PersianDate - string - array - Object and array date
+	 * @param {String|Number} array[].y - year of date
+	 * @param {Null|String|Number} array[].year - year of date
+	 * @param {Null|String|Number} array[].years - year of date
+	 * @param {Null|String|Number} array[].M - month of date
+	 * @param {Null|String|Number} array[].month - month of date
+	 * @param {Null|String|Number} array[].months - month of date
+	 * @param {Null|String|Number} array[].d - day of date
+	 * @param {Null|String|Number} array[].day - day of date
+	 * @param {Null|String|Number} array[].days - day of date
+	 * @param {Null|String|Number} array[].date - day of date
+	 * @param {Null|String|Number} array[].h - hour of date
+	 * @param {Null|String|Number} array[].hour - hour of date
+	 * @param {Null|String|Number} array[].hours - hour of date
+	 * @param {Null|String|Number} array[].m - minute of date
+	 * @param {Null|String|Number} array[].minute - minute of date
+	 * @param {Null|String|Number} array[].minutes - minute of date
+	 * @param {Null|String|Number} array[].s - second of date
+	 * @param {Null|String|Number} array[].second - second of date
+	 * @param {Null|String|Number} array[].seconds - second of date
+	 * @param {Null|String|Number} array[].ms - millisecond of date
+	 * @param {Null|String|Number} array[].millisecond - millisecond of date
+	 * @param {Null|String|Number} array[].milliseconds - millisecond of date
+	 * @returns {‌Boolean} if date is in array return true
+	 */
+	isInArray(array: AllDateInput[]): boolean;
 	/**
 	 * returns minimum date in arguments that passed
 	 * @since 1.4.0
@@ -897,7 +936,7 @@ declare class PersianDate {
 	 * @returns {*} return minimum date
 	 * @throws {false} if parameters not send or parameters is invalid, return false
 	 */
-	min(...dates: AllDateInput[]): AllDateInput;
+	min<T extends AllDateInput>(...dates: T[]): T;
 	/**
 	 * returns maximum date in arguments that passed
 	 * @since 1.4.0
@@ -927,7 +966,7 @@ declare class PersianDate {
 	 * @returns {*} return maximum date
 	 * @throws {false} if parameters not send or parameters is invalid, return false
 	 */
-	max(...dates: AllDateInput[]): AllDateInput;
+	max<T extends AllDateInput>(...dates: T[]): T;
 	/**
 	 * get the diffrence between two date
 	 * @since 1.4.0
@@ -959,7 +998,7 @@ declare class PersianDate {
 	 * @returns {Number} diffrence
 	 * @throws {String} if date invalid return error message
 	 */
-	diff(date: AllDateInput, unit: Unit, addOne?: boolean): number | string;
+	diff(date: AllDateInput, unit?: Unit, addOne?: boolean): number;
 	/**
 	 * return the array of PersianDate
 	 * @since 1.3.0
@@ -1003,7 +1042,7 @@ declare class PersianDate {
 		minuteFormat?: DateInput,
 		secondFormat?: DateInput,
 		millisecondFormat?: DateInput
-	): DateArray | string;
+	): DateArray;
 	/**
 	 * get the diffrence between two date in a human-readable format
 	 * @since 2.0.0
@@ -1078,7 +1117,7 @@ declare class PersianDate {
 		minute?: DateInput,
 		second?: DateInput,
 		millisecond?: DateInput
-	): PersianDate | string;
+	): PersianDate;
 	/**
 	 * convert a gregorian date to PersianDate instance
 	 * @since 2.0.0
@@ -1122,43 +1161,43 @@ declare class PersianDate {
 		minute?: DateInput,
 		second?: DateInput,
 		millisecond?: DateInput
-	): PersianDate | string;
+	): PersianDate;
 	/**
 	 * convert a gregorian date to PersianDate instance
 	 * @since 2.0.0
 	 * @param {"j"|"jalali"|"g"|"gregorian"} calendar - the calendar
 	 * @returns {PersianDate} return class with persian date
 	 */
-	calendar(calendar: CalendarName): PersianDate | string;
+	calendar(): CalendarName;
+	calendar(calendar: CalendarName): PersianDate;
 	/**
 	 * return number of weeks in year
 	 * @since 2.0.0
 	 * @param {Number|String} year - the year
 	 * @returns {Number} number of weeks in year
 	 */
-	getWeeksInYear(year?: DateInput): number | string;
+	getWeeksInYear(year?: DateInput): number;
 	/**
 	 * return the Date instance of PersianDate
 	 * @since 2.0.0
 	 * @returns {Date} if date valid, return Date instance of date
 	 * @throws {String} if date invalid return error message
 	 */
-	toDate(): Date | string;
+	toDate(): Date;
 	/**
 	 * change the date to start of the year or month or ...
 	 * @since 2.0.0
 	 * @param {String} unit - the unit of time
 	 * @returns {PersianDate} return the class with new date or time
 	 */
-	startOf(unit?: Unit): PersianDate;
+	startOf(unit?: AllUnit): PersianDate;
 	/**
 	 * change the date to end of the year or month or ...
 	 * @since 2.0.0
 	 * @param {String} unit - the unit of time
 	 * @returns {PersianDate} return the class with new date or time
 	 */
-	endOf(unit?: Unit): PersianDate;
-	valueOf(): string | number | PersianDate;
+	endOf(unit?: AllUnit): PersianDate;
 	/**
 	 * change the time
 	 * @since 2.3.0
@@ -1179,6 +1218,10 @@ declare class PersianDate {
 	 * else returns an array of time
 	 * @throws {String} if time invalid return error text
 	 */
-	time(...time: AllDateInput[]): PersianDate | [] | string;
+	time(): DateInput[];
+	time(...time: AllDateInput[]): PersianDate;
+
+	valueOf(): number;
+	valueOf(format: DateInput): PersianDate;
 }
 export default PersianDate;

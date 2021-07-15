@@ -6,3 +6,4 @@ export * from "./isValidDate";
 export * from "./isValidTime";
 export * from "./isSame";
 export * from "./isBetween";
+export * from "./isInArray";

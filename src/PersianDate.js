@@ -67,6 +67,7 @@ import {
 	isValid,
 	isSame,
 	isBetween,
+	isInArray,
 } from "./comparison";
 
 import { diff, diffForHumans } from "./diff";
@@ -1079,7 +1080,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} minute minute of date
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is same to the argument, return true of false
 	 */
 	PersianDate.prototype.isSame = function () {
 		if (this.error) return false;
@@ -1118,7 +1119,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} minute minute of date
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is before the argument, return true of false
 	 */
 	PersianDate.prototype.isBefore = function () {
 		if (this.error) return false;
@@ -1157,7 +1158,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} minute minute of date
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is after the argument, return true of false
 	 */
 	PersianDate.prototype.isAfter = function () {
 		if (this.error) return false;
@@ -1196,7 +1197,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} minute minute of date
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is samr or before the argument, return true of false
 	 */
 	PersianDate.prototype.isSameOrBefore = function () {
 		if (this.error) return false;
@@ -1235,7 +1236,7 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|Number|String} minute minute of date
 	 * @param {Null|Number|String} second second of date
 	 * @param {Null|Number|String} millisecond millisecond of date
-	 * @returns {‌Boolean} if date valid, return true of false
+	 * @returns {‌Boolean} if this date is same or after the argument, return true of false
 	 */
 	PersianDate.prototype.isSameOrAfter = function () {
 		if (this.error) return false;
@@ -1292,11 +1293,44 @@ const PersianDate = function (dateVal, calendarVal) {
 	 * @param {Null|String|Number} to.millisecond - millisecond of date
 	 * @param {Null|String|Number} to.milliseconds - millisecond of date
 	 * @param {String} method - determines that consider the dates themselves
-	 * @returns {‌Boolean} if date valid, return true or false
+	 * @returns {‌Boolean} if this date is between the arguments, return true of false
 	 */
 	PersianDate.prototype.isBetween = function (from, to, method = "()") {
 		if (this.error) return false;
 		return isBetween.call(this, from, to, method);
+	};
+
+	/**
+	 * checks this date is in array of dates
+	 * @since 2.6.0
+	 * @param {(PersianDate|Date|String|Array|Object)[]} array - this param must be array of PersianDate - string - array - Object and array date
+	 * @param {String|Number} array[].y - year of date
+	 * @param {Null|String|Number} array[].year - year of date
+	 * @param {Null|String|Number} array[].years - year of date
+	 * @param {Null|String|Number} array[].M - month of date
+	 * @param {Null|String|Number} array[].month - month of date
+	 * @param {Null|String|Number} array[].months - month of date
+	 * @param {Null|String|Number} array[].d - day of date
+	 * @param {Null|String|Number} array[].day - day of date
+	 * @param {Null|String|Number} array[].days - day of date
+	 * @param {Null|String|Number} array[].date - day of date
+	 * @param {Null|String|Number} array[].h - hour of date
+	 * @param {Null|String|Number} array[].hour - hour of date
+	 * @param {Null|String|Number} array[].hours - hour of date
+	 * @param {Null|String|Number} array[].m - minute of date
+	 * @param {Null|String|Number} array[].minute - minute of date
+	 * @param {Null|String|Number} array[].minutes - minute of date
+	 * @param {Null|String|Number} array[].s - second of date
+	 * @param {Null|String|Number} array[].second - second of date
+	 * @param {Null|String|Number} array[].seconds - second of date
+	 * @param {Null|String|Number} array[].ms - millisecond of date
+	 * @param {Null|String|Number} array[].millisecond - millisecond of date
+	 * @param {Null|String|Number} array[].milliseconds - millisecond of date
+	 * @returns {‌Boolean} if date is in array return true
+	 */
+	PersianDate.prototype.isInArray = function (array) {
+		if (this.error) return false;
+		return isInArray.call(this, array);
 	};
 
 	/**

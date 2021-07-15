@@ -37,18 +37,7 @@ export const gtj = (year, month, day, hour, minute, second, millisecond) => {
 	millisecond = date.getMilliseconds();
 	let jYear, jMonth, jDay;
 	const pastDaysInMonth = [
-		0,
-		31,
-		59,
-		90,
-		120,
-		151,
-		181,
-		212,
-		243,
-		273,
-		304,
-		334,
+		0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
 	]; // Past days from the start of the year in each month
 	if (year > 1600) {
 		jYear = 979;

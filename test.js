@@ -10,8 +10,8 @@ let persianDate = new PersianDate();
 
 const now = {
 	year: 1400,
-	month: 3,
-	date: 5,
+	month: 4,
+	date: 24,
 };
 
 test("create date and return now", () => {
@@ -2317,4 +2317,58 @@ test("test errors", () => {
 	expect(persianDate.isValid()).toBe(true);
 
 	perf.end();
+});
+
+////////////////////--- Version 2.6.0 ---////////////////////
+
+test("isInArray function", () => {
+	persianDate.calendar("j").parse("1399/6/1 12:20:30.235");
+	expect(
+		persianDate.isInArray([[1399, "6", 1, "12", 20, 30, 235], new PersianDate()])
+	).toBe(true);
+	expect(
+		persianDate.isInArray([[1399, 7], new Date(2020, 7, 22, 12, 20, 30, 235)])
+	).toBe(true);
+	expect(
+		persianDate.isInArray([
+			{
+				year: 1399,
+				month: 6,
+				date: 24,
+				hour: 11,
+				minute: 2,
+				second: 55,
+				millisecond: 112,
+			},
+			"1399/13/1",
+		])
+	).toBe(false);
+	expect(persianDate.isInArray(["1399/6/1"])).toBe(true);
+	expect(persianDate.isInArray([])).toBe(false);
+	expect(persianDate.isInArray([[1399, "6", 1, "12", 20, 30, 0]])).toBe(false);
+
+	persianDate.calendar("g").parse("2020-6-1 12:20:30.235");
+	expect(
+		persianDate.isInArray([[2020, "6", 1, "12", 20, 30, 235], new PersianDate()])
+	).toBe(true);
+	expect(
+		persianDate.isInArray([[2020, 7], new Date(2020, 5, 1, 12, 20, 30, 235)])
+	).toBe(true);
+	expect(
+		persianDate.isInArray([
+			{
+				year: 2020,
+				month: 6,
+				date: 24,
+				hour: 11,
+				minute: 2,
+				second: 55,
+				millisecond: 112,
+			},
+			"2020-13-1",
+		])
+	).toBe(false);
+	expect(persianDate.isInArray(["2020-6-1"])).toBe(true);
+	expect(persianDate.isInArray([])).toBe(false);
+	expect(persianDate.isInArray([[2020, "6", 1, "12", 20, 30, 0]])).toBe(false);
 });
