@@ -5,7 +5,7 @@ export function isBetween(from, to, method) {
 	const date = this.toArray();
 
 	from = typesToArray(this.c, from);
-	if (!from[2]) date[2] = 1;
+	// if (!from[2]) date[2] = 1;
 	from = date.map((value, i) =>
 		REGEX["isNumeric"].test(from[i]) ? from[i] : value
 	);

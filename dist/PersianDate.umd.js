@@ -418,8 +418,8 @@
 
 	function isBetween(from, to, method) {
 	  var date = this.toArray();
-	  from = typesToArray(this.c, from);
-	  if (!from[2]) date[2] = 1;
+	  from = typesToArray(this.c, from); // if (!from[2]) date[2] = 1;
+
 	  from = date.map(function (value, i) {
 	    return REGEX["isNumeric"].test(from[i]) ? from[i] : value;
 	  });

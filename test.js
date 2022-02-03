@@ -1,6 +1,6 @@
+// import PersianDate from "./dist/PersianDate.js";
 const PersianDate = require("./dist/PersianDate.js");
 const perf = require("@alireza-ab/performance-check");
-// import PersianDate from './src/PersianDate.js'
 
 let persianDate = new PersianDate();
 
@@ -10,8 +10,8 @@ let persianDate = new PersianDate();
 
 const now = {
 	year: 1400,
-	month: 4,
-	date: 24,
+	month: 11,
+	date: 13,
 };
 
 test("create date and return now", () => {
@@ -1532,7 +1532,7 @@ test("isSameOrAfter function", () => {
 });
 
 test("isBetween function", () => {
-	persianDate.calendar("j").parse("1399/6/1 12:20:30.235");
+	persianDate.calendar("j").parse("1399/6/2 12:20:30.235");
 	expect(
 		persianDate.isBetween(
 			[1399, "5", 1, "12", 20, 30, 235],
@@ -1563,11 +1563,11 @@ test("isBetween function", () => {
 	expect(persianDate.isBetween("1399/5", "1399/6", "[)")).toBe(false);
 	expect(persianDate.isBetween("1399/5", "1399/6", "(]")).toBe(true);
 	expect(persianDate.isBetween("1398/11", "1399/7", "[]")).toBe(true);
-	expect(persianDate.isBetween("1399/5/31", "1399/6/2")).toBe(true);
-	expect(persianDate.isBetween("1399/6/1", "1399/6/1")).toBe(false);
-	expect(persianDate.isBetween("1399/6/1", "1399/6/1", "[]")).toBe(true);
+	expect(persianDate.isBetween("1399/5/31", "1399/6/3")).toBe(true);
+	expect(persianDate.isBetween("1399/6/2", "1399/6/2")).toBe(false);
+	expect(persianDate.isBetween("1399/6/2", "1399/6/2", "[]")).toBe(true);
 
-	persianDate.calendar("g").parse("2020-6-1 12:20:30.235");
+	persianDate.calendar("g").parse("2020-6-2 12:20:30.235");
 	expect(
 		persianDate.isBetween(
 			[2020, "5", 1, "12", 20, 30, 235],
@@ -1598,9 +1598,9 @@ test("isBetween function", () => {
 	expect(persianDate.isBetween("2020-5", "2020-6", "[)")).toBe(false);
 	expect(persianDate.isBetween("2020-5", "2020-6", "(]")).toBe(true);
 	expect(persianDate.isBetween("2019-11", "2020-7", "(]")).toBe(true);
-	expect(persianDate.isBetween("2020-5-31", "2020-6-2")).toBe(true);
-	expect(persianDate.isBetween("2020-6-1", "2020-6-1")).toBe(false);
-	expect(persianDate.isBetween("2020-6-1", "2020-6-1", "[]")).toBe(true);
+	expect(persianDate.isBetween("2020-5-31", "2020-6-3")).toBe(true);
+	expect(persianDate.isBetween("2020-6-2", "2020-6-2")).toBe(false);
+	expect(persianDate.isBetween("2020-6-2", "2020-6-2", "[]")).toBe(true);
 });
 
 ////////////////////--- Version 1.4.0 ---////////////////////
@@ -2324,7 +2324,10 @@ test("test errors", () => {
 test("isInArray function", () => {
 	persianDate.calendar("j").parse("1399/6/1 12:20:30.235");
 	expect(
-		persianDate.isInArray([[1399, "6", 1, "12", 20, 30, 235], new PersianDate()])
+		persianDate.isInArray([
+			[1399, "6", 1, "12", 20, 30, 235],
+			new PersianDate(),
+		])
 	).toBe(true);
 	expect(
 		persianDate.isInArray([[1399, 7], new Date(2020, 7, 22, 12, 20, 30, 235)])
@@ -2349,7 +2352,10 @@ test("isInArray function", () => {
 
 	persianDate.calendar("g").parse("2020-6-1 12:20:30.235");
 	expect(
-		persianDate.isInArray([[2020, "6", 1, "12", 20, 30, 235], new PersianDate()])
+		persianDate.isInArray([
+			[2020, "6", 1, "12", 20, 30, 235],
+			new PersianDate(),
+		])
 	).toBe(true);
 	expect(
 		persianDate.isInArray([[2020, 7], new Date(2020, 5, 1, 12, 20, 30, 235)])
