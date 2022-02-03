@@ -11,7 +11,7 @@ let persianDate = new PersianDate();
 const now = {
 	year: 1400,
 	month: 11,
-	date: 13,
+	date: 14,
 };
 
 test("create date and return now", () => {
